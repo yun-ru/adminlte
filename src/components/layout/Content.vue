@@ -17,7 +17,7 @@
       transition
       transition-mode="out-in">
       </router-view>
-    
+
     </section>
       <!-- /.content -->
   </div>
