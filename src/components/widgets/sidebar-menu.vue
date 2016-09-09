@@ -9,7 +9,6 @@
           <span>{{ item.name }}</span>
           <i v-if="item.child" class="fa fa-angle-left pull-right"></i>
         </a>
-
         <ul class="treeview-menu">
           <li v-link-active v-for="child in item.child">
             <a v-link="{ path: child.link }">
