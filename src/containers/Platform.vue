@@ -1,7 +1,12 @@
 <template>
   <app-header></app-header>
   <app-sidebar></app-sidebar>
-  <app-content></app-content>
+  <router-view
+          class="view"
+          keep-alive
+          transition
+          transition-mode="out-in">
+  </router-view>
   <app-footer></app-footer>
 </template>
 
@@ -9,7 +14,6 @@
 
   import Header from '../components/layout/Header.vue'
   import Sidebar from '../components/layout/Sidebar.vue'
-  import Content from '../components/layout/Content.vue'
   import Footer from '../components/layout/Footer.vue'
 
   module.exports = {
@@ -22,7 +26,6 @@
     components: {
       'app-header': Header,
       'app-sidebar': Sidebar,
-      'app-content': Content,
       'app-footer': Footer
     }
   }

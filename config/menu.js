@@ -27,6 +27,11 @@ module.exports = [
         name: '黑名單設定',
         link: '/',
         icon: 'fa-circle-o'
+      },
+      {
+        name: '語系設定',
+        link: '/',
+        icon: 'fa-circle-o'
       }
     ]
   },

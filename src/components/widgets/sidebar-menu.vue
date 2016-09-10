@@ -1,7 +1,7 @@
 <template>
   <!-- sidebar menu: : style can be found in sidebar.less -->
   <ul class="sidebar-menu">
-    <li class="header">MAIN NAVIGATION</li>
+    <li class="header">主選單</li>
     <template v-for="item in menu">
       <li v-if="item.child" class="treeview" v-link-active>
         <a v-link="{ path: item.link }">
