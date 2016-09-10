@@ -5,34 +5,34 @@ module.exports = [
     icon: 'fa-home'
   },
   {
-    name: '系統設定',
-    icon: 'fa-bars',
+    name: '系統設置',
+    icon: 'fa-sliders',
     child: [
       {
         name: '角色設定',
-        link: '/base/role',
+        link: '/',
         icon: 'fa-circle-o'
       },
       {
         name: '權限設定',
-        link: '/base/permission',
+        link: '/',
         icon: 'fa-circle-o'
       },
       {
-        name: '金流設定',
-        link: '/base/currency',
+        name: '站別設定',
+        link: '/',
         icon: 'fa-circle-o'
       },
       {
-        name: '指定收款',
-        link: '/base/payment',
+        name: '黑名單設定',
+        link: '/',
         icon: 'fa-circle-o'
       }
     ]
   },
   {
-    name: '人員管理',
-    icon: 'fa-bars',
+    name: '帳號管理',
+    icon: 'fa-users',
     child: [
       {
         name: '站長',
@@ -79,20 +79,14 @@ module.exports = [
       ,
       {
         name: '客服',
-        link: '/member/service',
-        icon: 'fa-circle-o'
-      }
-      ,
-      {
-        name: '登入歷程',
-        link: '/member/login-log',
+        link: '/',
         icon: 'fa-circle-o'
       }
     ]
   },
   {
     name: '遊戲管理',
-    icon: 'fa-bars',
+    icon: 'fa-gamepad',
     child: [
       {
         name: '平台設定',
@@ -107,8 +101,8 @@ module.exports = [
     ]
   },
   {
-    name: '訂單操作',
-    icon: 'fa-bars',
+    name: '帳務管理',
+    icon: 'fa-server',
     child: [
       {
         name: '儲值',
@@ -134,7 +128,7 @@ module.exports = [
   },
   {
     name: '訊息管理',
-    icon: 'fa-bars',
+    icon: 'fa-comments',
     child: [
       {
         name: '站內訊息',
@@ -149,29 +143,8 @@ module.exports = [
     ]
   },
   {
-    name: '黑名單',
-    icon: 'fa-bars',
-    child: [
-      {
-        name: '銀行',
-        link: '/',
-        icon: 'fa-circle-o'
-      },
-      {
-        name: '電話',
-        link: '/',
-        icon: 'fa-circle-o'
-      },
-      {
-        name: 'IP',
-        link: '/',
-        icon: 'fa-circle-o'
-      }
-    ]
-  },
-  {
-    name: '交易查詢',
-    icon: 'fa-bars',
+    name: '報表查詢',
+    icon: 'fa-bar-chart',
     child: [
       {
         name: '營運報表',
@@ -186,16 +159,11 @@ module.exports = [
     ]
   },
   {
-    name: '前台設定',
-    icon: 'fa-bars',
+    name: '網站設定',
+    icon: 'fa-cogs',
     child: [
       {
-        name: '公用版面',
-        link: '/',
-        icon: 'fa-circle-o'
-      },
-      {
-        name: '代理商版面',
+        name: '版面設定',
         link: '/',
         icon: 'fa-circle-o'
       },
@@ -203,12 +171,33 @@ module.exports = [
         name: '系統公告',
         link: '/',
         icon: 'fa-circle-o'
+      },
+      {
+        name: '活動訊息',
+        link: '/',
+        icon: 'fa-circle-o'
+      }
+    ]
+  },
+  {
+    name: '歷程紀錄',
+    icon: 'fa-history',
+    child: [
+      {
+        name: '登入紀錄',
+        link: '/',
+        icon: 'fa-circle-o'
+      },
+      {
+        name: '帳務歷程',
+        link: '/',
+        icon: 'fa-circle-o'
       }
     ]
   },
   {
     name: 'UI Elements',
-    icon: 'fa-bars',
+    icon: 'fa-circle-o',
     child: [
       {
         name: 'General',
