@@ -1,18 +1,17 @@
 <template>
     <section class="content-header">
         <h1>
-            Page Header
-            <small>Optional description</small>
+            {{title}}
+            <small>{{subTitle}}</small>
         </h1>
         <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-            <li class="active">Here</li>
+            <slot name="breadcrumb"></slot>
         </ol>
     </section>
 </template>
 
 <script>
     export default {
-
+        props: ['title','subTitle']
     }
 </script>

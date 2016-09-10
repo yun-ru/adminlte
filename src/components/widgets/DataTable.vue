@@ -24,6 +24,7 @@
         },
         ready() {
             $('#example').DataTable( {
+                responsive: true,
                 "language": {
                     "paginate": {
                         "first": "<i class='fa fa-angle-double-left'></i>",
