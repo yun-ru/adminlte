@@ -24,6 +24,19 @@
         },
         ready() {
             $('#example').DataTable( {
+                "language": {
+                    "paginate": {
+                        "first": "<i class='fa fa-angle-double-left'></i>",
+                        "last": "<i class='fa fa-angle-double-right'></i>",
+                        "previous": "<i class='fa fa-angle-left'></i>",
+                        "next": "<i class='fa fa-angle-right'></i>"
+                    },
+                    "emptyTable": "No data available in table",
+                    "info": "第 _PAGE_ 頁，共 _PAGES_ 頁",
+                    "infoEmpty": "No entries to show",
+                    "search": "搜尋:",
+                    "lengthMenu": "每頁顯示 _MENU_ 筆"
+                },
                 "processing": true,
                 "ajax": "/static/data/demo.json",
                 "columns": [
