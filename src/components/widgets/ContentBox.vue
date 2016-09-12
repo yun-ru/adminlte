@@ -1,14 +1,13 @@
 <template>
-    <h3>{{winType}} ({{winW}})</h3>
     <div class="box box-success">
         <div class="box-header with-border">
             <div class="btn-group pull-left">
-                <a @click="goBack" class="btn btn-sm btn-default btn-flat"><i class="fa fa-arrow-left"></i>返回</a>
-                <a @click="update" class="btn btn-sm btn-default btn-flat"><i class="fa fa-undo"></i>重新整理</a>
-                <a @click="setting" class="btn btn-sm btn-default btn-flat"><i class="fa fa-wrench"></i>設定</a>
+                <a @click="goBack" class="btn btn-sm btn-default btn-flat"><i class="fa fa-arrow-left"></i><span v-if="winType !== 'xs'">返回</span></a>
+                <a @click="update" class="btn btn-sm btn-default btn-flat"><i class="fa fa-undo"></i><span v-if="winType !== 'xs'">重新整理</span></a>
+                <a @click="setting" class="btn btn-sm btn-default btn-flat"><i class="fa fa-wrench"></i><span v-if="winType !== 'xs'">設定</span></a>
             </div>
 
-            <a @click="openModal" class="btn btn-sm btn-success btn-flat pull-right"><i class="fa fa-plus"></i>新增項目</a>
+            <a @click="openModal" class="btn btn-sm btn-success btn-flat pull-right"><i class="fa fa-plus"></i><span v-if="winType !== 'xs'">新增項目</span></a>
         </div><!-- /.box-header -->
         <div class="box-body">
             <slot name="main"></slot>
@@ -22,12 +21,12 @@
 </template>
 
 <script>
-    import RWD from '../../utils/rwd'
+    import rwd from '../../mixins/rwd'
     export default {
+        mixins: [rwd],
         data() {
             return {
-                winW: 100,
-                winType: ""
+
             }
         },
         props: {
@@ -48,13 +47,14 @@
             }
         },
         created() {
-            RWD.call(this)
         }
     }
 </script>
 
 <style lang="stylus">
-    .btn > i.fa
-        margin-right: 8px
+    div.table-responsive > div.dataTables_wrapper > div.row > div[class^="col-"]
+        padding: 0
+    .btn > span
+        margin-left: 8px
 
 </style>
