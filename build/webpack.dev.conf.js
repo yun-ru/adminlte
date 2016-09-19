@@ -17,6 +17,7 @@ Object.keys(config.entry).forEach(function (name, i) {
 // when serving the html from in-memory
 config.output.publicPath = '/'
 
+
 config.plugins = (config.plugins || []).concat([
   // https://github.com/glenjamin/webpack-hot-middleware#installation--usage
   new webpack.optimize.OccurenceOrderPlugin(),

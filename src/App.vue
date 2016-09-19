@@ -3,9 +3,7 @@
 </template>
 
 <script>
-  import rwd from './mixins/rwd'
   export default {
-    replace: false,
-    mixins: [rwd]
+    replace: false
   }
 </script>
