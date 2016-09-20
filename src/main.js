@@ -19,7 +19,7 @@ Vue.use(VueValidator)
 
 
 // routing
-export var router = new VueRouter({ linkActiveClass: 'active', history: true })
+export var router = new VueRouter({ linkActiveClass: 'active' })
 
 router.map({
   '*': {

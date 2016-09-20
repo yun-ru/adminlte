@@ -3,9 +3,7 @@
   <app-sidebar></app-sidebar>
   <router-view
           class="view"
-          keep-alive
-          transition
-          transition-mode="out-in">
+          keep-alive>
   </router-view>
   <app-footer></app-footer>
 </template>

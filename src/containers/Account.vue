@@ -3,7 +3,6 @@
     <div class="login-box">
       <div class="login-logo">
         <h1><b>MID</b>NET</h1>
-        <h2>{{winType}}</h2>
       </div>
       <!-- /.login-logo -->
       <div class="login-box-body">
@@ -40,7 +39,6 @@
 
 <script>
   import api from '../../config/api.js'
-  import rwd from '../mixins/rwd.js'
   export default {
     data() {
       return {
@@ -62,8 +60,7 @@
       }
       run()
 
-    },
-    mixins: [rwd]
+    }
   }
 </script>
 

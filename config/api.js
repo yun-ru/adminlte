@@ -1,16 +1,24 @@
-module.exports = {
-  host: "http://mid.tw/",
-  api(method,url,data) {
+module.exports = (function(){
+
+  var host = "http://mid.tw/";
+
+  function apiInit(method,url,data) {
     return $.ajax({
       method: method,
-      url: this.host + url,
-      data: data
+      url: host + url,
+      data: data,
+      xhrFields: {
+        withCredentials: true
+      }
     })
-  },
-  login(data) {
-    return this.api('post','account/common/do-login',data)
-  },
-  getRoleList() {
-    return this.api('get','role/role/get-list')
   }
-}
+
+  return {
+    login: function(data) {
+      return apiInit('post','account/common/do-login',data)
+    },
+    getRoleList: function() {
+      return apiInit('get','role/role/get-list')
+    }
+  }
+})()

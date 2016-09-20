@@ -1,6 +1,7 @@
 var webpack = require('webpack')
 var config = require('./webpack.base.conf')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
+var BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 
 // eval-source-map is faster for development
 config.devtool = 'eval-source-map'
