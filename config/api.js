@@ -14,6 +14,18 @@ module.exports = (function(){
   }
 
   return {
+    test: function() {
+      return $.get('/static/data/test.json')
+    },
+    getTestList: function() {
+      return $.get('/static/data/getTestList.json')
+    },
+    getMenu: function() {
+      return apiInit('get','node/menu/get-menu')
+    },
+    getCurrencyList: function() {
+      return apiInit('get','currency/setting/get-list')
+    },
     login: function(data) {
       return apiInit('post','account/common/do-login',data)
     },

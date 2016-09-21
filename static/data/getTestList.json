@@ -1,0 +1,88 @@
+{
+  "code": 0,
+  "data": {
+    "list": [
+      {
+        "ccy_id": 3,
+        "ccy_guid": "d80be6c7-7fda-11e6-b21c-000c29658232",
+        "ccy_add_date": 1474448858,
+        "ccy_udate": 1474448858,
+        "ccy_status": 3,
+        "ccy_name_zh_TW": "美金",
+        "ccy_name_zh_CN": "美金",
+        "ccy_name_en": "Dollars",
+        "ccy_code": "USD"
+      },
+      {
+        "ccy_id": 2,
+        "ccy_guid": "d1031f23-7fda-11e6-b21c-000c29658232",
+        "ccy_add_date": 1474448846,
+        "ccy_udate": 1474448846,
+        "ccy_status": 3,
+        "ccy_name_zh_TW": "人民幣",
+        "ccy_name_zh_CN": "人民币",
+        "ccy_name_en": "CN",
+        "ccy_code": "CNY"
+      },
+      {
+        "ccy_id": 1,
+        "ccy_guid": "cb57eb1c-7fda-11e6-b21c-000c29658232",
+        "ccy_add_date": 1474448837,
+        "ccy_udate": 1474448837,
+        "ccy_status": 3,
+        "ccy_name_zh_TW": "新台幣",
+        "ccy_name_zh_CN": "新台币",
+        "ccy_name_en": "NT",
+        "ccy_code": "NTD"
+      }
+    ],
+    "search_condition": {
+      "search_complex": "",
+      "search_ccy_name_zh_TW": "",
+      "search_ccy_name_zh_CN": "",
+      "search_ccy_name_en": "",
+      "search_ccy_status": ""
+    },
+    "paginator": {
+      "sort": "ccy_id",
+      "sort_by": "DESC",
+      "count": 3,
+      "page_num": 1,
+      "page": 1,
+      "perpage": 100
+    },
+    "breadcrumnb": [
+      {
+        "node_id": 1,
+        "node_guid": "7f54b032-7fda-11e6-b21c-000c29658232",
+        "node_add_date": 1474448709,
+        "node_udate": 1474448709,
+        "node_sort": 1,
+        "node_status": 3,
+        "node_name_zh_TW": "系統設置",
+        "node_name_zh_CN": "系統設置",
+        "node_name_en": "系統設置",
+        "node_route": null,
+        "node_memo": "系統設置",
+        "node_pguid": null
+      },
+      {
+        "node_id": 7,
+        "node_guid": "7f5c2009-7fda-11e6-b21c-000c29658232",
+        "node_add_date": 1474448709,
+        "node_udate": 1474448709,
+        "node_sort": 9,
+        "node_status": 3,
+        "node_name_zh_TW": "幣別設定",
+        "node_name_zh_CN": "幣別設定",
+        "node_name_en": "幣別設定",
+        "node_route": "currency/setting/getList",
+        "node_memo": "系統設置 > 幣別設定",
+        "node_pguid": "7f54b032-7fda-11e6-b21c-000c29658232"
+      }
+    ],
+    "permission": 15
+  },
+  "FILE": "/var/www/html/mid.tw/vendor/mid/PKG-90000-currency/controllers/SettingController.php",
+  "LINE": 17
+}

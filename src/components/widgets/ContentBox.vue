@@ -1,16 +1,11 @@
 <template>
     <div class="box box-success">
         <div class="box-header with-border">
-            <div class="btn-group pull-left">
-                <a @click="goBack" class="btn btn-sm btn-default btn-flat"><i class="fa fa-arrow-left"></i><span v-if="winType !== 'xs'">返回</span></a>
-                <a @click="update" class="btn btn-sm btn-default btn-flat"><i class="fa fa-undo"></i><span v-if="winType !== 'xs'">重新整理</span></a>
-                <a @click="setting" class="btn btn-sm btn-default btn-flat"><i class="fa fa-wrench"></i><span v-if="winType !== 'xs'">設定</span></a>
-            </div>
-
-            <a @click="openModal" class="btn btn-sm btn-success btn-flat pull-right"><i class="fa fa-plus"></i><span v-if="winType !== 'xs'">新增項目</span></a>
+            <slot name="controller"></slot>
         </div><!-- /.box-header -->
         <div class="box-body">
             <slot name="main"></slot>
+            <slot name="pagination"></slot>
         </div><!-- /.box-body -->
         <div v-if="loading" class="overlay" transition>
             <i class="fa fa-refresh fa-spin"></i>
@@ -56,5 +51,7 @@
         padding: 0
     .btn > span
         margin-left: 8px
+    .box-body
+        padding: 20px 12px
 
 </style>
