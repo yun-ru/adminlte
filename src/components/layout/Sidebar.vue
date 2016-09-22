@@ -25,10 +25,19 @@
         menu: this.$parent.$data.menu || []
       }
     },
+    computed: {
+      sidebarH() {
+        return $(".main-sidebar").height()
+      }
+    },
     components: {
       'sidebar-search': SidebarSearch,
       'sidebar-user-panel': SidebarUserPanel,
       'sidebar-menu': SidebarMenu
+    },
+    ready() {
+      console.log("sidebarH: " + this.sidebarH)
+      this.$dispatch("sidebar-ready",this.sidebarH)
     }
   }
 

@@ -36,7 +36,7 @@ $.AdminLTE.options = {
   //Add slimscroll to navbar menus
   //This requires you to load the slimscroll plugin
   //in every page before app.js
-  navbarMenuSlimscroll: true,
+  navbarMenuSlimscroll: false,
   navbarMenuSlimscrollWidth: "3px", //The width of the scroll bar
   navbarMenuHeight: "200px", //The height of the inner menu
   //General animation speed for JS animated elements such as box collapse/expand and
@@ -48,7 +48,7 @@ $.AdminLTE.options = {
   //Activate sidebar push menu
   sidebarPushMenu: true,
   //Activate sidebar slimscroll if the fixed layout is set (requires SlimScroll Plugin)
-  sidebarSlimScroll: true,
+  sidebarSlimScroll: false,
   //Enable sidebar expand on hover effect for sidebar mini
   //This option is forced to true if both the fixed layout and sidebar mini
   //are used together
@@ -56,13 +56,13 @@ $.AdminLTE.options = {
   //BoxRefresh Plugin
   enableBoxRefresh: true,
   //Bootstrap.js tooltip
-  enableBSToppltip: true,
+  enableBSToppltip: false,
   BSTooltipSelector: "[data-toggle='tooltip']",
   //Enable Fast Click. Fastclick.js creates a more
   //native touch experience with touch devices. If you
   //choose to enable the plugin, make sure you load the script
   //before AdminLTE's app.js
-  enableFastclick: true,
+  enableFastclick: false,
   //Control Sidebar Options
   enableControlSidebar: true,
   controlSidebarOptions: {

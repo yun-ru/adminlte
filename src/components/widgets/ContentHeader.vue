@@ -2,16 +2,26 @@
     <section class="content-header">
         <h1>
             {{title}}
-            <small>{{subTitle}}</small>
         </h1>
         <ol class="breadcrumb">
-            <slot name="breadcrumb"></slot>
+            <li v-for="item in breadcrumbList" :class="{active: item.isActive}">{{item.text}}</li>
         </ol>
     </section>
 </template>
 
 <script>
     export default {
-        props: ['title','subTitle']
+        data() {
+          return {
+              breadcrumbList: [],
+              title: ''
+          }
+        },
+        events: {
+            onReady() {
+                this.breadcrumbList = this.$parent.$data.breadcrumbList
+                this.title = this.breadcrumbList[this.breadcrumbList.length-1].text
+            }
+        }
     }
 </script>

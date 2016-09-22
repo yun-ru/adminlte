@@ -26,6 +26,9 @@ module.exports = (function(){
     getCurrencyList: function() {
       return apiInit('get','currency/setting/get-list')
     },
+    postCurrencyList: function(data) {
+      return apiInit('post','currency/setting/get-list',data)
+    },
     login: function(data) {
       return apiInit('post','account/common/do-login',data)
     },

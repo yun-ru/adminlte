@@ -1,17 +1,19 @@
 <template>
-    <div class="box box-success">
-        <div class="box-header with-border">
-            <slot name="controller"></slot>
-        </div><!-- /.box-header -->
-        <div class="box-body">
-            <slot name="main"></slot>
-            <slot name="pagination"></slot>
-        </div><!-- /.box-body -->
-        <div v-if="loading" class="overlay" transition>
-            <i class="fa fa-refresh fa-spin"></i>
-        </div>
+    <section class="content">
+        <div class="box box-success">
+            <div class="box-header with-border">
+                <slot name="controller"></slot>
+            </div><!-- /.box-header -->
+            <div class="box-body">
+                <slot name="main"></slot>
+                <slot name="pagination"></slot>
+            </div><!-- /.box-body -->
+            <div v-if="loading" class="overlay" transition>
+                <i class="fa fa-refresh fa-spin"></i>
+            </div>
 
-    </div><!-- /.box -->
+        </div><!-- /.box -->
+    </section>
 
 </template>
 

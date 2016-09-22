@@ -8,7 +8,7 @@ import NotFound from './components/pages/ui/NotFound.vue'
 import PageGeneral from './components/pages/ui/General.vue'
 import PageIcons from './components/pages/ui/Icons.vue'
 import PageButtons from './components/pages/ui/Buttons.vue'
-import Magic from './components/pages/tt/Magic.vue'
+import Magic from './components/pages/tt/Home.vue'
 import VueResource from 'vue-resource'
 import VueValidator from 'vue-validator'
 

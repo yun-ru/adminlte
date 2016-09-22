@@ -1,10 +1,12 @@
 <template>
   <app-header></app-header>
-  <app-sidebar></app-sidebar>
-  <router-view
-          class="view"
-          keep-alive>
-  </router-view>
+  <app-sidebar @sidebar-ready="getSidebarHeight"></app-sidebar>
+  <div class="content-wrapper" :style="{'min-height': contentMinHeight+'px'}">
+    <router-view
+            class="view"
+            keep-alive>
+    </router-view>
+  </div>
   <app-footer></app-footer>
 </template>
 
@@ -21,7 +23,8 @@
     name: 'Container',
     data: function () {
       return {
-        menu: menu || []
+        menu: menu || [],
+        contentMinHeight: 0
       }
     },
     components: {
@@ -32,13 +35,29 @@
     created() {
       var run = async function() {
         let res = await api.getMenu()
-        console.log(res.data)
-        this.doMenu(res.data)
+        if(res.code) this.handleError(res)
+        else this.handleSuccess(res)
       }
-//      run.call(this)
+      run.call(this)
     },
     methods: {
-      doMenu(menu) {
+      handleSuccess(res) {
+        this.makeMenu(res.data)
+      },
+      handleError(res){
+        if(res.hasOwnProperty("text")){
+          swal(res.text.common).then(()=>{
+            this.$router.go({path: "/"});
+          })
+        }else{
+          throw res
+        }
+      },
+      getSidebarHeight(height) {
+        console.log("sidebar's height: " + height)
+        this.contentMinHeight = height-50
+      },
+      makeMenu(menu) {
         _.each(menu,(item,i,arr)=>{
           var targetItem = _.find(this.menu,{id: item.node_pguid})
           if(targetItem){
@@ -62,7 +81,6 @@
             })
           }
         })
-        console.log(this.menu)
       }
     }
   }

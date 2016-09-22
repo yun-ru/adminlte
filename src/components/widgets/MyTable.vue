@@ -9,7 +9,7 @@
         <tr v-for="item in dataContent.data" track-by="$index">
             <td v-for="subItem in item" track-by="$index">{{subItem}}</td>
             <td>
-                <button class="btn btn-default btn-xs" type="button" @click="modify">修改</button>
+                <slot name="inlineControl"></slot>
             </td>
         </tr>
         </tbody>
@@ -29,9 +29,6 @@
         },
         props: ['data-content'],
         methods: {
-            modify() {
-                this.$dispatch('modify','msg')
-            }
         }
     }
 </script>

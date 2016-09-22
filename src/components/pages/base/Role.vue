@@ -1,21 +1,31 @@
 <template>
 
-    <div class="content-wrapper">
-        <content-header :title="title" :sub-title="subTitle">
-            <template slot="breadcrumb">
-                <li><i class="fa fa-users"></i> {{subject}}</li>
-                <li class="active">{{title}}</li>
-            </template>
-        </content-header>
-        <section class="content">
+    <div>
+        <content-header :title="title" :sub-title="subTitle" :breadcrumb-list="breadcrumbList"></content-header>
 
-            <content-box :title="title" @open-modal="openModal">
-                <div class="table-responsive" slot="main">
-                    <data-table v-if="!loading" transition :data-content="dataContent"></data-table>
+
+        <content-box :title="title" @open-modal="openModal">
+            <div class="controller" slot="controller">
+                <div class="btn-group pull-left">
+                    <a class="btn btn-sm btn-default btn-flat"><i class="fa fa-arrow-left"></i><span v-if="winType !== 'xs'">返回</span></a>
+                    <a class="btn btn-sm btn-default btn-flat"><i class="fa fa-undo"></i><span v-if="winType !== 'xs'">更新</span></a>
+                    <a class="btn btn-sm btn-success btn-flat" @click="openModal"><i class="fa fa-plus"></i><span v-if="winType !== 'xs'">新增</span></a>
                 </div>
-            </content-box>
+                <search-input></search-input>
+                <!--<a class="btn btn-sm btn-success btn-flat pull-right"><i class="fa fa-plus"></i><span v-if="winType !== 'xs'">新增項目</span></a>-->
+            </div>
+            <div class="table-responsive" slot="main">
+                <my-table v-if="!loading" transition :data-content="dataContent">
+                    <template slot="inlineControl">
+                        <button class="btn btn-default btn-xs" type="button" @click="openModal">修改</button>
+                    </template>
+                </my-table>
+            </div>
+            <template slot="pagination">
+                <pagination :data="pageData" :page-list="pageList"></pagination>
+            </template>
+        </content-box>
 
-        </section>
 
         <Modal :title="title">
             <form class="form-horizontal" slot="main">
@@ -59,45 +69,6 @@
                         </label>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <select class="form-control">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <div class="dropdown">
-                            <button class="btn btn-default dropdown-toggle btn-flat" type="button" data-toggle="dropdown">
-                                {{ selectItem }}
-                                <span class="caret"></span></button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li class="dropdown-header">Group 1</li>
-                                <li><a href="#" @click="changeSelected">HTML</a></li>
-                                <li><a href="#" @click="changeSelected">CSS</a></li>
-                                <li><a href="#" @click="changeSelected">JavaScript</a></li>
-                                <li class="divider"></li>
-                                <li class="dropdown-header">Group 2</li>
-                                <li><a href="#" @click="changeSelected">About Us</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox"> 啟用
-                            </label>
-                        </div>
-                    </div>
-                </div>
 
             </form>
         </Modal>
@@ -107,26 +78,42 @@
 
 <script>
     import api from '../../../../config/api.js'
-    import DataTable from '../../widgets/DataTable.vue'
+    import MyTable from '../../widgets/MyTable.vue'
+    import SearchInput from '../../widgets/Search.vue'
+    import Pagination from '../../widgets/Pagination.vue'
     import ContentHeader from '../../widgets/ContentHeader.vue'
     import ContentBox from '../../widgets/ContentBox.vue'
     import Modal from '../../widgets/Modal.vue'
+    import tableMixin from '../../../mixins/tableMixin'
+    import commonMixin from '../../../mixins/commonMixin'
     export default {
         data () {
             return {
                 subject: "系統設置",
-                title: '角色設定',
-                subTitle: "角色設定的說明在這裡",
+                title: '幣別設定',
+                subTitle: "幣別設定的說明在這裡",
                 dataContent: {},
-                selectItem: "Init",
-                loading: false
+                loading: false,
+                permission: 0,
+                pageData: {},
+                pageList: [],
+                breadcrumbList: [],
+                tableColumns: [
+                    {title: '代碼'},
+                    {title: '英文名稱'},
+                    {title: '簡中名稱'},
+                    {title: '繁中名稱'},
+                    {title: '狀態'},
+                    {title: '最後更新時間'},
+                    {title: '控制'}
+                ]
             }
         },
         created() {
             var run = async function () {
-                let res = await api.test()
-                this.dataContent.data = res.content
-                this.dataContent.columns = res.title
+                let res = await api.getCurrencyList()
+                if(res.code) this.handleError(res)
+                else this.handleSuccess(res)
             }
             run.call(this)
             this.loading = true
@@ -137,19 +124,51 @@
             }.bind(this),1000)
         },
         components: {
-            DataTable,
+            MyTable,
             ContentHeader,
             ContentBox,
-            Modal
+            Modal,
+            Pagination,
+            SearchInput
         },
         methods: {
-            openModal() {
-                $("#myModal").modal()
+            handleSuccess(res) {
+                this.dataContent.data = this.makeTableData(res.data.list)
+                this.dataContent.columns = this.tableColumns
+                this.permission = this.dec2bin(res.data.permission)
+                this.breadcrumbList = this.makeBreadCrumbList(res.data.breadcrumnb)
+                this.pageData = res.data.paginator
+                this.pageList = this.makePageList(this.pageData.page_num, this.pageData.page)
+                this.$broadcast("onReady")
             },
-            changeSelected(e) {
-                this.selectItem = e.target.innerText
-            }
-        }
+            makeBreadCrumbList(list) {
+                var breadcrumblist = []
+                _.each(list,(item,i,arr)=>{
+                    if(i===arr.length-1){
+                        breadcrumblist.push({text: item.node_name_en, isActive: true})
+                    }else{
+                        breadcrumblist.push({text: item.node_name_en, isActive: false})
+                    }
+                })
+                return breadcrumblist
+            },
+            makeTableData(list){
+                var tableData = []
+                _.each(list,item=>{
+                    var itemArr = []
+                    itemArr.push(item.ccy_code)
+                    itemArr.push(item.ccy_name_en)
+                    itemArr.push(item.ccy_name_zh_CN)
+                    itemArr.push(item.ccy_name_zh_TW)
+                    itemArr.push(this.caseStatus(item.ccy_status))
+                    itemArr.push(new Date(item.ccy_udate*1000).toLocaleString())
+
+                    tableData.push(itemArr)
+                })
+                return tableData
+            },
+        },
+        mixins: [tableMixin,commonMixin]
     }
 </script>
 
