@@ -18,6 +18,7 @@
 
   import api from '../../config/api'
   import menu from '../../config/menu'
+  import commonMixin from '../mixins/commonMixin'
 
   module.exports = {
     name: 'Container',
@@ -34,7 +35,7 @@
     },
     created() {
       var run = async function() {
-        let res = await api.getMenu()
+        let res = await api.getTestMenu()
         if(res.code) this.handleError(res)
         else this.handleSuccess(res)
       }
@@ -43,15 +44,6 @@
     methods: {
       handleSuccess(res) {
         this.makeMenu(res.data)
-      },
-      handleError(res){
-        if(res.hasOwnProperty("text")){
-          swal(res.text.common).then(()=>{
-            this.$router.go({path: "/"});
-          })
-        }else{
-          throw res
-        }
       },
       getSidebarHeight(height) {
         console.log("sidebar's height: " + height)
@@ -82,7 +74,8 @@
           }
         })
       }
-    }
+    },
+    mixins: [commonMixin]
   }
 
 </script>

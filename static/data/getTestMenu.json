@@ -1,0 +1,79 @@
+{
+  "code": 0,
+  "data": [
+    {
+      "node_name_zh_TW": "系統設置",
+      "node_name_zh_CN": "系統設置",
+      "node_name_en": "系統設置",
+      "node_route": null,
+      "node_guid": "7f54b032-7fda-11e6-b21c-000c29658232",
+      "node_pguid": null,
+      "node_sort": 1
+    },
+    {
+      "node_name_zh_TW": "角色設定",
+      "node_name_zh_CN": "角色設定",
+      "node_name_en": "角色設定",
+      "node_route": "role/setting/getList",
+      "node_guid": "7f54f99b-7fda-11e6-b21c-000c29658232",
+      "node_pguid": "7f54b032-7fda-11e6-b21c-000c29658232",
+      "node_sort": 2
+    },
+    {
+      "node_name_zh_TW": "權限設定",
+      "node_name_zh_CN": "權限設定",
+      "node_name_en": "權限設定",
+      "node_route": "role/assign/show",
+      "node_guid": "7f55668f-7fda-11e6-b21c-000c29658232",
+      "node_pguid": "7f54b032-7fda-11e6-b21c-000c29658232",
+      "node_sort": 3
+    },
+    {
+      "node_name_zh_TW": "網站管理",
+      "node_name_zh_CN": "網站管理",
+      "node_name_en": "網站管理",
+      "node_route": null,
+      "node_guid": "7f5a6452-7fda-11e6-b21c-000c29658232",
+      "node_pguid": null,
+      "node_sort": 4
+    },
+    {
+      "node_name_zh_TW": "站別設定",
+      "node_name_zh_CN": "站別設定",
+      "node_name_en": "站別設定",
+      "node_route": "branch/setting/getList",
+      "node_guid": "7f5a9e37-7fda-11e6-b21c-000c29658232",
+      "node_pguid": "7f5a6452-7fda-11e6-b21c-000c29658232",
+      "node_sort": 5
+    },
+    {
+      "node_name_zh_TW": "語系設定",
+      "node_name_zh_CN": "語系設定",
+      "node_name_en": "語系設定",
+      "node_route": "languages/setting/getList",
+      "node_guid": "7f5b58a6-7fda-11e6-b21c-000c29658232",
+      "node_pguid": "7f54b032-7fda-11e6-b21c-000c29658232",
+      "node_sort": 7
+    },
+    {
+      "node_name_zh_TW": "幣別設定",
+      "node_name_zh_CN": "幣別設定",
+      "node_name_en": "幣別設定",
+      "node_route": "currency/setting/getList",
+      "node_guid": "7f5c2009-7fda-11e6-b21c-000c29658232",
+      "node_pguid": "7f54b032-7fda-11e6-b21c-000c29658232",
+      "node_sort": 9
+    },
+    {
+      "node_name_zh_TW": "版型設定",
+      "node_name_zh_CN": "版型設定",
+      "node_name_en": "版型設定",
+      "node_route": "testQq/testStart/getList",
+      "node_guid": "7f5d4d90-7fda-11e6-b21c-000c29658232",
+      "node_pguid": "7f54b032-7fda-11e6-b21c-000c29658232",
+      "node_sort": 11
+    }
+  ],
+  "FILE": "/var/www/html/mid.tw/vendor/mid/PKG-60000-node/models/NodeModel.php",
+  "LINE": 59
+}

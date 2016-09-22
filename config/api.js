@@ -20,6 +20,12 @@ module.exports = (function(){
     getTestList: function() {
       return $.get('/static/data/getTestList.json')
     },
+    getTestMenu: function() {
+      return $.get('/static/data/getTestMenu.json')
+    },
+
+
+
     getMenu: function() {
       return apiInit('get','node/menu/get-menu')
     },

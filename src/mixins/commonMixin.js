@@ -4,8 +4,8 @@ export default {
     openModal() {
       $("#myModal").modal()
     },
-    dec2bin(dec) {
-      return (dec >>> 0).toString(2);
+    checkPermission(dec){
+      return (dec >>> 0).toString(2)
     },
     makeBreadCrumbList(list) {
       var breadcrumblist = []
