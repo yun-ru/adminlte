@@ -5,8 +5,8 @@
                 <div class="controller">
                     <div class="btn-group pull-left">
                         <a class="btn btn-sm btn-default btn-flat"><i class="fa fa-arrow-left"></i><span v-if="winType !== 'xs'">返回</span></a>
-                        <a class="btn btn-sm btn-default btn-flat"><i class="fa fa-undo"></i><span v-if="winType !== 'xs'">更新</span></a>
-                        <a class="btn btn-sm btn-success btn-flat" v-if="permission[2]-0" @click="openModal"><i class="fa fa-plus"></i><span v-if="winType !== 'xs'">新增</span></a>
+                        <a class="btn btn-sm btn-default btn-flat" @click="onUpdate"><i class="fa fa-undo"></i><span v-if="winType !== 'xs'">更新</span></a>
+                        <a class="btn btn-sm btn-success btn-flat" v-if="permission[2]-0" @click="onCreate"><i class="fa fa-plus"></i><span v-if="winType !== 'xs'">新增</span></a>
                     </div>
                     <search-input></search-input>
                 </div>
@@ -29,6 +29,8 @@
     import MyTable from '../widgets/MyTable.vue'
     import SearchInput from '../widgets/Search.vue'
     import Pagination from '../widgets/Pagination.vue'
+    import api from '../../../config/api'
+
     export default {
         mixins: [RWD],
         data() {
@@ -40,13 +42,8 @@
                 pageList: []
             }
         },
-        props: {
-            'title': String
-        },
         events: {
             onReady() {
-                console.log("contentBox get ready!")
-                this.$broadcast("table-data-ready")
                 this.data = this.$parent.$data.responseData.data
                 this.tableContent = this.$parent.$data.tableContent
                 this.permission = this.$parent.$data.permission
@@ -54,21 +51,27 @@
                 this.pageList = this.$parent.$data.pageList
             },
             onModify(id) {
-                console.log(id)
+                console.log("You modify: " + id)
+                this.$dispatch("modify", id)
+            },
+            onDelete(id) {
+                console.log("You remove: " + id)
+                this.$dispatch("delete", id)
+            },
+            onUpdate() {
+                this.tableContent = {}
             }
         },
         methods: {
-            openModal() {
-                this.$broadcast("onReady")
-            },
-            setting() {
+            onCreate() {
+                this.$dispatch("onCreate")
 
             },
-            update() {
-
+            onUpdate() {
+                this.$dispatch("onUpdate")
             },
             goBack() {
-
+                console.log("go back!")
             }
         },
         components: {

@@ -4,53 +4,11 @@
         <content-header :title="title" :sub-title="subTitle" :breadcrumb-list="breadcrumbList"></content-header>
 
 
-        <content-body :title="title" @open-modal="openModal"></content-body>
+        <content-body></content-body>
 
 
-        <Modal :title="title">
-            <form class="form-horizontal" slot="main">
-                <div class="form-group">
-                    <label for="item01" class="col-sm-2 control-label">項目一</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="item01" placeholder="請輸入項目一">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="item02" class="col-sm-2 control-label">項目二</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="item02" placeholder="請輸入項目二">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">項目三</label>
-                    <div class="col-sm-10">
-                        <label class="checkbox-inline">
-                            <input type="checkbox" value="option1"> 1
-                        </label>
-                        <label class="checkbox-inline">
-                            <input type="checkbox" value="option2"> 2
-                        </label>
-                        <label class="checkbox-inline">
-                            <input type="checkbox" value="option3"> 3
-                        </label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">項目四</label>
-                    <div class="col-sm-10">
-                        <label class="radio-inline">
-                            <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> 1
-                        </label>
-                        <label class="radio-inline">
-                            <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 2
-                        </label>
-                        <label class="radio-inline">
-                            <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> 3
-                        </label>
-                    </div>
-                </div>
+        <Modal :title="title" :modal-type="modalType" :modal-item="modalItem">
 
-            </form>
         </Modal>
     </div>
 
@@ -84,19 +42,16 @@
                     {title: '狀態'},
                     {title: '最後更新時間'},
                     {title: '控制'}
-                ]
+                ],
+                modalItem: {}
             }
         },
         created() {
             this.loading = true
         },
         ready() {
-            var run = async function () {
-                let res = await api.getTestList()
-                res.code>0 ? this.handleError(res) : this.handleSuccess(res)
-                this.loading = false
-            }
-            run.call(this)
+            this.update()
+            api.addCurrency({ccy_status:123})
         },
         components: {
             ContentHeader,
@@ -104,11 +59,170 @@
             Modal
         },
         events: {
-          tableOk() {
-              console.log("child say ok")
-          }
+            onCreate() {
+                this.create()
+            },
+            onSubmitNew(data) {
+                this.createSubmit(data)
+            },
+            onSubmitModify(data) {
+                this.modifySubmit(data)
+            },
+            modify(id) {
+                this.modify(id)
+            },
+            onUpdate() {
+                this.update()
+            },
+            delete(id) {
+                this.handleRemove(api.delCurrency({ccy_guid: id}),this.update)
+            }
         },
         methods: {
+            update() {
+                console.log("onUpdate!")
+                this.$broadcast("onUpdate")
+                api.getCurrencyList().then(res=>{
+                    res.code===0 ? this.handleSuccess(res) : this.handleError(res)
+                    this.loading = false
+                })
+            },
+            create() {
+                this.initModalItem()
+                this.modalItem.ready = true
+                $("#myModal").modal()
+            },
+            modify(id) {
+                this.initModalItem()
+                this.modalItem.title = "修改幣別項目"
+                this.modalItem.id = id
+                this.modalItem.ready = true
+                api.showCurrency({ccy_guid: id}).then(res=>{
+                    var data = res.data.currency
+                    if(!res.code){
+                        this.modalItem.value = {
+                            ccy_status: data.ccy_status,
+                            ccy_name_zh_TW: data.ccy_name_zh_TW,
+                            ccy_name_zh_CN: data.ccy_name_zh_CN,
+                            ccy_name_en: data.ccy_name_en,
+                            ccy_code: data.ccy_code,
+                            ccy_udate: new Date(data.ccy_udate*1000).toLocaleString(),
+                            ccy_add_date: new Date(data.ccy_add_date*1000).toLocaleString(),
+                            ccy_guid: data.ccy_guid
+                        }
+                        this.modalItem.display = {
+                            ccy_status: true,
+                            ccy_name_zh_TW: true,
+                            ccy_name_zh_CN: true,
+                            ccy_name_en: true,
+                            ccy_code: true,
+                            ccy_udate: true,
+                            ccy_add_date: true
+                        }
+                        $('#myModal').modal()
+                    }else{
+                        this.handleError(res)
+                    }
+                })
+            },
+            createSubmit(_data) {
+
+                var data = {
+                    ccy_status: _data.ccy_status,
+                    ccy_name_zh_TW: _data.ccy_name_zh_TW,
+                    ccy_name_zh_CN: _data.ccy_name_zh_CN,
+                    ccy_name_en: _data.ccy_name_en,
+                    ccy_code: _data.ccy_code
+                }
+
+                api.addCurrency(data).then(res=>{
+                    if(!res.code){
+                        $('#myModal').modal("hide")
+                        swal("新增成功！").then(()=>{
+                            this.update()
+                        })
+                    }else{
+                        if(res.code===10006){
+                            this.modalItem.errMsg = res.text
+                        }else{
+                            swal("新增失敗！")
+                        }
+                    }
+
+                })
+            },
+            modifySubmit(_data) {
+                var data = {
+                    ccy_guid: this.modalItem.id,
+                    ccy_status: _data.ccy_status,
+                    ccy_name_zh_TW: _data.ccy_name_zh_TW,
+                    ccy_name_zh_CN: _data.ccy_name_zh_CN,
+                    ccy_name_en: _data.ccy_name_en,
+                    ccy_code: _data.ccy_code
+                }
+                api.editCurrency(data).then(res=>{
+                    if(!res.code){
+                        $('#myModal').modal("hide")
+                        swal("修改成功！").then(()=>{
+                            this.update()
+                        })
+                    }else{
+                        if(res.code===10006){
+                            this.modalItem.errMsg = res.text
+                        }else{
+                            swal("修改失敗！")
+                        }
+                    }
+                })
+            },
+            initModalItem() {
+                this.modalItem = {
+                    ready: false,
+                    title: "新增幣別項目",
+                    id: "",
+                    display: {
+                        ccy_status: true,
+                        ccy_name_zh_TW: true,
+                        ccy_name_zh_CN: true,
+                        ccy_name_en: true,
+                        ccy_code: true,
+                    },
+                    type: {
+                        ccy_status: "radio",
+                        ccy_name_zh_TW: "text",
+                        ccy_name_zh_CN: "text",
+                        ccy_name_en: "text",
+                        ccy_code: "text",
+                        ccy_udate: "static",
+                        ccy_add_date: "static",
+                        ccy_guid: "static"
+                    },
+                    option: {
+                        ccy_status: [
+                            {label: "啟用", value: 3},
+                            {label: "不啟用", value: -2}
+                        ]
+                    },
+                    label: {
+                        ccy_status: "狀態",
+                        ccy_name_zh_TW: "繁中名稱",
+                        ccy_name_zh_CN: "簡中名稱",
+                        ccy_name_en: "英文名稱",
+                        ccy_code: "代碼",
+                        ccy_udate: "更新時間",
+                        ccy_add_date: "新增時間",
+                        ccy_guid: "ID"
+                    },
+                    value: {
+                        ccy_status: 3,
+                        ccy_name_zh_TW: "",
+                        ccy_name_zh_CN: "",
+                        ccy_name_en: "",
+                        ccy_code: ""
+                    },
+                    errMsg: {}
+                }
+            },
             handleSuccess(res) {
                 this.tableContent.data = this.makeTableData(res.data.list)
                 this.tableContent.columns = this.tableColumns
@@ -118,7 +232,7 @@
                 this.pageList = this.makePageList(this.pageData.page_num, this.pageData.page)
                 this.responseData = res
                 this.$broadcast("onReady")
-                console.log("mom")
+                console.log("onReady!")
             },
             makeBreadCrumbList(list) {
                 var breadcrumblist = []
@@ -142,7 +256,7 @@
                     itemArr.push(this.caseStatus(item.ccy_status))
                     itemArr.push(new Date(item.ccy_udate*1000).toLocaleString())
 
-                    tableData.push(itemArr)
+                    tableData.push({id: item.ccy_guid, tds: itemArr})
                 })
                 return tableData
             },

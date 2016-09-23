@@ -1,6 +1,7 @@
 module.exports = (function(){
 
   var host = "http://mid.tw/";
+  var local = "/";
 
   function apiInit(method,url,data) {
     return $.ajax({
@@ -13,17 +14,31 @@ module.exports = (function(){
     })
   }
 
+  function apiTest(method,url,data) {
+    return $.ajax({
+      method: method,
+      url: local + url,
+      data: data
+    })
+  }
+
   return {
     test: function() {
-      return $.get('/static/data/test.json')
+      return apiTest('get','static/data/test.json')
     },
-    getTestList: function() {
-      return $.get('/static/data/getTestList.json')
+    getTestList: function(data) {
+      return apiTest('get','static/data/getTestList.json',data)
     },
-    getTestMenu: function() {
-      return $.get('/static/data/getTestMenu.json')
+    postTestList: function(data) {
+      return apiTest('post','static/data/getTestList.json',data)
     },
 
+    getTestMenu: function(data) {
+      return apiTest('get','static/data/getTestMenu.json',data)
+    },
+    showTest: function(data) {
+      return apiTest('post','static/data/showTest.json', data)
+    },
 
 
     getMenu: function() {
@@ -34,6 +49,18 @@ module.exports = (function(){
     },
     postCurrencyList: function(data) {
       return apiInit('post','currency/setting/get-list',data)
+    },
+    addCurrency: function(data) {
+      return apiInit('post','currency/setting/do-add',data)
+    },
+    delCurrency: function(data) {
+      return apiInit('post','currency/setting/do-del',data)
+    },
+    editCurrency: function(data) {
+      return apiInit('post','currency/setting/do-edit',data)
+    },
+    showCurrency: function(data) {
+      return apiInit('post','currency/setting/edit',data)
     },
     login: function(data) {
       return apiInit('post','account/common/do-login',data)

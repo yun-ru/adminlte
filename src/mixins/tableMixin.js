@@ -10,13 +10,15 @@ export default {
     },
     makePageList(num,current) {
       var list = []
-      for(var i=0; i<num; i++){
-        list.push({
-          text: i+1,
-          isActive: false
-        })
+      if(num>0) {
+        for(var i=0; i<num; i++){
+          list.push({
+            text: i+1,
+            isActive: false
+          })
+        }
+        list[current-1].isActive = true
       }
-      list[current-1].isActive = true
       return list
     }
   }

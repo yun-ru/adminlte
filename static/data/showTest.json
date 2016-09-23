@@ -1,0 +1,54 @@
+{
+  "code": 0,
+  "data": {
+    "currency": {
+      "ccy_id": 4,
+      "ccy_guid": "64238bab-809e-11e6-b21c-000c29658232",
+      "ccy_add_date": 1474533143,
+      "ccy_udate": 1474533143,
+      "ccy_status": 3,
+      "ccy_name_zh_TW": "比特幣",
+      "ccy_name_zh_CN": "比特",
+      "ccy_name_en": "Bitcoin",
+      "ccy_code": "BIT"
+    },
+    "breadcrumb": [
+      {
+        "node_id": 1,
+        "node_guid": "7f54b032-7fda-11e6-b21c-000c29658232",
+        "node_add_date": 1474448709,
+        "node_udate": 1474448709,
+        "node_sort": 1,
+        "node_status": 3,
+        "node_name_zh_TW": "系統設置",
+        "node_name_zh_CN": "系統設置",
+        "node_name_en": "系統設置",
+        "node_route": null,
+        "node_memo": "系統設置",
+        "node_pguid": null
+      },
+      {
+        "node_id": 7,
+        "node_guid": "7f5c2009-7fda-11e6-b21c-000c29658232",
+        "node_add_date": 1474448709,
+        "node_udate": 1474448709,
+        "node_sort": 9,
+        "node_status": 3,
+        "node_name_zh_TW": "幣別設定",
+        "node_name_zh_CN": "幣別設定",
+        "node_name_en": "幣別設定",
+        "node_route": "currency/setting/getList",
+        "node_memo": "系統設置 > 幣別設定",
+        "node_pguid": "7f54b032-7fda-11e6-b21c-000c29658232"
+      },
+      {
+        "node_name": "編輯",
+        "node_route": "currency/setting/getList",
+        "unlink": true
+      }
+    ],
+    "permission": 15
+  },
+  "FILE": "/var/www/html/mid.tw/vendor/mid/PKG-90000-currency/controllers/SettingController.php",
+  "LINE": 44
+}

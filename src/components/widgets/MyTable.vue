@@ -8,10 +8,10 @@
             </thead>
             <tbody>
             <tr v-for="item in tableContent.data" track-by="$index">
-                <td v-for="subItem in item" track-by="$index">{{subItem}}</td>
+                <td v-for="subItem in item.tds" track-by="$index">{{subItem}}</td>
                 <td>
-                    <button class="btn btn-default btn-xs" type="button" v-if="permission[1]-0" @click="onModify">修改</button>
-                    <button class="btn btn-danger btn-xs" type="button" v-if="permission[3]-0" :data-id="item.ccy_guid">刪除</button>
+                    <button class="btn btn-default btn-xs" type="button" v-if="permission[1]-0" @click="onModify(item.id)">修改</button>
+                    <button class="btn btn-danger btn-xs" type="button" v-if="permission[3]-0" @click="onDelete(item.id)">刪除</button>
                 </td>
             </tr>
             </tbody>
@@ -27,20 +27,13 @@
 
             }
         },
-        created() {
-        },
-        ready() {
-            this.$dispatch("tableOk")
-        },
         props: ['table-content','permission'],
         methods: {
-            onModify() {
-                this.$dispatch("onModify",999)
-            }
-        },
-        events: {
-            onReady() {
-                console.log("my table get ready!")
+            onModify(id) {
+                this.$dispatch("onModify",id)
+            },
+            onDelete(id) {
+                this.$dispatch("onDelete",id)
             }
         }
     }

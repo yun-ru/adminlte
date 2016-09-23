@@ -35,9 +35,12 @@
     },
     created() {
       var run = async function() {
-        let res = await api.getTestMenu()
-        if(res.code) this.handleError(res)
-        else this.handleSuccess(res)
+        try{
+          let res = await api.getMenu()
+          res.code ? this.handleError(res) : this.handleSuccess(res)
+        }catch(err){
+          this.handleError(err)
+        }
       }
       run.call(this)
     },
