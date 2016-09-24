@@ -4,8 +4,8 @@ export default {
     openModal() {
       $("#myModal").modal()
     },
-    checkPermission(dec){
-      return (dec >>> 0).toString(2)
+    closeModal() {
+      $('#myModal').modal("hide")
     },
     makeBreadCrumbList(list) {
       var breadcrumblist = []
