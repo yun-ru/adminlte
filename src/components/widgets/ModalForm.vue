@@ -9,17 +9,23 @@
                     </label>
                 </template>
                 <input v-if="modalData.type[labelKey]==='text'" type="text" class="form-control" :placeholder="modalData.label[labelKey]" v-model="modalData.value[labelKey]">
-                <p v-if="modalData.type[labelKey]==='static'" class="form-control-static">{{modalData.value[labelKey]}}</p>
+                <p v-if="modalData.type[labelKey]==='date'" class="form-control-static">{{modalData.value[labelKey] | my-date}}</p>
                 <span class="help-block">{{modalData.errMsg[labelKey]}}</span>
             </div>
 
         </div>
+        {{modalData |json}}
     </form>
 
 </template>
 
 <script>
     export default {
-        props: ['modalData','formSubmit','formUpdate']
+        props: ['modalData','formSubmit','formUpdate'],
+        filters: {
+            myDate(data) {
+                return new Date(data*1000).toLocaleString()
+            }
+        }
     }
 </script>

@@ -51,11 +51,9 @@
                 this.pageList = this.$parent.$data.pageList
             },
             onModify(id) {
-                console.log("You modify: " + id)
                 this.$dispatch("modify", id)
             },
             onDelete(id) {
-                console.log("You remove: " + id)
                 this.$dispatch("delete", id)
             },
             onUpdate() {

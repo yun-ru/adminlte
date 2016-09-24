@@ -21,15 +21,9 @@
 <script>
     import ModalForm from './ModalForm.vue'
     export default {
-        props: ['modalData'],
+        props: ['modalData','formSubmit','closeModal'],
         methods: {
-            formSubmit() {
-//                var data = _.mapValues(this.$refs.modalForm.formInputs,val=>val.value)
-//                this.modalData.id ? this.$dispatch("onSubmitModify", data) : this.$dispatch("onSubmitNew", data)
-            },
-            closeModal() {
-                $('#myModal').modal("hide")
-            }
+
         },
         components: {
             ModalForm

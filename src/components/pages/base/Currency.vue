@@ -4,7 +4,7 @@
         <content-header :breadcrumb-list="breadcrumbList"></content-header>
         <content-body></content-body>
 
-        <Modal :modal-data="modalData"></Modal>
+        <Modal :modal-data="modalData" :form-submit="formSubmit" :close-modal="closeModal"></Modal>
     </div>
 
 </template>
@@ -50,8 +50,8 @@
                         ccy_name_zh_CN: "text",
                         ccy_name_en: "text",
                         ccy_code: "text",
-                        ccy_udate: "static",
-                        ccy_add_date: "static",
+                        ccy_udate: "date",
+                        ccy_add_date: "date",
                         ccy_guid: "static"
                     },
                     option: {
@@ -69,6 +69,10 @@
                         ccy_udate: "更新時間",
                         ccy_add_date: "新增時間",
                         ccy_guid: "ID"
+                    },
+                    filter: {
+                        ccy_udate: "my-date",
+                        ccy_add_date: "my-date"
                     },
                     errMsg: {}
                 }
@@ -135,17 +139,8 @@
                     }
                 })
             },
-            modifyModal(data) {
-                this.modalData.value = {
-                    ccy_status: data.ccy_status,
-                    ccy_name_zh_TW: data.ccy_name_zh_TW,
-                    ccy_name_zh_CN: data.ccy_name_zh_CN,
-                    ccy_name_en: data.ccy_name_en,
-                    ccy_code: data.ccy_code,
-                    ccy_udate: new Date(data.ccy_udate*1000).toLocaleString(),
-                    ccy_add_date: new Date(data.ccy_add_date*1000).toLocaleString(),
-                    ccy_guid: data.ccy_guid
-                }
+            modifyModal(data) {data
+                this.modalData.value = data
                 this.modalData.display = {
                     ccy_status: true,
                     ccy_name_zh_TW: true,
@@ -262,6 +257,14 @@
                     tableData.push({id: item.ccy_guid, tds: itemArr})
                 })
                 return tableData
+            },
+            formSubmit() {
+                console.log("you submit!")
+                console.dir(this.modalData.value)
+//                this.modalData.id ? this.modifySubmit(this.modalData.value) : this.createSubmit()
+            },
+            closeModal() {
+                $('#myModal').modal("hide")
             }
         },
         mixins: [tableMixin,commonMixin]
