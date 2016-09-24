@@ -2,13 +2,11 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from './App'
 import Platform from './containers/Platform.vue'
-import Account from './containers/Account.vue'
 import Login from './containers/Login.vue'
 import NotFound from './components/pages/ui/NotFound.vue'
 import PageGeneral from './components/pages/ui/General.vue'
 import PageIcons from './components/pages/ui/Icons.vue'
 import PageButtons from './components/pages/ui/Buttons.vue'
-import Magic from './components/pages/tt/Home.vue'
 import VueResource from 'vue-resource'
 import VueValidator from 'vue-validator'
 
@@ -35,7 +33,7 @@ router.map({
     component: Platform,
     subRoutes: {
       '/': {
-        component: Magic
+        component: Currency
       },
 
       '/ui/general': {
@@ -52,17 +50,17 @@ router.map({
         component: Role
       },
       '/base/permission': {
-        component: Magic
+        component: Currency
       },
       '/currency/setting/getList': {
         component: Currency
       },
       '/base/payment': {
-        component: Magic
+        component: Currency
       },
 
       '/member/:level': {
-        component: Magic
+        component: Currency
       },
       '/member/service': {
         component: PageIcons

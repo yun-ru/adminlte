@@ -3,15 +3,15 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">{{modalItem.title}}</h4>
+                    <button type="button" class="close" @click="closeModal"><span>&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">{{modalData.title}}</h4>
                 </div>
                 <div class="modal-body">
-                    <modal-form :modal-item="modalItem" v-ref:modal-form></modal-form>
+                    <modal-form v-ref:modal-form :form-submit="formSubmit" :modal-data="modalData"></modal-form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default btn-flat" @click="close">關閉</button>
-                    <button type="button" class="btn btn-success btn-flat" @click="submit">確認送出</button>
+                    <button type="button" class="btn btn-default btn-flat" @click="closeModal">關閉</button>
+                    <button type="button" class="btn btn-success btn-flat" @click="formSubmit">確認送出</button>
                 </div>
             </div>
         </div>
@@ -21,14 +21,13 @@
 <script>
     import ModalForm from './ModalForm.vue'
     export default {
-        props: ['modalItem'],
+        props: ['modalData'],
         methods: {
-            submit() {
-                console.log(this.$refs.modalForm.formItems)
-                var data = _.mapValues(this.$refs.modalForm.formItems,val=>val.value)
-                this.modalItem.id ? this.$dispatch("onSubmitModify", data) : this.$dispatch("onSubmitNew", data)
+            formSubmit() {
+//                var data = _.mapValues(this.$refs.modalForm.formInputs,val=>val.value)
+//                this.modalData.id ? this.$dispatch("onSubmitModify", data) : this.$dispatch("onSubmitNew", data)
             },
-            close() {
+            closeModal() {
                 $('#myModal').modal("hide")
             }
         },

@@ -29,22 +29,14 @@ export default {
     },
     handleRemove(api,cb) {
       swal({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
+        title: '是否確認刪除?',
         type: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
+        confirmButtonText: '確認刪除'
       }).then(function() {
-        api.then(()=>{
-          cb()
-          swal(
-            'Deleted!',
-            'Your file has been deleted.',
-            'success'
-          );
-        },()=>{
+        api.then(cb,()=>{
           swal("未刪除成功!");
         })
       })

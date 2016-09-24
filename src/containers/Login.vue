@@ -7,7 +7,7 @@
       <!-- /.login-logo -->
       <div class="login-box-body">
         <p class="login-box-msg">請輸入會員帳號及密碼</p>
-        <form novalidate>
+        <form novalidate @keyup.enter="onSubmit">
           <div class="form-group">
             <input type="text" class="form-control" placeholder="帳號" v-model="account">
             <p class="text-danger">{{acc_err}}</p>

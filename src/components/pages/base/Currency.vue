@@ -1,15 +1,10 @@
 <template>
 
     <div>
-        <content-header :title="title" :sub-title="subTitle" :breadcrumb-list="breadcrumbList"></content-header>
-
-
+        <content-header :breadcrumb-list="breadcrumbList"></content-header>
         <content-body></content-body>
 
-
-        <Modal :title="title" :modal-type="modalType" :modal-item="modalItem">
-
-        </Modal>
+        <Modal :modal-data="modalData"></Modal>
     </div>
 
 </template>
@@ -43,15 +38,51 @@
                     {title: '最後更新時間'},
                     {title: '控制'}
                 ],
-                modalItem: {}
+                modalData: {
+                    ready: false,
+                    title: "",
+                    id: null,
+                    display: {},
+                    value: {},
+                    type: {
+                        ccy_status: "radio",
+                        ccy_name_zh_TW: "text",
+                        ccy_name_zh_CN: "text",
+                        ccy_name_en: "text",
+                        ccy_code: "text",
+                        ccy_udate: "static",
+                        ccy_add_date: "static",
+                        ccy_guid: "static"
+                    },
+                    option: {
+                        ccy_status: [
+                            {label: "啟用", value: 3},
+                            {label: "不啟用", value: -2}
+                        ]
+                    },
+                    label: {
+                        ccy_status: "狀態",
+                        ccy_name_zh_TW: "繁中名稱",
+                        ccy_name_zh_CN: "簡中名稱",
+                        ccy_name_en: "英文名稱",
+                        ccy_code: "代碼",
+                        ccy_udate: "更新時間",
+                        ccy_add_date: "新增時間",
+                        ccy_guid: "ID"
+                    },
+                    errMsg: {}
+                }
             }
+        },
+        computed: {
         },
         created() {
             this.loading = true
+            api.addCurrency({ccy_status:123})
         },
         ready() {
             this.update()
-            api.addCurrency({ccy_status:123})
+
         },
         components: {
             ContentHeader,
@@ -88,42 +119,42 @@
                 })
             },
             create() {
-                this.initModalItem()
-                this.modalItem.ready = true
+                this.createModal()
                 $("#myModal").modal()
             },
             modify(id) {
-                this.initModalItem()
-                this.modalItem.title = "修改幣別項目"
-                this.modalItem.id = id
-                this.modalItem.ready = true
+                this.modalData.title = "修改幣別項目"
+                this.modalData.id = id
                 api.showCurrency({ccy_guid: id}).then(res=>{
                     var data = res.data.currency
                     if(!res.code){
-                        this.modalItem.value = {
-                            ccy_status: data.ccy_status,
-                            ccy_name_zh_TW: data.ccy_name_zh_TW,
-                            ccy_name_zh_CN: data.ccy_name_zh_CN,
-                            ccy_name_en: data.ccy_name_en,
-                            ccy_code: data.ccy_code,
-                            ccy_udate: new Date(data.ccy_udate*1000).toLocaleString(),
-                            ccy_add_date: new Date(data.ccy_add_date*1000).toLocaleString(),
-                            ccy_guid: data.ccy_guid
-                        }
-                        this.modalItem.display = {
-                            ccy_status: true,
-                            ccy_name_zh_TW: true,
-                            ccy_name_zh_CN: true,
-                            ccy_name_en: true,
-                            ccy_code: true,
-                            ccy_udate: true,
-                            ccy_add_date: true
-                        }
+                        this.modifyModal(data)
                         $('#myModal').modal()
                     }else{
                         this.handleError(res)
                     }
                 })
+            },
+            modifyModal(data) {
+                this.modalData.value = {
+                    ccy_status: data.ccy_status,
+                    ccy_name_zh_TW: data.ccy_name_zh_TW,
+                    ccy_name_zh_CN: data.ccy_name_zh_CN,
+                    ccy_name_en: data.ccy_name_en,
+                    ccy_code: data.ccy_code,
+                    ccy_udate: new Date(data.ccy_udate*1000).toLocaleString(),
+                    ccy_add_date: new Date(data.ccy_add_date*1000).toLocaleString(),
+                    ccy_guid: data.ccy_guid
+                }
+                this.modalData.display = {
+                    ccy_status: true,
+                    ccy_name_zh_TW: true,
+                    ccy_name_zh_CN: true,
+                    ccy_name_en: true,
+                    ccy_code: true,
+                    ccy_udate: true,
+                    ccy_add_date: true
+                }
             },
             createSubmit(_data) {
 
@@ -143,7 +174,7 @@
                         })
                     }else{
                         if(res.code===10006){
-                            this.modalItem.errMsg = res.text
+                            this.modalData.errMsg = res.text
                         }else{
                             swal("新增失敗！")
                         }
@@ -153,7 +184,7 @@
             },
             modifySubmit(_data) {
                 var data = {
-                    ccy_guid: this.modalItem.id,
+                    ccy_guid: this.modalData.id,
                     ccy_status: _data.ccy_status,
                     ccy_name_zh_TW: _data.ccy_name_zh_TW,
                     ccy_name_zh_CN: _data.ccy_name_zh_CN,
@@ -168,60 +199,32 @@
                         })
                     }else{
                         if(res.code===10006){
-                            this.modalItem.errMsg = res.text
+                            this.modalData.errMsg = res.text
                         }else{
                             swal("修改失敗！")
                         }
                     }
                 })
             },
-            initModalItem() {
-                this.modalItem = {
-                    ready: false,
-                    title: "新增幣別項目",
-                    id: "",
-                    display: {
-                        ccy_status: true,
-                        ccy_name_zh_TW: true,
-                        ccy_name_zh_CN: true,
-                        ccy_name_en: true,
-                        ccy_code: true,
-                    },
-                    type: {
-                        ccy_status: "radio",
-                        ccy_name_zh_TW: "text",
-                        ccy_name_zh_CN: "text",
-                        ccy_name_en: "text",
-                        ccy_code: "text",
-                        ccy_udate: "static",
-                        ccy_add_date: "static",
-                        ccy_guid: "static"
-                    },
-                    option: {
-                        ccy_status: [
-                            {label: "啟用", value: 3},
-                            {label: "不啟用", value: -2}
-                        ]
-                    },
-                    label: {
-                        ccy_status: "狀態",
-                        ccy_name_zh_TW: "繁中名稱",
-                        ccy_name_zh_CN: "簡中名稱",
-                        ccy_name_en: "英文名稱",
-                        ccy_code: "代碼",
-                        ccy_udate: "更新時間",
-                        ccy_add_date: "新增時間",
-                        ccy_guid: "ID"
-                    },
-                    value: {
-                        ccy_status: 3,
-                        ccy_name_zh_TW: "",
-                        ccy_name_zh_CN: "",
-                        ccy_name_en: "",
-                        ccy_code: ""
-                    },
-                    errMsg: {}
+            createModal() {
+
+                this.modalData.title = "新增幣別項目"
+                this.modalData.id = null
+                this.modalData.display = {
+                    ccy_status: true,
+                    ccy_name_zh_TW: true,
+                    ccy_name_zh_CN: true,
+                    ccy_name_en: true,
+                    ccy_code: true,
                 }
+                this.modalData.value = {
+                    ccy_status: 3,
+                    ccy_name_zh_TW: "",
+                    ccy_name_zh_CN: "",
+                    ccy_name_en: "",
+                    ccy_code: ""
+                }
+
             },
             handleSuccess(res) {
                 this.tableContent.data = this.makeTableData(res.data.list)
@@ -259,7 +262,7 @@
                     tableData.push({id: item.ccy_guid, tds: itemArr})
                 })
                 return tableData
-            },
+            }
         },
         mixins: [tableMixin,commonMixin]
     }

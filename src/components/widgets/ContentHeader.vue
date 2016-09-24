@@ -4,7 +4,14 @@
             {{title}}
         </h1>
         <ol class="breadcrumb">
-            <li v-for="item in breadcrumbList" :class="{active: item.isActive}">{{item.text}}</li>
+            <li>
+                <a v-link="{path:'/'}">
+                    <i class="fa fa-home"></i> 首頁
+                </a>
+            </li>
+            <li v-for="item in breadcrumbList" :class="{active: item.isActive}">
+                {{item.text}}
+            </li>
         </ol>
     </section>
 </template>
@@ -13,15 +20,13 @@
     export default {
         data() {
           return {
-              breadcrumbList: [],
-              title: ''
           }
         },
-        events: {
-            onReady() {
-                this.breadcrumbList = this.$parent.$data.breadcrumbList
-                this.title = this.breadcrumbList[this.breadcrumbList.length-1].text
+        computed: {
+            title() {
+                return this.breadcrumbList.length ? this.breadcrumbList[this.breadcrumbList.length-1].text : ""
             }
-        }
+        },
+        props: ['breadcrumb-list']
     }
 </script>
