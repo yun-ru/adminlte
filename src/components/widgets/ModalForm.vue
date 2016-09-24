@@ -1,6 +1,6 @@
 <template>
-    <form class="form-horizontal" @keyup.enter="formSubmit">
-        <div class="form-group" v-for="(labelKey,isActive) in modalData.display">
+    <form class="form-horizontal" novalidate>
+        <div class="form-group" v-for="(labelKey,isActive) in modalData.display" :class="{'has-error':modalData.errMsg[labelKey]}">
             <label class="col-sm-2 control-label">{{modalData.label[labelKey]}}</label>
             <div class="col-sm-10">
                 <template v-if="modalData.type[labelKey]==='radio'">
@@ -10,11 +10,10 @@
                 </template>
                 <input v-if="modalData.type[labelKey]==='text'" type="text" class="form-control" :placeholder="modalData.label[labelKey]" v-model="modalData.value[labelKey]">
                 <p v-if="modalData.type[labelKey]==='date'" class="form-control-static">{{modalData.value[labelKey] | my-date}}</p>
-                <span class="help-block">{{modalData.errMsg[labelKey]}}</span>
+                <span v-if="modalData.errMsg[labelKey]" class="help-block">{{modalData.errMsg[labelKey]}}</span>
             </div>
 
         </div>
-        {{modalData |json}}
     </form>
 
 </template>

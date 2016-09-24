@@ -38,44 +38,7 @@
                     {title: '最後更新時間'},
                     {title: '控制'}
                 ],
-                modalData: {
-                    ready: false,
-                    title: "",
-                    id: null,
-                    display: {},
-                    value: {},
-                    type: {
-                        ccy_status: "radio",
-                        ccy_name_zh_TW: "text",
-                        ccy_name_zh_CN: "text",
-                        ccy_name_en: "text",
-                        ccy_code: "text",
-                        ccy_udate: "date",
-                        ccy_add_date: "date",
-                        ccy_guid: "static"
-                    },
-                    option: {
-                        ccy_status: [
-                            {label: "啟用", value: 3},
-                            {label: "不啟用", value: -2}
-                        ]
-                    },
-                    label: {
-                        ccy_status: "狀態",
-                        ccy_name_zh_TW: "繁中名稱",
-                        ccy_name_zh_CN: "簡中名稱",
-                        ccy_name_en: "英文名稱",
-                        ccy_code: "代碼",
-                        ccy_udate: "更新時間",
-                        ccy_add_date: "新增時間",
-                        ccy_guid: "ID"
-                    },
-                    filter: {
-                        ccy_udate: "my-date",
-                        ccy_add_date: "my-date"
-                    },
-                    errMsg: {}
-                }
+                modalData: {}
             }
         },
         computed: {
@@ -85,7 +48,7 @@
             api.addCurrency({ccy_status:123})
         },
         ready() {
-            this.update()
+            this.dataReload()
 
         },
         components: {
@@ -107,14 +70,14 @@
                 this.modify(id)
             },
             onUpdate() {
-                this.update()
+                this.dataReload()
             },
             delete(id) {
-                this.handleRemove(api.delCurrency({ccy_guid: id}),this.update)
+                this.handleRemove(api.delCurrency({ccy_guid: id}),this.dataReload)
             }
         },
         methods: {
-            update() {
+            dataReload() {
                 console.log("onUpdate!")
                 this.$broadcast("onUpdate")
                 api.getCurrencyList().then(res=>{
@@ -127,19 +90,20 @@
                 $("#myModal").modal()
             },
             modify(id) {
-                this.modalData.title = "修改幣別項目"
-                this.modalData.id = id
                 api.showCurrency({ccy_guid: id}).then(res=>{
                     var data = res.data.currency
                     if(!res.code){
-                        this.modifyModal(data)
+                        this.modifyModal(id,data)
                         $('#myModal').modal()
                     }else{
                         this.handleError(res)
                     }
                 })
             },
-            modifyModal(data) {data
+            modifyModal(id,data) {
+                this.modalInit()
+                this.modalData.title = "修改幣別項目"
+                this.modalData.id = id
                 this.modalData.value = data
                 this.modalData.display = {
                     ccy_status: true,
@@ -152,7 +116,6 @@
                 }
             },
             createSubmit(_data) {
-
                 var data = {
                     ccy_status: _data.ccy_status,
                     ccy_name_zh_TW: _data.ccy_name_zh_TW,
@@ -165,7 +128,7 @@
                     if(!res.code){
                         $('#myModal').modal("hide")
                         swal("新增成功！").then(()=>{
-                            this.update()
+                            this.dataReload()
                         })
                     }else{
                         if(res.code===10006){
@@ -190,7 +153,7 @@
                     if(!res.code){
                         $('#myModal').modal("hide")
                         swal("修改成功！").then(()=>{
-                            this.update()
+                            this.dataReload()
                         })
                     }else{
                         if(res.code===10006){
@@ -201,8 +164,44 @@
                     }
                 })
             },
+            modalInit() {
+              this.modalData = {
+                  ready: false,
+                  title: "",
+                  id: null,
+                  display: {},
+                  value: {},
+                  type: {
+                      ccy_status: "radio",
+                      ccy_name_zh_TW: "text",
+                      ccy_name_zh_CN: "text",
+                      ccy_name_en: "text",
+                      ccy_code: "text",
+                      ccy_udate: "date",
+                      ccy_add_date: "date",
+                      ccy_guid: "static"
+                  },
+                  option: {
+                      ccy_status: [
+                          {label: "啟用", value: 3},
+                          {label: "不啟用", value: -2}
+                      ]
+                  },
+                  label: {
+                      ccy_status: "狀態",
+                      ccy_name_zh_TW: "繁中名稱",
+                      ccy_name_zh_CN: "簡中名稱",
+                      ccy_name_en: "英文名稱",
+                      ccy_code: "代碼",
+                      ccy_udate: "更新時間",
+                      ccy_add_date: "新增時間",
+                      ccy_guid: "ID"
+                  },
+                  errMsg: {}
+              }
+            },
             createModal() {
-
+                this.modalInit()
                 this.modalData.title = "新增幣別項目"
                 this.modalData.id = null
                 this.modalData.display = {
@@ -259,9 +258,8 @@
                 return tableData
             },
             formSubmit() {
-                console.log("you submit!")
-                console.dir(this.modalData.value)
-//                this.modalData.id ? this.modifySubmit(this.modalData.value) : this.createSubmit()
+                var data = this.modalData.value
+                this.modalData.id ? this.modifySubmit(data) : this.createSubmit(data)
             },
             closeModal() {
                 $('#myModal').modal("hide")

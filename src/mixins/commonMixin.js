@@ -34,7 +34,8 @@ export default {
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: '確認刪除'
+        confirmButtonText: '確認刪除',
+        cancelButtonText: "取消"
       }).then(function() {
         api.then(cb,()=>{
           swal("未刪除成功!");
