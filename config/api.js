@@ -1,9 +1,20 @@
 module.exports = (function(){
 
-  var host = "http://mid.tw/";
-  var local = "/";
 
-  function apiInit(method,url,data) {
+  var testMode = true
+  var host = testMode? "/" : "http://mid.tw/"
+
+  var router = {
+    setting: {
+      getList: {path: "/setting/get-list", type: "get"},
+      getItem: {path: "/setting/edit", type: "post"},
+      postNew: {path: "/setting/do-add", type: "post"},
+      delItem: {path: "/setting/do-del", type: "post"},
+      updateItem: {path: "/setting/do-edit", type: "post"}
+    }
+  }
+
+  var apiInit = function (method,url,data) {
     return $.ajax({
       method: method,
       url: host + url,
@@ -14,59 +25,19 @@ module.exports = (function(){
     })
   }
 
-  function apiTest(method,url,data) {
-    return $.ajax({
-      method: method,
-      url: local + url,
-      data: data
-    })
-  }
-
   return {
-    test: function() {
-      return apiTest('get','static/data/test.json')
-    },
-    getTestList: function(data) {
-      return apiTest('get','static/data/getTestList.json',data)
-    },
-    postTestList: function(data) {
-      return apiTest('post','static/data/getTestList.json',data)
-    },
-
-    getTestMenu: function(data) {
-      return apiTest('get','static/data/getTestMenu.json',data)
-    },
-    showTest: function(data) {
-      return apiTest('post','static/data/showTest.json', data)
-    },
-
-
-    getMenu: function() {
-      return apiInit('get','node/menu/get-menu')
-    },
-    getCurrencyList: function() {
-      return apiInit('get','currency/setting/get-list')
-    },
-    postCurrencyList: function(data) {
-      return apiInit('post','currency/setting/get-list',data)
-    },
-    addCurrency: function(data) {
-      return apiInit('post','currency/setting/do-add',data)
-    },
-    delCurrency: function(data) {
-      return apiInit('post','currency/setting/do-del',data)
-    },
-    editCurrency: function(data) {
-      return apiInit('post','currency/setting/do-edit',data)
-    },
-    showCurrency: function(data) {
-      return apiInit('post','currency/setting/edit',data)
+    setting: function(subject,action,data) {
+      var route = testMode? 'static/data/getTestList.json' : subject + router.setting[action].path
+      var type = testMode? 'get' : router.setting[action].type
+      return apiInit( type , route , data)
     },
     login: function(data) {
-      return apiInit('post','account/common/do-login',data)
+      return apiInit('post','account/common/do-login', data)
     },
-    getRoleList: function() {
-      return apiInit('get','role/role/get-list')
+    menu: function() {
+      var route = testMode? 'static/data/getTestMenu.json' : 'node/menu/get-menu'
+      return apiInit('get', route)
     }
   }
+
 })()
