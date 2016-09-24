@@ -1,8 +1,8 @@
 <template>
 
     <div>
-        <content-header :breadcrumb-list="breadcrumbList"></content-header>
-        <content-body></content-body>
+        <content-header :breadcrumb="breadcrumb"></content-header>
+        <!--<content-body :permission="permission" :table-data="tableData"></content-body>-->
 
         <Modal :modal-data="modalData" :form-submit="formSubmit" :close-modal="closeModal"></Modal>
     </div>
@@ -19,29 +19,35 @@
     export default {
         data () {
             return {
-                subject: "系統設置",
-                title: '幣別設定',
-                subTitle: "幣別設定的說明在這裡",
-                tableContent: {},
-                loading: false,
-                permission: 0,
-                pageData: {},
-                pageList: [],
-                breadcrumbList: [],
-                responseData: {},
-                tableColumns: [
-                    {title: '代碼'},
-                    {title: '英文名稱'},
-                    {title: '簡中名稱'},
-                    {title: '繁中名稱'},
-                    {title: '狀態'},
-                    {title: '最後更新時間'},
-                    {title: '控制'}
-                ],
+                resData: {},
+//                tableContent: {},
+//                loading: false,
+//                permission: 0,
+//                pageData: {},
+//                pageList: [],
+//                breadcrumbList: [],
+//                resData: {},
+//                tableColumns: [
+//                    {title: '代碼'},
+//                    {title: '英文名稱'},
+//                    {title: '簡中名稱'},
+//                    {title: '繁中名稱'},
+//                    {title: '狀態'},
+//                    {title: '最後更新時間'},
+//                    {title: '控制'}
+//                ],
                 modalData: {}
             }
         },
         computed: {
+            breadcrumb() {
+                return _.map(this.resData.data.breadcrumb,item=>{
+                    return {text: item.node_name_zh_TW,link: item.node_route}
+                })
+            },
+            tableData() {
+
+            }
         },
         created() {
             this.loading = true
@@ -77,6 +83,33 @@
             }
         },
         methods: {
+            handleSuccess(res) {
+                this.resData = res
+//                this.tableContent.data = this.makeTableData(res.data.list)
+//                this.tableContent.columns = this.tableColumns
+//                this.permission = this.checkPermission(res.data.permission)
+//                this.breadcrumbList = this.makeBreadCrumbList(res.data.breadcrumb)
+//                this.pageData = res.data.paginator
+//                this.pageList = this.makePageList(this.pageData.page_num, this.pageData.page)
+//                this.resData = res
+//                this.$broadcast("onReady")
+//                console.log("onReady!")
+            },
+            makeTableData(list){
+                var tableData = []
+                _.each(list,item=>{
+                    var itemArr = []
+                    itemArr.push(item.ccy_code)
+                    itemArr.push(item.ccy_name_en)
+                    itemArr.push(item.ccy_name_zh_CN)
+                    itemArr.push(item.ccy_name_zh_TW)
+                    itemArr.push(this.caseStatus(item.ccy_status))
+                    itemArr.push(new Date(item.ccy_udate*1000).toLocaleString())
+
+                    tableData.push({id: item.ccy_guid, tds: itemArr})
+                })
+                return tableData
+            },
             dataReload() {
                 console.log("onUpdate!")
                 this.$broadcast("onUpdate")
@@ -219,43 +252,6 @@
                     ccy_code: ""
                 }
 
-            },
-            handleSuccess(res) {
-                this.tableContent.data = this.makeTableData(res.data.list)
-                this.tableContent.columns = this.tableColumns
-                this.permission = this.checkPermission(res.data.permission)
-                this.breadcrumbList = this.makeBreadCrumbList(res.data.breadcrumb)
-                this.pageData = res.data.paginator
-                this.pageList = this.makePageList(this.pageData.page_num, this.pageData.page)
-                this.responseData = res
-                this.$broadcast("onReady")
-                console.log("onReady!")
-            },
-            makeBreadCrumbList(list) {
-                var breadcrumblist = []
-                _.each(list,(item,i,arr)=>{
-                    if(i===arr.length-1){
-                        breadcrumblist.push({text: item.node_name_en, isActive: true})
-                    }else{
-                        breadcrumblist.push({text: item.node_name_en, isActive: false})
-                    }
-                })
-                return breadcrumblist
-            },
-            makeTableData(list){
-                var tableData = []
-                _.each(list,item=>{
-                    var itemArr = []
-                    itemArr.push(item.ccy_code)
-                    itemArr.push(item.ccy_name_en)
-                    itemArr.push(item.ccy_name_zh_CN)
-                    itemArr.push(item.ccy_name_zh_TW)
-                    itemArr.push(this.caseStatus(item.ccy_status))
-                    itemArr.push(new Date(item.ccy_udate*1000).toLocaleString())
-
-                    tableData.push({id: item.ccy_guid, tds: itemArr})
-                })
-                return tableData
             },
             formSubmit() {
                 var data = this.modalData.value

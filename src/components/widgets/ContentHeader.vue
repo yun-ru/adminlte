@@ -1,7 +1,7 @@
 <template>
     <section class="content-header">
         <h1>
-            {{title}}
+            {{breadcrumb[0].text}}
         </h1>
         <ol class="breadcrumb">
             <li>
@@ -9,8 +9,9 @@
                     <i class="fa fa-home"></i> 首頁
                 </a>
             </li>
-            <li v-for="item in breadcrumbList" :class="{active: item.isActive}">
-                {{item.text}}
+            <li v-for="item in breadcrumb">
+                <a v-if="item.link" v-link="{path:'/' + item.link}">{{item.text}}</a>
+                <a v-if="!item.link">{{item.text}}</a>
             </li>
         </ol>
     </section>
@@ -22,11 +23,6 @@
           return {
           }
         },
-        computed: {
-            title() {
-                return this.breadcrumbList.length ? this.breadcrumbList[this.breadcrumbList.length-1].text : ""
-            }
-        },
-        props: ['breadcrumb-list']
+        props: ['breadcrumb']
     }
 </script>
