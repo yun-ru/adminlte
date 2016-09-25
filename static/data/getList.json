@@ -45,7 +45,7 @@
     },
     "paginator": {
       "sort": "ccy_id",
-      "sort_by": "DESC",
+      "sort_type": "DESC",
       "count": 3,
       "page_num": 1,
       "page": 1,

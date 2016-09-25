@@ -22,10 +22,13 @@ export default {
           }
         })
       }
+      var getTestRoute = function(action) {
+        return action === 'getList' ? 'static/data/getList.json' : 'static/data/getItem.json'
+      }
 
       return {
         setting: function(subject,action,data) {
-          var route = apiConfig.testMode? 'static/data/getTestList.json' : subject + router.setting[action].path
+          var route = apiConfig.testMode? getTestRoute(action) : subject + router.setting[action].path
           var type = apiConfig.testMode? 'get' : router.setting[action].type
           return apiInit( type , route , data)
         },
@@ -33,7 +36,7 @@ export default {
           return apiInit('post','account/common/do-login', data)
         },
         menu: function() {
-          var route = apiConfig.testMode? 'static/data/getTestMenu.json' : 'node/menu/get-menu'
+          var route = apiConfig.testMode? 'static/data/getMenu.json' : 'node/menu/get-menu'
           return apiInit('get', route)
         }
       }
