@@ -13,6 +13,7 @@ import VueValidator from 'vue-validator'
 // Pages
 import Currency from './components/pages/base/Currency.vue'
 import Role from './components/pages/base/Role.vue'
+import Permission from './components/pages/base/Permission.vue'
 
 
 Vue.use(VueRouter)
@@ -49,8 +50,8 @@ router.map({
       '/role/setting/getList': {
         component: Role
       },
-      '/base/permission': {
-        component: Currency
+      '/role/assign/show': {
+        component: Permission
       },
       '/currency/setting/getList': {
         component: Currency

@@ -29,7 +29,9 @@ export default {
     computed: {
         permissionBtn() {
             return {
+                show: this.permission[0]-0,
                 edit: this.permission[1]-0,
+                add: this.permission[2]-0,
                 del: this.permission[3]-0
             }
         }

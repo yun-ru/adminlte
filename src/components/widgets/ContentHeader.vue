@@ -18,7 +18,7 @@
 <script>
     export default {
         computed: {
-            title() { return this.breadcrumb ? this.breadcrumb[0].text : ""}
+            title() { return this.breadcrumb ? this.breadcrumb[this.breadcrumb.length-1].text : ""}
         },
         props: ['breadcrumb']
     }

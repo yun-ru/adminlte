@@ -30,6 +30,7 @@
     import apiMixin from '../../../mixins/apiMixin'
 
     export default {
+        mixins: [tableMixin, commonMixin, apiMixin],
         data () {
             return {
                 resData: null,
@@ -270,8 +271,7 @@
                 var data = this.modalData.value
                 this.modalData.id ? this.modifySubmit(data) : this.createSubmit(data)
             }
-        },
-        mixins: [tableMixin, commonMixin, apiMixin]
+        }
     }
 </script>
 

@@ -6,6 +6,7 @@ export default {
                 setting: {
                     getList: {path: "/setting/get-list", type: "get"},
                     getItem: {path: "/setting/edit", type: "post"},
+                    showItem: {path: "/setting/show", type: "post"},
                     postNew: {path: "/setting/do-add", type: "post"},
                     delItem: {path: "/setting/do-del", type: "post"},
                     updateItem: {path: "/setting/do-edit", type: "post"}
@@ -39,6 +40,18 @@ export default {
                 menu: function() {
                     var route = apiConfig.testMode? 'static/data/getMenu.json' : 'node/menu/get-menu'
                     return apiInit('get', route)
+                },
+                assignShow: function() {
+                    var route = apiConfig.testMode? 'static/data/showRole.json' : 'role/assign/show'
+                    return apiInit('get', route)
+                },
+                assignEdit: function(data) {
+                    var route = apiConfig.testMode? 'static/data/showRole.json' : 'role/assign/edit'
+                    return apiInit('post', route, data)
+                },
+                assignEditSubmit: function(data) {
+                    var route = apiConfig.testMode? 'static/data/showRole.json' : 'role/assign/do-edit'
+                    return apiInit('post', route, data)
                 }
             }
         }
