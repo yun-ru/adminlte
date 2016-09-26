@@ -1,8 +1,6 @@
 <template>
     <section class="content-header">
-        <h1>
-            {{breadcrumb[0].text}}
-        </h1>
+        <h1>{{title}}</h1>
         <ol class="breadcrumb">
             <li>
                 <a v-link="{path:'/'}">
@@ -19,9 +17,8 @@
 
 <script>
     export default {
-        data() {
-          return {
-          }
+        computed: {
+            title() { return this.breadcrumb ? this.breadcrumb[0].text : ""}
         },
         props: ['breadcrumb']
     }

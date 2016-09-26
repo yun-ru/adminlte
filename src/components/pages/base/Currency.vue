@@ -1,8 +1,19 @@
 <template>
 
     <div>
-        <content-header :breadcrumb="breadcrumb"></content-header>
-        <!--<content-body :permission="permission" :table-data="tableData"></content-body>-->
+        <content-header v-if="resData" :breadcrumb="breadcrumb"></content-header>
+        <content-body v-if="resData"
+                      :permission="permission"
+                      :table-data="tableData"
+                      :test-table-data="testTableData"
+                      :data-reload="dataReload"
+                      :on-modify="onModify"
+                      :on-create="onCreate"
+                      :on-delete="onDelete"
+                      :pagination="pagination"
+                      :data-label="dataLabel"
+                      :change-page="changePage"
+        ></content-body>
 
         <Modal :modal-data="modalData" :form-submit="formSubmit" :close-modal="closeModal"></Modal>
     </div>
@@ -10,94 +21,79 @@
 </template>
 
 <script>
-    import api from '../../../../config/api.js'
     import ContentHeader from '../../widgets/ContentHeader.vue'
     import ContentBody from '../../widgets/ContentBody.vue'
     import Modal from '../../widgets/Modal.vue'
     import tableMixin from '../../../mixins/tableMixin'
     import commonMixin from '../../../mixins/commonMixin'
+    import apiMixin from '../../../mixins/apiMixin'
+
     export default {
         data () {
             return {
-                resData: {},
-//                tableContent: {},
-//                loading: false,
-//                permission: 0,
-//                pageData: {},
-//                pageList: [],
-//                breadcrumbList: [],
-//                resData: {},
-//                tableColumns: [
-//                    {title: '代碼'},
-//                    {title: '英文名稱'},
-//                    {title: '簡中名稱'},
-//                    {title: '繁中名稱'},
-//                    {title: '狀態'},
-//                    {title: '最後更新時間'},
-//                    {title: '控制'}
-//                ],
-                modalData: {}
+                resData: null,
+                subject: "currency",
+                modalData: {},
+                dataLabel: {
+                    ccy_status: "狀態",
+                    ccy_name_zh_TW: "繁中名稱",
+                    ccy_name_zh_CN: "簡中名稱",
+                    ccy_name_en: "英文名稱",
+                    ccy_code: "代碼",
+                    ccy_udate: "更新時間",
+                    ccy_add_date: "新增時間",
+                    ccy_guid: "ID",
+                    ccy_id: "_ID"
+                }
             }
         },
         computed: {
+            pagination() {
+                return this.resData.data.paginator
+            },
             breadcrumb() {
                 return _.map(this.resData.data.breadcrumb,item=>{
                     return {text: item.node_name_zh_TW,link: item.node_route}
                 })
             },
+            permission() {
+                return (this.resData.data.permission >>> 0).toString(2)
+            },
+            testTableData() {
+                var list = this.resData.data.list
+                var columns = this.dataLabel
+                var display = {
+                    ccy_status: true,
+                    ccy_name_zh_TW: true,
+                    ccy_name_zh_CN: true,
+                    ccy_name_en: true,
+                    ccy_code: true,
+                    ccy_udate: true,
+                    ccy_add_date: false
+                }
+
+                var filter = {
+                    ccy_status: "status",
+                    ccy_udate: "date",
+                    ccy_add_date: "date"
+                }
+
+                var controller = {
+                    title: "控制",
+                    btns: ['edit','del']
+                }
+
+                return {
+                    list,
+                    columns,
+                    display,
+                    filter,
+                    controller
+                }
+            },
             tableData() {
-
-            }
-        },
-        created() {
-            this.loading = true
-            api.addCurrency({ccy_status:123})
-        },
-        ready() {
-            this.dataReload()
-
-        },
-        components: {
-            ContentHeader,
-            ContentBody,
-            Modal
-        },
-        events: {
-            onCreate() {
-                this.create()
-            },
-            onSubmitNew(data) {
-                this.createSubmit(data)
-            },
-            onSubmitModify(data) {
-                this.modifySubmit(data)
-            },
-            modify(id) {
-                this.modify(id)
-            },
-            onUpdate() {
-                this.dataReload()
-            },
-            delete(id) {
-                this.handleRemove(api.delCurrency({ccy_guid: id}),this.dataReload)
-            }
-        },
-        methods: {
-            handleSuccess(res) {
-                this.resData = res
-//                this.tableContent.data = this.makeTableData(res.data.list)
-//                this.tableContent.columns = this.tableColumns
-//                this.permission = this.checkPermission(res.data.permission)
-//                this.breadcrumbList = this.makeBreadCrumbList(res.data.breadcrumb)
-//                this.pageData = res.data.paginator
-//                this.pageList = this.makePageList(this.pageData.page_num, this.pageData.page)
-//                this.resData = res
-//                this.$broadcast("onReady")
-//                console.log("onReady!")
-            },
-            makeTableData(list){
-                var tableData = []
-                _.each(list,item=>{
+                var data = []
+                _.each(this.resData.data.list,item=>{
                     var itemArr = []
                     itemArr.push(item.ccy_code)
                     itemArr.push(item.ccy_name_en)
@@ -106,37 +102,81 @@
                     itemArr.push(this.caseStatus(item.ccy_status))
                     itemArr.push(new Date(item.ccy_udate*1000).toLocaleString())
 
-                    tableData.push({id: item.ccy_guid, tds: itemArr})
+                    data.push({id: item.ccy_guid, tds: itemArr})
                 })
-                return tableData
-            },
+                var columns = [
+                    {title: '代碼'},
+                    {title: '英文名稱'},
+                    {title: '簡中名稱'},
+                    {title: '繁中名稱'},
+                    {title: '狀態'},
+                    {title: '最後更新時間'},
+                    {title: '控制'}
+                ]
+                return {
+                    data: data,
+                    columns: columns
+                }
+            }
+        },
+        ready() {
+            this.dataReload()
+        },
+        components: {
+            ContentHeader,
+            ContentBody,
+            Modal
+        },
+        methods: {
             dataReload() {
-                console.log("onUpdate!")
-                this.$broadcast("onUpdate")
-                api.getCurrencyList().then(res=>{
-                    res.code===0 ? this.handleSuccess(res) : this.handleError(res)
-                    this.loading = false
-                })
-            },
-            create() {
-                this.createModal()
-                $("#myModal").modal()
-            },
-            modify(id) {
-                api.showCurrency({ccy_guid: id}).then(res=>{
-                    var data = res.data.currency
-                    if(!res.code){
-                        this.modifyModal(id,data)
-                        $('#myModal').modal()
+                this.api.setting(this.subject,"getList").then(res=>{
+                    if(res.code===0) {
+                        this.resData = res
                     }else{
                         this.handleError(res)
                     }
                 })
             },
-            modifyModal(id,data) {
+            onCreate() {
+                this.createReady()
+                this.openModal()
+            },
+            onModify(id) {
+                this.api.setting(this.subject,"getItem",{ccy_guid: id}).then(res=>{
+                    if(res.code===0){
+                        this.modifyReady(res.data.currency)
+                        this.openModal()
+                    }else{
+                        this.handleError(res)
+                    }
+                })
+            },
+            onDelete(id) {
+                swal({
+                    title: '確認刪除?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: '刪除',
+                    cancelButtonText: '取消',
+                }).then(()=> {
+                    this.api.setting(this.subject, 'delItem', {ccy_guid: id}).then(res=>{
+                        if(res.code===0){
+                            swal("刪除成功！").then(()=> this.dataReload())
+                        }else{
+                            this.handleError(res)
+                        }
+                    })
+                }, (dismiss)=> {
+                    if (dismiss === 'cancel') {
+                        swal('刪除已取消');
+                    }
+                });
+
+            },
+            modifyReady(data) {
                 this.modalInit()
                 this.modalData.title = "修改幣別項目"
-                this.modalData.id = id
+                this.modalData.id = data.ccy_guid
                 this.modalData.value = data
                 this.modalData.display = {
                     ccy_status: true,
@@ -157,18 +197,12 @@
                     ccy_code: _data.ccy_code
                 }
 
-                api.addCurrency(data).then(res=>{
-                    if(!res.code){
-                        $('#myModal').modal("hide")
-                        swal("新增成功！").then(()=>{
-                            this.dataReload()
-                        })
+                this.api.setting(this.subject,'postNew',data).then(res=>{
+                    if(res.code===0){
+                        this.closeModal()
+                        swal("新增成功！").then(()=> this.dataReload())
                     }else{
-                        if(res.code===10006){
-                            this.modalData.errMsg = res.text
-                        }else{
-                            swal("新增失敗！")
-                        }
+                        this.handleError(res)
                     }
 
                 })
@@ -182,58 +216,43 @@
                     ccy_name_en: _data.ccy_name_en,
                     ccy_code: _data.ccy_code
                 }
-                api.editCurrency(data).then(res=>{
+                this.api.setting(this.subject,'updateItem',data).then(res=>{
                     if(!res.code){
-                        $('#myModal').modal("hide")
-                        swal("修改成功！").then(()=>{
-                            this.dataReload()
-                        })
+                        this.closeModal()
+                        swal("修改成功！").then(()=>this.dataReload())
                     }else{
-                        if(res.code===10006){
-                            this.modalData.errMsg = res.text
-                        }else{
-                            swal("修改失敗！")
-                        }
+                        this.handleError(res)
                     }
                 })
             },
             modalInit() {
-              this.modalData = {
-                  ready: false,
-                  title: "",
-                  id: null,
-                  display: {},
-                  value: {},
-                  type: {
-                      ccy_status: "radio",
-                      ccy_name_zh_TW: "text",
-                      ccy_name_zh_CN: "text",
-                      ccy_name_en: "text",
-                      ccy_code: "text",
-                      ccy_udate: "date",
-                      ccy_add_date: "date",
-                      ccy_guid: "static"
-                  },
-                  option: {
-                      ccy_status: [
-                          {label: "啟用", value: 3},
-                          {label: "不啟用", value: -2}
-                      ]
-                  },
-                  label: {
-                      ccy_status: "狀態",
-                      ccy_name_zh_TW: "繁中名稱",
-                      ccy_name_zh_CN: "簡中名稱",
-                      ccy_name_en: "英文名稱",
-                      ccy_code: "代碼",
-                      ccy_udate: "更新時間",
-                      ccy_add_date: "新增時間",
-                      ccy_guid: "ID"
-                  },
-                  errMsg: {}
-              }
+                this.modalData = {
+                    ready: false,
+                    title: "",
+                    id: null,
+                    display: {},
+                    value: {},
+                    type: {
+                        ccy_status: "radio",
+                        ccy_name_zh_TW: "text",
+                        ccy_name_zh_CN: "text",
+                        ccy_name_en: "text",
+                        ccy_code: "text",
+                        ccy_udate: "date",
+                        ccy_add_date: "date",
+                        ccy_guid: "static"
+                    },
+                    option: {
+                        ccy_status: [
+                            {label: "啟用", value: 3},
+                            {label: "不啟用", value: -2}
+                        ]
+                    },
+                    label: this.dataLabel,
+                    errMsg: {}
+                }
             },
-            createModal() {
+            createReady() {
                 this.modalInit()
                 this.modalData.title = "新增幣別項目"
                 this.modalData.id = null
@@ -256,12 +275,9 @@
             formSubmit() {
                 var data = this.modalData.value
                 this.modalData.id ? this.modifySubmit(data) : this.createSubmit(data)
-            },
-            closeModal() {
-                $('#myModal').modal("hide")
             }
         },
-        mixins: [tableMixin,commonMixin]
+        mixins: [tableMixin, commonMixin, apiMixin]
     }
 </script>
 

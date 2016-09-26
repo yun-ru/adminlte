@@ -3,11 +3,11 @@
         <table id="example" class="table table-striped table-bordered">
             <thead>
             <tr>
-                <th v-for="item in tableContent.columns">{{item.title}}</th>
+                <th v-for="item in tableData.columns">{{item.title}}</th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="item in tableContent.data" track-by="$index">
+            <tr v-for="item in tableData.data" track-by="$index">
                 <td v-for="subItem in item.tds" track-by="$index">{{subItem}}</td>
                 <td>
                     <button class="btn btn-default btn-xs" type="button" v-if="permission[1]-0" @click="onModify(item.id)">修改</button>
@@ -27,15 +27,7 @@
 
             }
         },
-        props: ['table-content','permission'],
-        methods: {
-            onModify(id) {
-                this.$dispatch("onModify",id)
-            },
-            onDelete(id) {
-                this.$dispatch("onDelete",id)
-            }
-        }
+        props: ['table-data','permission','onModify','onDelete']
     }
 </script>
 

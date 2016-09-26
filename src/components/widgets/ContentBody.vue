@@ -2,22 +2,24 @@
     <section class="content">
         <div class="box box-success">
             <div class="box-header with-border">
-                <div class="controller">
+                <div class="controller" v-if="permission">
                     <div class="btn-group pull-left">
                         <a class="btn btn-sm btn-default btn-flat"><i class="fa fa-arrow-left"></i><span v-if="winType !== 'xs'">返回</span></a>
-                        <a class="btn btn-sm btn-default btn-flat" @click="onUpdate"><i class="fa fa-undo"></i><span v-if="winType !== 'xs'">更新</span></a>
+                        <a class="btn btn-sm btn-default btn-flat" @click="dataReload"><i class="fa fa-undo"></i><span v-if="winType !== 'xs'">更新</span></a>
                         <a class="btn btn-sm btn-success btn-flat" v-if="permission[2]-0" @click="onCreate"><i class="fa fa-plus"></i><span v-if="winType !== 'xs'">新增</span></a>
                     </div>
                     <search-input></search-input>
                 </div>
-            </div><!-- /.box-header -->
-            <div class="box-body">
-                <my-table :table-content="tableContent" :permission="permission"></my-table>
-                <pagination :data="pageData" :page-list="pageList"></pagination>
-            </div><!-- /.box-body -->
-            <div v-if="loading" class="overlay" transition>
-                <i class="fa fa-refresh fa-spin"></i>
             </div>
+            <div class="box-body">
+
+                <test-table v-if="permission" :test-table-data="testTableData" :permission="permission" :on-modify="onModify" :on-delete="onDelete"></test-table>
+                <pagination v-if="pagination" :pagination="pagination" :data-label="dataLabel" :change-page="changePage"></pagination>
+
+            </div>
+            <!--<div v-if="loading" class="overlay" transition>-->
+            <!--<i class="fa fa-refresh fa-spin"></i>-->
+            <!--</div>-->
 
         </div>
     </section>
@@ -26,56 +28,20 @@
 
 <script>
     import RWD from '../../mixins/rwd'
+    import commonMixin from '../../mixins/commonMixin'
     import MyTable from '../widgets/MyTable.vue'
+    import TestTable from '../widgets/TestTable.vue'
     import SearchInput from '../widgets/Search.vue'
     import Pagination from '../widgets/Pagination.vue'
-    import api from '../../../config/api'
 
     export default {
-        mixins: [RWD],
-        data() {
-            return {
-                data: {},
-                tableContent: {},
-                permission: "",
-                pageData: {},
-                pageList: []
-            }
-        },
-        events: {
-            onReady() {
-                this.data = this.$parent.$data.responseData.data
-                this.tableContent = this.$parent.$data.tableContent
-                this.permission = this.$parent.$data.permission
-                this.pageData = this.$parent.$data.pageData
-                this.pageList = this.$parent.$data.pageList
-            },
-            onModify(id) {
-                this.$dispatch("modify", id)
-            },
-            onDelete(id) {
-                this.$dispatch("delete", id)
-            },
-            onUpdate() {
-                this.tableContent = {}
-            }
-        },
-        methods: {
-            onCreate() {
-                this.$dispatch("onCreate")
-
-            },
-            onUpdate() {
-                this.$dispatch("onUpdate")
-            },
-            goBack() {
-                console.log("go back!")
-            }
-        },
+        mixins: [RWD,commonMixin],
+        props: ['tableData','permission','dataReload','onModify','onCreate','onDelete','pagination','dataLabel','changePage','testTableData'],
         components: {
-            MyTable,
             SearchInput,
-            Pagination
+            MyTable,
+            Pagination,
+            TestTable
         }
     }
 </script>
