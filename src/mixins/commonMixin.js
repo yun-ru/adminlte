@@ -1,5 +1,10 @@
 
 export default {
+    data() {
+      return {
+          msg: "good!"
+      }
+    },
     filters: {
         myDate(data) {
             return new Date(data*1000).toLocaleString()

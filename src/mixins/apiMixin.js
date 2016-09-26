@@ -61,7 +61,6 @@ export default {
                     break
                 case 10006:
                     this.modalData.errMsg = res.text
-                    swal(errMsg)
                     break
                 case 30006:
                     this.$router.go({path: "/login"});
