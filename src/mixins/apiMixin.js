@@ -66,6 +66,9 @@ export default {
                     this.$router.go({path: "/login"});
                     swal(errMsg)
                     break
+                default:
+                    swal(errMsg)
+                    break
             }
 
 

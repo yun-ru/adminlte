@@ -16,6 +16,22 @@ export default {
                 case -2:
                     return '停用'
             }
+        },
+        allowEdit(val) {
+            switch (val){
+                case 'CUSTOM':
+                    return '可'
+                default:
+                    return '不可'
+            }
+        }
+    },
+    computed: {
+        permissionBtn() {
+            return {
+                edit: this.permission[1]-0,
+                del: this.permission[3]-0
+            }
         }
     },
     methods: {

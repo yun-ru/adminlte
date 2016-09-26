@@ -1,163 +1,277 @@
 <template>
 
     <div>
-        <content-header :title="title" :sub-title="subTitle" :breadcrumb-list="breadcrumbList"></content-header>
+        <content-header v-if="resData" :breadcrumb="breadcrumb"></content-header>
+        <content-body v-if="resData"
+                      :code="code"
+                      :permission="permission"
+                      :table-data="tableData"
+                      :test-table-data="testTableData"
+                      :data-reload="dataReload"
+                      :on-modify="onModify"
+                      :on-create="onCreate"
+                      :on-delete="onDelete"
+                      :pagination="pagination"
+                      :data-label="dataLabel"
+                      :change-page="changePage"
+        ></content-body>
 
-
-        <content-body :title="title" @open-modal="openModal">
-            <div class="controller" slot="controller">
-
-                <!--<a class="btn btn-sm btn-success btn-flat pull-right"><i class="fa fa-plus"></i><span v-if="winType !== 'xs'">新增項目</span></a>-->
-            </div>
-            <template slot="pagination">
-                <pagination :data="pageData" :page-list="pageList"></pagination>
-            </template>
-        </content-body>
-
-
-        <Modal :title="title">
-            <form class="form-horizontal" slot="main">
-                <div class="form-group">
-                    <label for="item01" class="col-sm-2 control-label">項目一</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="item01" placeholder="請輸入項目一">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="item02" class="col-sm-2 control-label">項目二</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="item02" placeholder="請輸入項目二">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">項目三</label>
-                    <div class="col-sm-10">
-                        <label class="checkbox-inline">
-                            <input type="checkbox" value="option1"> 1
-                        </label>
-                        <label class="checkbox-inline">
-                            <input type="checkbox" value="option2"> 2
-                        </label>
-                        <label class="checkbox-inline">
-                            <input type="checkbox" value="option3"> 3
-                        </label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">項目四</label>
-                    <div class="col-sm-10">
-                        <label class="radio-inline">
-                            <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> 1
-                        </label>
-                        <label class="radio-inline">
-                            <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 2
-                        </label>
-                        <label class="radio-inline">
-                            <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> 3
-                        </label>
-                    </div>
-                </div>
-
-            </form>
-        </Modal>
+        <Modal :modal-data="modalData" :form-submit="formSubmit" :close-modal="closeModal"></Modal>
     </div>
 
 </template>
 
 <script>
-    import api from '../../../../config/api.js'
-    import Pagination from '../../widgets/Pagination.vue'
     import ContentHeader from '../../widgets/ContentHeader.vue'
     import ContentBody from '../../widgets/ContentBody.vue'
     import Modal from '../../widgets/Modal.vue'
     import tableMixin from '../../../mixins/tableMixin'
     import commonMixin from '../../../mixins/commonMixin'
+    import apiMixin from '../../../mixins/apiMixin'
+
     export default {
         data () {
             return {
-                subject: "系統設置",
-                title: '幣別設定',
-                subTitle: "幣別設定的說明在這裡",
-                dataContent: {},
-                loading: false,
-                permission: 0,
-                pageData: {},
-                pageList: [],
-                breadcrumbList: [],
-                responseData: {},
-                tableColumns: [
-                    {title: '代碼'},
-                    {title: '英文名稱'},
-                    {title: '簡中名稱'},
-                    {title: '繁中名稱'},
-                    {title: '狀態'},
-                    {title: '最後更新時間'},
-                    {title: '控制'}
-                ]
+                resData: null,
+                subject: "role",
+                code: "role",
+                guildName: "role_guid",
+                modalData: {},
+                dataLabel: {
+                    role_specific: "編輯",
+                    role_status: "狀態",
+                    role_name_zh_TW: "繁中名稱",
+                    role_name_zh_CN: "簡中名稱",
+                    role_name_en: "英文名稱",
+                    role_description_zh_TW: "繁中說明",
+                    role_description_zh_CN: "簡中說明",
+                    role_description_en: "英文說明",
+                    role_udate: "更新時間",
+                    role_add_date: "新增時間",
+                    role_guid: "ID",
+                    role_id: "_ID"
+                }
             }
         },
-        created() {
-            this.loading = true
+        computed: {
+            pagination() {
+                return this.resData.data.paginator
+            },
+            breadcrumb() {
+                return _.map(this.resData.data.breadcrumb,item=>{
+                    return {text: item.node_name_zh_TW,link: item.node_route}
+                })
+            },
+            permission() {
+                return (this.resData.data.permission >>> 0).toString(2)
+            },
+            testTableData() {
+                var list = this.resData.data.list.map(item=>{return {...item, id: item[this.code+'_guid']}})
+                var columns = this.dataLabel
+                var display = {
+                    role_status: true,
+                    role_name_zh_TW: true,
+                    role_name_zh_CN: true,
+                    role_name_en: true,
+                    role_description_zh_TW: true,
+                    role_description_zh_CN: true,
+                    role_description_en: true,
+                    role_udate: true,
+                    role_specific: false
+                }
+
+                var filter = {
+                    role_status: "status",
+                    role_udate: "date",
+                    role_add_date: "date",
+                    role_specific: "edit"
+                }
+
+                var controller = {
+                    title: "控制",
+                    btns: ['edit','del']
+                }
+
+                return {
+                    list,
+                    columns,
+                    display,
+                    filter,
+                    controller
+                }
+            }
         },
         ready() {
-            var run = async function () {
-                let res = await api.getCurrencyList()
-                res.code>0 ? this.handleError(res) : this.handleSuccess(res)
-                this.loading = false
-            }
-            run.call(this)
+            this.dataReload()
         },
         components: {
             ContentHeader,
             ContentBody,
-            Modal,
-            Pagination
-        },
-        events: {
-            tableOk() {
-                console.log("child say ok")
-            }
+            Modal
         },
         methods: {
-            handleSuccess(res) {
-                this.dataContent.data = this.makeTableData(res.data.list)
-                this.dataContent.columns = this.tableColumns
-                this.permission = this.checkPermission(res.data.permission)
-                this.breadcrumbList = this.makeBreadCrumbList(res.data.breadcrumb)
-                this.pageData = res.data.paginator
-                this.pageList = this.makePageList(this.pageData.page_num, this.pageData.page)
-                this.responseData = res
-                this.$broadcast("onReady")
-                console.log("mom")
-            },
-            makeBreadCrumbList(list) {
-                var breadcrumblist = []
-                _.each(list,(item,i,arr)=>{
-                    if(i===arr.length-1){
-                        breadcrumblist.push({text: item.node_name_en, isActive: true})
+            dataReload() {
+                this.api.setting(this.subject,"getList").then(res=>{
+                    if(res.code===0) {
+                        this.resData = res
                     }else{
-                        breadcrumblist.push({text: item.node_name_en, isActive: false})
+                        this.handleError(res)
                     }
                 })
-                return breadcrumblist
             },
-            makeTableData(list){
-                var tableData = []
-                _.each(list,item=>{
-                    var itemArr = []
-                    itemArr.push(item.ccy_code)
-                    itemArr.push(item.ccy_name_en)
-                    itemArr.push(item.ccy_name_zh_CN)
-                    itemArr.push(item.ccy_name_zh_TW)
-                    itemArr.push(this.caseStatus(item.ccy_status))
-                    itemArr.push(new Date(item.ccy_udate*1000).toLocaleString())
-
-                    tableData.push(itemArr)
+            onCreate() {
+                this.createReady()
+                this.openModal()
+            },
+            onModify(id) {
+                this.api.setting(this.subject,"getItem",{role_guid: id}).then(res=>{
+                    if(res.code===0){
+                        this.modifyReady(res.data[this.subject])
+                        this.openModal()
+                    }else{
+                        this.handleError(res)
+                    }
                 })
-                return tableData
             },
+            modifyReady(data) {
+                this.modalInit()
+                this.modalData.title = "修改幣別項目"
+                this.modalData.id = data.role_guid
+                this.modalData.value = data
+                this.modalData.display = {
+                    role_status: true,
+                    role_name_zh_TW: true,
+                    role_name_zh_CN: true,
+                    role_name_en: true,
+                    role_description_zh_TW: true,
+                    role_description_zh_CN: true,
+                    role_description_en: true,
+                    role_udate: true,
+                    role_add_date: true
+                }
+            },
+            modifySubmit(_data) {
+                var data = {
+                    role_guid: this.modalData.id,
+                    role_status: _data.role_status,
+                    role_name_zh_TW: _data.role_name_zh_TW || "",
+                    role_name_zh_CN: _data.role_name_zh_CN || "",
+                    role_name_en: _data.role_name_en || "",
+                    role_description_zh_TW: _data.role_description_zh_TW || "",
+                    role_description_zh_CN: _data.role_description_zh_CN || "",
+                    role_description_en: _data.role_description_en || "",
+                }
+                this.api.setting(this.subject,'updateItem',data).then(res=>{
+                    if(!res.code){
+                        this.closeModal()
+                        swal("修改成功！").then(()=>this.dataReload())
+                    }else{
+                        this.handleError(res)
+                    }
+                })
+            },
+            onDelete(id) {
+                swal({
+                    title: '確認刪除?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: '刪除',
+                    cancelButtonText: '取消',
+                }).then(()=> {
+                    this.api.setting(this.subject, 'delItem', {role_guid: id}).then(res=>{
+                        if(res.code===0){
+                            swal("刪除成功！").then(()=> this.dataReload())
+                        }else{
+                            this.handleError(res)
+                        }
+                    })
+                }, (dismiss)=> {
+                    if (dismiss === 'cancel') {
+                        swal('刪除已取消');
+                    }
+                });
+
+            },
+            createSubmit(_data) {
+                var data = {
+                    role_status: _data.role_status,
+                    role_name_zh_TW: _data.role_name_zh_TW,
+                    role_name_zh_CN: _data.role_name_zh_CN,
+                    role_name_en: _data.role_name_en,
+                    role_description_zh_TW: _data.role_description_zh_TW,
+                    role_description_zh_CN: _data.role_description_zh_CN,
+                    role_description_en: _data.role_description_en,
+                }
+
+                this.api.setting(this.subject,'postNew',data).then(res=>{
+                    if(res.code===0){
+                        this.closeModal()
+                        swal("新增成功！").then(()=> this.dataReload())
+                    }else{
+                        this.handleError(res)
+                    }
+
+                })
+            },
+            modalInit() {
+                this.modalData = {
+                    ready: false,
+                    title: "",
+                    id: null,
+                    display: {},
+                    value: {},
+                    type: {
+                        role_status: "radio",
+                        role_name_zh_TW: "text",
+                        role_name_zh_CN: "text",
+                        role_name_en: "text",
+                        role_description_zh_TW: "text",
+                        role_description_zh_CN: "text",
+                        role_description_en: "text",
+                        role_udate: "date",
+                        role_add_date: "date",
+                        role_guid: "static"
+                    },
+                    option: {
+                        role_status: [
+                            {label: "啟用", value: 3},
+                            {label: "不啟用", value: -2}
+                        ]
+                    },
+                    label: this.dataLabel,
+                    errMsg: {}
+                }
+            },
+            createReady() {
+                this.modalInit()
+                this.modalData.title = "新增幣別項目"
+                this.modalData.id = null
+                this.modalData.display = {
+                    role_status: true,
+                    role_name_zh_TW: true,
+                    role_name_zh_CN: true,
+                    role_name_en: true,
+                    role_description_zh_TW: true,
+                    role_description_zh_CN: true,
+                    role_description_en: true
+                }
+                this.modalData.value = {
+                    role_status: 3,
+                    role_name_zh_TW: "",
+                    role_name_zh_CN: "",
+                    role_name_en: "",
+                    role_description_zh_TW: "",
+                    role_description_zh_CN: "",
+                    role_description_en: ""
+                }
+
+            },
+            formSubmit() {
+                var data = this.modalData.value
+                this.modalData.id ? this.modifySubmit(data) : this.createSubmit(data)
+            }
         },
-        mixins: [tableMixin,commonMixin]
+        mixins: [tableMixin, commonMixin, apiMixin]
     }
 </script>
 

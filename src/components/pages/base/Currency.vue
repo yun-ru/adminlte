@@ -3,6 +3,7 @@
     <div>
         <content-header v-if="resData" :breadcrumb="breadcrumb"></content-header>
         <content-body v-if="resData"
+                      :code="code"
                       :permission="permission"
                       :table-data="tableData"
                       :test-table-data="testTableData"
@@ -33,6 +34,7 @@
             return {
                 resData: null,
                 subject: "currency",
+                code: "ccy",
                 modalData: {},
                 dataLabel: {
                     ccy_status: "狀態",
@@ -60,7 +62,7 @@
                 return (this.resData.data.permission >>> 0).toString(2)
             },
             testTableData() {
-                var list = this.resData.data.list
+                var list = this.resData.data.list.map(item=>{return {...item, id: item[this.code+'_guid']}})
                 var columns = this.dataLabel
                 var display = {
                     ccy_status: true,
@@ -89,33 +91,6 @@
                     display,
                     filter,
                     controller
-                }
-            },
-            tableData() {
-                var data = []
-                _.each(this.resData.data.list,item=>{
-                    var itemArr = []
-                    itemArr.push(item.ccy_code)
-                    itemArr.push(item.ccy_name_en)
-                    itemArr.push(item.ccy_name_zh_CN)
-                    itemArr.push(item.ccy_name_zh_TW)
-                    itemArr.push(this.caseStatus(item.ccy_status))
-                    itemArr.push(new Date(item.ccy_udate*1000).toLocaleString())
-
-                    data.push({id: item.ccy_guid, tds: itemArr})
-                })
-                var columns = [
-                    {title: '代碼'},
-                    {title: '英文名稱'},
-                    {title: '簡中名稱'},
-                    {title: '繁中名稱'},
-                    {title: '狀態'},
-                    {title: '最後更新時間'},
-                    {title: '控制'}
-                ]
-                return {
-                    data: data,
-                    columns: columns
                 }
             }
         },

@@ -13,7 +13,7 @@
             </div>
             <div class="box-body">
 
-                <test-table v-if="permission" :test-table-data="testTableData" :permission="permission" :on-modify="onModify" :on-delete="onDelete"></test-table>
+                <test-table v-if="permission" :code="code" :test-table-data="testTableData" :permission="permission" :on-modify="onModify" :on-delete="onDelete"></test-table>
                 <pagination v-if="pagination" :pagination="pagination" :data-label="dataLabel" :change-page="changePage"></pagination>
 
             </div>
@@ -36,7 +36,7 @@
 
     export default {
         mixins: [RWD,commonMixin],
-        props: ['tableData','permission','dataReload','onModify','onCreate','onDelete','pagination','dataLabel','changePage','testTableData'],
+        props: ['code','tableData','permission','dataReload','onModify','onCreate','onDelete','pagination','dataLabel','changePage','testTableData'],
         components: {
             SearchInput,
             MyTable,

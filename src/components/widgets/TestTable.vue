@@ -1,5 +1,6 @@
 <template>
     <div class="table-responsive">
+        <!--{{testTableData|json}}-->
         <table class="table table-striped table-bordered">
             <thead>
             <tr>
@@ -13,10 +14,12 @@
                     <span v-if="!testTableData.filter[key]">{{item[key]}}</span>
                     <span v-if="testTableData.filter[key]==='status'">{{item[key] | status}}</span>
                     <span v-if="testTableData.filter[key]==='date'">{{item[key] | myDate}}</span>
+                    <span v-if="testTableData.filter[key]==='edit'">{{item[key] | allowEdit}}</span>
                 </td>
-                <td>
-                    <button class="btn btn-default btn-xs" type="button" v-if="permission[1]-0" @click="onModify(item.ccy_guid)">修改</button>
-                    <button class="btn btn-danger btn-xs" type="button" v-if="permission[3]-0" @click="onDelete(item.ccy_guid)">刪除</button>
+                <td v-if="!allow(item[code+'_specific'])" class="text-muted">(不可修改)</td>
+                <td v-if="allow(item[code+'_specific'])">
+                    <button class="btn btn-default btn-xs" type="button" v-if="permissionBtn.edit" @click="onModify(item.id)">修改</button>
+                    <button class="btn btn-danger btn-xs" type="button" v-if="permissionBtn.del" @click="onDelete(item.id)">刪除</button>
                 </td>
             </tr>
             </tbody>
@@ -29,12 +32,20 @@
     import commonMixin from '../../mixins/commonMixin'
     export default {
         mixins: [commonMixin],
-        data () {
-            return {
-
+        props: ['code','test-table-data','permission','onModify','onDelete'],
+        methods: {
+            allow(specific) {
+                if(specific){
+                    if(specific==='CUSTOM'){
+                        return true
+                    }else{
+                        return false
+                    }
+                }else{
+                    return true
+                }
             }
-        },
-        props: ['test-table-data','permission','onModify','onDelete']
+        }
     }
 </script>
 
