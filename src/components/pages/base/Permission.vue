@@ -50,21 +50,20 @@
         },
         computed: {
             tableData() {
-                var roles = this.resData.data.role
-                var node = this.resData.data.node
-                var roleNode = this.resData.data.role_node
-                var getRoleNode = (role_guid)=> {
+                var srcData = this.editMode && this.editData? this.editData : this.resData
+                var roles = srcData.data.role
+                var nodes = srcData.data.node
+                var role_node = srcData.data.role_node
 
-                    var targetNode =  _.filter(roleNode,item=>{
-                        return item.rne_role_guid===role_guid
-                    })
-                    return targetNode.rne_status || ""
-
+                var getRoleNode = (nodeID,roleID) => {
+                    var targetRoleNode = _.find(role_node,{rne_node_guid: nodeID, rne_role_guid: roleID})
+                    return targetRoleNode ? targetRoleNode.rne_crud : 0
                 }
+
 
                 return {
                     roles,
-                    node,
+                    nodes,
                     getRoleNode
                 }
             },

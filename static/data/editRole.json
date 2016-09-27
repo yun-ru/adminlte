@@ -271,7 +271,18 @@
         "role_specific": "CUSTOM"
       }
     ],
-    "role_node": [],
+    "role_node": [
+      {
+        "rne_id": 1,
+        "rne_guid": "f9a9cbd5-8132-11e6-b14d-000c29658232",
+        "rne_add_date": 1474596837,
+        "rne_udate": 1474596837,
+        "rne_status": 3,
+        "rne_role_guid": "f9a06d45-8132-11e6-b14d-000c29658232",
+        "rne_node_guid": "f9a8c37c-8132-11e6-b14d-000c29658232",
+        "rne_crud": 1
+      }
+    ],
     "breadcrumb": [
       {
         "node_id": 1,
