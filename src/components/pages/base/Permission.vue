@@ -86,14 +86,14 @@
         },
         methods: {
             async loadData() {
-                this.resData = await this.api.assignShow()
+                this.resData = await this.api.assign('show')
             },
             dataReload() {
                 this.loadData.call(this)
             },
             onEdit() {
                 this.editMode = true
-                this.api.assignEdit().then(res=>{
+                this.api.assign('edit').then(res=>{
                     this.editData = res
                 })
             },
@@ -101,7 +101,7 @@
                 this.editMode = false
             },
             editSubmit(data) {
-                this.api.assignEditSubmit(data).then(res=>{
+                this.api.assign('doEdit',data).then(res=>{
                     if(res.code===0){
 
                     }else{

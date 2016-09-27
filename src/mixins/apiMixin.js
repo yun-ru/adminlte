@@ -10,6 +10,11 @@ export default {
                     postNew: {path: "/setting/do-add", type: "post"},
                     delItem: {path: "/setting/do-del", type: "post"},
                     updateItem: {path: "/setting/do-edit", type: "post"}
+                },
+                assign: {
+                    show: {path: "role/assign/show", type: "post"},
+                    edit: {path: "role/assign/edit", type: "post"},
+                    doEdit: {path: "role/assign/do-edit", type: "post"}
                 }
             }
 
@@ -41,17 +46,11 @@ export default {
                     var route = apiConfig.testMode? 'static/data/getMenu.json' : 'node/menu/get-menu'
                     return apiInit('get', route)
                 },
-                assignShow: function() {
-                    var route = apiConfig.testMode? 'static/data/showRole.json' : 'role/assign/show'
-                    return apiInit('get', route)
-                },
-                assignEdit: function(data) {
-                    var route = apiConfig.testMode? 'static/data/showRole.json' : 'role/assign/edit'
-                    return apiInit('post', route, data)
-                },
-                assignEditSubmit: function(data) {
-                    var route = apiConfig.testMode? 'static/data/showRole.json' : 'role/assign/do-edit'
-                    return apiInit('post', route, data)
+                assign: function(action,data) {
+                    var route = apiConfig.testMode? 'static/data/showRole.json' : router.assign[action].path
+                    var type = apiConfig.testMode? 'get' : router.assign[action].type
+                    var _data = apiConfig.testMode? {testType: action, ...data} : data
+                    return apiInit( type , route , _data)
                 }
             }
         }
