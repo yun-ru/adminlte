@@ -12,12 +12,13 @@
                 <tr v-for="(n_i,node) in tableData.nodes">
                     <th>{{node.node_name_en}}</th>
                     <td v-for="(r_i,role) in tableData.roles">
-                        <p v-for="obj in tableData.crudList[n_i][r_i].init">
+                        <p v-for="obj in tableData.initCRUD">
                             <label>{{obj.text}}
-                                <input type="checkbox" :disabled="!editMode" :value="obj.value" v-model="tableData.crudList[n_i][r_i].crud" @change="onChange(node.node_guid,role.role_guid,tableData.crudList[n_i][r_i].crud)">
+                                <input type="checkbox" :disabled="!editMode" v-model="tableData.roleNodeList[n_i][r_i]" :value="obj.value" @change="onChange(node,role,tableData.roleNodeList[n_i][r_i],$e)">
                             </label>
-                            {{obj.value}}
+                            <span class="text-muted">{{obj.value}}</span>
                         </p>
+
                     </td>
                 </tr>
                 </tbody>

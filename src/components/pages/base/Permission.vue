@@ -56,39 +56,39 @@
                 var roles = srcData.data.role
                 var nodes = srcData.data.node
                 var role_node = srcData.data.role_node
-                var crudObj = [
+                var initCRUD = [
                     {text: "新增", value: 2, code: "C"},
                     {text: "讀取", value: 1, code: "R"},
                     {text: "修改", value: 4, code: "U"},
                     {text: "刪除", value: 8, code: "D"}
                 ]
                 function getInitCrud() {
-                    return crudObj
+                    return initCRUD
                 }
-
-
-                var crudList = _.map(nodes,node=>{
+                
+                var getSumList = function(node,role) {
+                    var target = _.find(role_node,{rne_node_guid: node.node_guid, rne_role_guid: role.role_guid})
+                    var sumList = []
+                    if(target){
+                        var crud = (target.rne_crud >>> 0).toString(2)
+                        _.each(crud,(t,i)=>{
+                            if(t) sumList.push(initCRUD[i].value)
+                        })
+                    }
+                    return sumList
+                }
+                var roleNodeList = _.map(nodes,node=>{
                     return _.map(roles,role=>{
-                        var target = _.find(role_node,{rne_node_guid: node.node_guid, rne_role_guid: role.role_guid})
-                        var initCrud = getInitCrud()
-                        if(target){
-                            var crud = (target.rne_crud >>> 0).toString(2)
-                            var sumList = _.map(crud,(t,i)=>{
-                                return t ? initCrud[i].value : 0
-                            })
-                        }
-                        return {
-                            init: initCrud,
-                            crud: sumList || []
-                        }
-
+                        return getSumList(node,role)
                     })
                 })
 
                 return {
                     roles,
                     nodes,
-                    crudList
+                    initCRUD,
+                    getSumList,
+                    roleNodeList
                 }
             },
             breadcrumb() {
@@ -120,16 +120,15 @@
 //                    this.editData = res
 //                })
             },
-            onChange(nodeID,roleID,crudItem) {
+            onChange(node,role,crudItem) {
 
                 console.log(crudItem)
+                var nodeID = node.node_guid
+                var roleID = role.role_guid
 
-                if(_.has(this.readyRoleNode,nodeID)){
-                    this.readyRoleNode[nodeID][roleID] = _.sum(crudItem)
-                }else{
-                    this.readyRoleNode[nodeID] = {}
-                    this.readyRoleNode[nodeID][roleID] = _.sum(crudItem)
-                }
+                if(!_.has(this.readyRoleNode,nodeID)) this.readyRoleNode[nodeID] = {}
+
+                this.readyRoleNode[nodeID][roleID] = _.sum(crudItem)
 
             },
             onSubmit() {
