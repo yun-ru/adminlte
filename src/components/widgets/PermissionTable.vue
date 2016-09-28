@@ -1,6 +1,7 @@
 <template>
     <form >
         <div class="table-responsive">
+            {{tableData.roleNode | json}}
             <table class="table table-striped table-bordered">
                 <thead>
                 <tr>

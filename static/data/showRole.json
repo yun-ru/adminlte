@@ -278,89 +278,9 @@
         "rne_add_date": 1474596837,
         "rne_udate": 1474596837,
         "rne_status": 3,
-        "rne_role_guid": "f9a06d45-8132-11e6-b14d-000c29658232",
+        "rne_role_guid": "f9a0f978-8132-11e6-b14d-000c29658232",
         "rne_node_guid": "f9a8c37c-8132-11e6-b14d-000c29658232",
-        "rne_crud": 3
-      },
-      {
-        "rne_id": 2,
-        "rne_guid": "f9aa4945-8132-11e6-b14d-000c29658232",
-        "rne_add_date": 1474596837,
-        "rne_udate": 1474596837,
-        "rne_status": 3,
-        "rne_role_guid": "f9a00ca1-8132-11e6-b14d-000c29658232",
-        "rne_node_guid": "f9a9274f-8132-11e6-b14d-000c29658232",
         "rne_crud": 15
-      },
-      {
-        "rne_id": 3,
-        "rne_guid": "f9aaa9e6-8132-11e6-b14d-000c29658232",
-        "rne_add_date": 1474596837,
-        "rne_udate": 1474596837,
-        "rne_status": 3,
-        "rne_role_guid": "f9a00ca1-8132-11e6-b14d-000c29658232",
-        "rne_node_guid": "f9a97625-8132-11e6-b14d-000c29658232",
-        "rne_crud": 15
-      },
-      {
-        "rne_id": 4,
-        "rne_guid": "f9dea03d-8132-11e6-b14d-000c29658232",
-        "rne_add_date": 1474596838,
-        "rne_udate": 1474596838,
-        "rne_status": 3,
-        "rne_role_guid": "f9a00ca1-8132-11e6-b14d-000c29658232",
-        "rne_node_guid": "f9dd69b7-8132-11e6-b14d-000c29658232",
-        "rne_crud": 1
-      },
-      {
-        "rne_id": 5,
-        "rne_guid": "f9df1041-8132-11e6-b14d-000c29658232",
-        "rne_add_date": 1474596838,
-        "rne_udate": 1474596838,
-        "rne_status": 3,
-        "rne_role_guid": "f9a00ca1-8132-11e6-b14d-000c29658232",
-        "rne_node_guid": "f9ddbc2e-8132-11e6-b14d-000c29658232",
-        "rne_crud": 15
-      },
-      {
-        "rne_id": 6,
-        "rne_guid": "f9e092a5-8132-11e6-b14d-000c29658232",
-        "rne_add_date": 1474596838,
-        "rne_udate": 1474596838,
-        "rne_status": 3,
-        "rne_role_guid": "f9a00ca1-8132-11e6-b14d-000c29658232",
-        "rne_node_guid": "f9e0021d-8132-11e6-b14d-000c29658232",
-        "rne_crud": 15
-      },
-      {
-        "rne_id": 7,
-        "rne_guid": "f9e18666-8132-11e6-b14d-000c29658232",
-        "rne_add_date": 1474596838,
-        "rne_udate": 1474596838,
-        "rne_status": 3,
-        "rne_role_guid": "f9a00ca1-8132-11e6-b14d-000c29658232",
-        "rne_node_guid": "f9e115d5-8132-11e6-b14d-000c29658232",
-        "rne_crud": 15
-      },
-      {
-        "rne_id": 8,
-        "rne_guid": "f9e2880d-8132-11e6-b14d-000c29658232",
-        "rne_add_date": 1474596838,
-        "rne_udate": 1474596838,
-        "rne_status": 3,
-        "rne_role_guid": "f9a00ca1-8132-11e6-b14d-000c29658232",
-        "rne_node_guid": "f9e2170b-8132-11e6-b14d-000c29658232",
-        "rne_crud": 15
-      },
-      {
-        "rne_id": 9,
-        "rne_guid": "f9e38449-8132-11e6-b14d-000c29658232",
-        "rne_add_date": 1474596838,
-        "rne_udate": 1474596838,
-        "rne_status": 3,
-        "rne_role_guid": "f9a00ca1-8132-11e6-b14d-000c29658232",
-        "rne_node_guid": "f9e302f1-8132-11e6-b14d-000c29658232",
-        "rne_crud": 5
       }
     ],
     "breadcrumb": [

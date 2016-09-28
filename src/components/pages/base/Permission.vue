@@ -43,13 +43,18 @@
                 editData: null,
                 code: "rne",
                 editMode: false,
-                readyRoleNode: {},
-                dataLabel: {
-                    rne_id: ""
-                }
+                nextRoleNode: {}
             }
         },
         computed: {
+            prevRoleNode() {
+                var roleNode = {}
+                _.each(this.resData.data.role_node,(t,i)=>{
+                    if(!_.has(roleNode,t.rne_node_guid)) roleNode[t.rne_node_guid] = {}
+                    roleNode[t.rne_node_guid][t.rne_role_guid] = t.rne_crud
+                })
+                return roleNode
+            },
             tableData() {
 //                var srcData = this.editMode && this.editData? this.editData : this.resData
                 var srcData = this.resData
@@ -62,9 +67,6 @@
                     {text: "修改", value: 4, code: "U"},
                     {text: "刪除", value: 8, code: "D"}
                 ]
-                function getInitCrud() {
-                    return initCRUD
-                }
                 
                 var getSumList = function(node,role) {
                     var target = _.find(role_node,{rne_node_guid: node.node_guid, rne_role_guid: role.role_guid})
@@ -87,8 +89,8 @@
                     roles,
                     nodes,
                     initCRUD,
-                    getSumList,
-                    roleNodeList
+                    roleNodeList,
+                    roleNode: this.prevRoleNode
                 }
             },
             breadcrumb() {
@@ -116,6 +118,7 @@
             },
             onEdit() {
                 this.editMode = true
+                this.nextRoleNode = _.clone(this.prevRoleNode)
 //                this.api.assign('edit').then(res=>{
 //                    this.editData = res
 //                })
@@ -126,15 +129,20 @@
                 var nodeID = node.node_guid
                 var roleID = role.role_guid
 
-                if(!_.has(this.readyRoleNode,nodeID)) this.readyRoleNode[nodeID] = {}
-
-                this.readyRoleNode[nodeID][roleID] = _.sum(crudItem)
+                if(!_.has(this.nextRoleNode,nodeID)) this.nextRoleNode[nodeID] = {}
+                this.nextRoleNode[nodeID][roleID] = _.sum(crudItem)
 
             },
             onSubmit() {
                 this.editMode = false
+
+                console.dir(this.prevRoleNode)
+                console.dir(this.nextRoleNode)
+
+                if(this.nextRoleNode === this.prevRoleNode) console.log("same")
+
                 var data = {}
-                data.role_node = this.readyRoleNode
+                data.role_node = this.nextRoleNode
                 console.log(data)
 
                 this.api.assign("doEdit", data).then(res=>{
