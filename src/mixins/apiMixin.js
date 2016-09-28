@@ -47,10 +47,15 @@ export default {
                     return apiInit('get', route)
                 },
                 assign: function(action,data) {
-                    var route = apiConfig.testMode? 'static/data/showRole.json' : router.assign[action].path
-                    var type = apiConfig.testMode? 'get' : router.assign[action].type
-                    var _data = apiConfig.testMode? {testType: action, ...data} : data
-                    return apiInit( type , route , _data)
+                    var route, type
+                    if(apiConfig.testMode){
+                        route = 'static/data/showRole.json'
+                        return apiInit( 'get' , route , {testType: action, ...data})
+                    }else{
+                        route = router.assign[action].path
+                        type = router.assign[action].type
+                        return apiInit( type , route , data)
+                    }
                 }
             }
         }

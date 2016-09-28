@@ -10,12 +10,12 @@
                             <a class="btn btn-sm btn-default btn-flat"><i class="fa fa-arrow-left"></i><span v-if="winType !== 'xs'">返回</span></a>
                             <a class="btn btn-sm btn-default btn-flat" @click="dataReload"><i class="fa fa-undo"></i><span v-if="winType !== 'xs'">更新</span></a>
                             <a class="btn btn-sm btn-flat btn-success" v-if="permissionBtn.edit && !editMode" @click="onEdit"><i class="fa fa-wrench"></i><span v-if="winType !== 'xs'">編輯</span></a>
-                            <a class="btn btn-sm btn-flat btn-warning" v-if="permissionBtn.edit && editMode" @click="offEdit"><i class="fa fa-wrench"></i><span v-if="winType !== 'xs'">編輯中</span></a>
+                            <a class="btn btn-sm btn-flat btn-warning" v-if="permissionBtn.edit && editMode" @click="onSubmit"><i class="fa fa-wrench"></i><span v-if="winType !== 'xs'">確認修改</span></a>
                         </div>
                     </div>
                 </div>
                 <div class="box-body">
-                    <permission-table v-if="tableData" :table-data="tableData" :edit-mode="editMode" :edit-data="editData" :edit-submit="editSubmit"></permission-table>
+                    <permission-table v-if="tableData" :table-data="tableData" :edit-mode="editMode" :edit-data="editData" :on-submit="onSubmit" :on-change="onChange"></permission-table>
 
                 </div>
                 <!--<div v-if="loading" class="overlay" transition>-->
@@ -43,6 +43,7 @@
                 editData: null,
                 code: "rne",
                 editMode: false,
+                readyRoleNode: {},
                 dataLabel: {
                     rne_id: ""
                 }
@@ -50,21 +51,44 @@
         },
         computed: {
             tableData() {
-                var srcData = this.editMode && this.editData? this.editData : this.resData
+//                var srcData = this.editMode && this.editData? this.editData : this.resData
+                var srcData = this.resData
                 var roles = srcData.data.role
                 var nodes = srcData.data.node
                 var role_node = srcData.data.role_node
-
-                var getRoleNode = (nodeID,roleID) => {
-                    var targetRoleNode = _.find(role_node,{rne_node_guid: nodeID, rne_role_guid: roleID})
-                    return targetRoleNode ? targetRoleNode.rne_crud : 0
+                var crudObj = [
+                    {text: "新增", value: 2, code: "C"},
+                    {text: "讀取", value: 1, code: "R"},
+                    {text: "修改", value: 4, code: "U"},
+                    {text: "刪除", value: 8, code: "D"}
+                ]
+                function getInitCrud() {
+                    return crudObj
                 }
 
+
+                var crudList = _.map(nodes,node=>{
+                    return _.map(roles,role=>{
+                        var target = _.find(role_node,{rne_node_guid: node.node_guid, rne_role_guid: role.role_guid})
+                        var initCrud = getInitCrud()
+                        if(target){
+                            var crud = (target.rne_crud >>> 0).toString(2)
+                            var sumList = _.map(crud,(t,i)=>{
+                                return t ? initCrud[i].value : 0
+                            })
+                        }
+                        return {
+                            init: initCrud,
+                            crud: sumList || []
+                        }
+
+                    })
+                })
 
                 return {
                     roles,
                     nodes,
-                    getRoleNode
+                    crudList
                 }
             },
             breadcrumb() {
@@ -92,19 +116,36 @@
             },
             onEdit() {
                 this.editMode = true
-                this.api.assign('edit').then(res=>{
-                    this.editData = res
-                })
+//                this.api.assign('edit').then(res=>{
+//                    this.editData = res
+//                })
             },
-            offEdit() {
+            onChange(nodeID,roleID,crudItem) {
+
+                console.log(crudItem)
+
+                if(_.has(this.readyRoleNode,nodeID)){
+                    this.readyRoleNode[nodeID][roleID] = _.sum(crudItem)
+                }else{
+                    this.readyRoleNode[nodeID] = {}
+                    this.readyRoleNode[nodeID][roleID] = _.sum(crudItem)
+                }
+
+            },
+            onSubmit() {
                 this.editMode = false
-            },
-            editSubmit(data) {
-                this.api.assign('doEdit',data).then(res=>{
+                var data = {}
+                data.role_node = this.readyRoleNode
+                console.log(data)
+
+                this.api.assign("doEdit", data).then(res=>{
                     if(res.code===0){
+                        swal("修改成功").then(()=>{
+                            this.dataReload()
+                        })
 
                     }else{
-
+                        this.handleError(res)
                     }
                 })
             }

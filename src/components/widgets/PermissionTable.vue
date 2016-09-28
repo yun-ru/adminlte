@@ -1,44 +1,44 @@
 <template>
     <form >
-        {{editMode? '編輯中':'xx'}}
         <div class="table-responsive">
-
-        <table class="table table-striped table-bordered">
-            <thead>
-            <tr>
-                <th></th>
-                <th v-for="role in tableData.roles">{{role.role_name_en}}</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="node in tableData.nodes">
-                <td>{{node.node_name_en}}</td>
-                <td v-for="role in tableData.roles">
-                    {{tableData.getRoleNode(node.node_guid,role.role_guid)}}
-                    <input type="checkbox" name="role[node.node_guid][role.role_guid]" value="[4]">
-                    <input type="checkbox" name="role[node.node_guid][role.role_guid]" value="[1]">
-                    <input type="checkbox" name="role[node.node_guid][role.role_guid]" value="[2]">
-                    <input type="checkbox" name="role[node.node_guid][role.role_guid]" value="[8]">
-                </td>
-            </tr>
-            </tbody>
-        </table>
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th v-for="role in tableData.roles">{{role.role_name_en}}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(n_i,node) in tableData.nodes">
+                    <th>{{node.node_name_en}}</th>
+                    <td v-for="(r_i,role) in tableData.roles">
+                        <p v-for="obj in tableData.crudList[n_i][r_i].init">
+                            <label>{{obj.text}}
+                                <input type="checkbox" :disabled="!editMode" :value="obj.value" v-model="tableData.crudList[n_i][r_i].crud" @change="onChange(node.node_guid,role.role_guid,tableData.crudList[n_i][r_i].crud)">
+                            </label>
+                            {{obj.value}}
+                        </p>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
 
         </div>
-        <button type="button" class="btn btn-success" @click="editSubmit(data)">確認修改</button>
-        <button type="button" class="btn btn-default">取消</button>
     </form>
 
 </template>
 
 <script>
+    import commonMixin from '../../mixins/commonMixin'
 
     export default {
-        data() {
-            return {
-                data: {test:123}
-            }
-        },
-        props: ['tableData','editMode','editData','editSubmit'],
+        mixins: [commonMixin],
+        props: ['tableData','editMode','editData','onChange'],
     }
 </script>
+
+<style lang="stylus">
+    .table > tbody > tr > td
+        p
+            margin: 0
+</style>
