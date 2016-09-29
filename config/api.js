@@ -1,6 +1,6 @@
 module.exports = (function(){
 
-  var testMode = true
+  var testMode = false
   var host = testMode? "/" : "http://mid.tw/"
 
   return {

@@ -118,7 +118,7 @@
             },
             onEdit() {
                 this.editMode = true
-                this.nextRoleNode = _.clone(this.prevRoleNode)
+                this.nextRoleNode = _.extend(this.prevRoleNode)
 //                this.api.assign('edit').then(res=>{
 //                    this.editData = res
 //                })
@@ -134,10 +134,7 @@
 
             },
             onSubmit() {
-                this.editMode = false
 
-                console.dir(this.prevRoleNode)
-                console.dir(this.nextRoleNode)
 
                 if(this.nextRoleNode === this.prevRoleNode) console.log("same")
 
@@ -147,6 +144,7 @@
 
                 this.api.assign("doEdit", data).then(res=>{
                     if(res.code===0){
+                        this.editMode = false
                         swal("修改成功").then(()=>{
                             this.dataReload()
                         })

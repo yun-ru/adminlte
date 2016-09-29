@@ -2,9 +2,7 @@
     <app-header></app-header>
     <app-sidebar @sidebar-ready="getSidebarHeight"></app-sidebar>
     <div class="content-wrapper" :style="{'min-height': contentMinHeight+'px'}">
-        <router-view
-            class="view"
-            keep-alive>
+        <router-view class="view">
         </router-view>
     </div>
     <app-footer></app-footer>

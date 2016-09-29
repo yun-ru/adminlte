@@ -1,8 +1,7 @@
 <template>
     <form >
         <div class="table-responsive">
-            {{tableData.roleNode | json}}
-            <table class="table table-striped table-bordered">
+            <table class="table table-striped table-bordered fixed-table">
                 <thead>
                 <tr>
                     <th></th>
@@ -40,7 +39,22 @@
 </script>
 
 <style lang="stylus">
+    col-min-width = 100px
+    table-height = 500px
+    .table.fixed-table
+        > thead
+            display: block
+            position: relative
+        > tbody
+            display: block
+            overflow: auto
+            height: table-height
+        tr > th, tr > td
+            min-width: col-min-width
+    .table > tbody > tr > th
+        width: 100px
     .table > tbody > tr > td
         p
             margin: 0
+
 </style>
