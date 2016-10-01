@@ -7,7 +7,6 @@
                       :permission="permission"
                       :permission-btn="permissionBtn"
                       :table-data="tableData"
-                      :test-table-data="testTableData"
                       :data-reload="dataReload"
                       :on-modify="onModify"
                       :on-create="onCreate"
@@ -40,41 +39,43 @@
                 resData: null,
                 subject: "currency",
                 code: "ccy",
-                modalData: {},
-                dataLabel: {
-                    ccy_status: "狀態",
-                    ccy_name_zh_TW: "繁中名稱",
-                    ccy_name_zh_CN: "簡中名稱",
-                    ccy_name_en: "英文名稱",
-                    ccy_code: "代碼",
-                    ccy_udate: "更新時間",
-                    ccy_add_date: "新增時間",
-                    ccy_guid: "ID",
-                    ccy_id: "_ID"
-                }
+                modalData: {}
             }
         },
         ready() {
             this.dataReload();
         },
         computed: {
-            testTableData() {
+            dataLabel() {
+                return {
+                    [`${this.code}_status`]: "狀態",
+                    [`${this.code}_name_zh_TW`]: "繁中名稱",
+                    [`${this.code}_name_zh_CN`]: "簡中名稱",
+                    [`${this.code}_name_en`]: "英文名稱",
+                    [`${this.code}_code`]: "代碼",
+                    [`${this.code}_udate`]: "更新時間",
+                    [`${this.code}_add_date`]: "新增時間",
+                    [`${this.code}_guid`]: "ID",
+                    [`${this.code}_id`]: "_ID"
+                }
+            },
+            tableData() {
                 var list = this.resData.data.list.map(item=>{return {...item, id: item[this.code+'_guid']}})
                 var columns = this.dataLabel
                 var display = {
-                    ccy_status: true,
-                    ccy_name_zh_TW: true,
-                    ccy_name_zh_CN: true,
-                    ccy_name_en: true,
-                    ccy_code: true,
-                    ccy_udate: true,
-                    ccy_add_date: false
+                    [`${this.code}_status`]: true,
+                    [`${this.code}_name_zh_TW`]: true,
+                    [`${this.code}_name_zh_CN`]: true,
+                    [`${this.code}_name_en`]: true,
+                    [`${this.code}_code`]: true,
+                    [`${this.code}_udate`]: true,
+                    [`${this.code}_add_date`]: false
                 }
 
                 var filter = {
-                    ccy_status: "status",
-                    ccy_udate: "date",
-                    ccy_add_date: "date"
+                    [`${this.code}_status`]: "status",
+                    [`${this.code}_udate`]: "date",
+                    [`${this.code}_add_date`]: "date"
                 }
 
                 var controller = {
@@ -95,25 +96,25 @@
             modifyReady(data) {
                 this.modalInit()
                 this.modalData.title = "修改幣別項目"
-                this.modalData.id = data.ccy_guid
+                this.modalData.id = data[`${this.code}_guid`]
                 this.modalData.value = data
                 this.modalData.display = {
-                    ccy_status: true,
-                    ccy_name_zh_TW: true,
-                    ccy_name_zh_CN: true,
-                    ccy_name_en: true,
-                    ccy_code: true,
-                    ccy_udate: true,
-                    ccy_add_date: true
+                    [`${this.code}_status`]: true,
+                    [`${this.code}_name_zh_TW`]: true,
+                    [`${this.code}_name_zh_CN`]: true,
+                    [`${this.code}_name_en`]: true,
+                    [`${this.code}_code`]: true,
+                    [`${this.code}_udate`]: true,
+                    [`${this.code}_add_date`]: true
                 }
             },
             createSubmit(_data) {
                 var data = {
-                    ccy_status: _data.ccy_status,
-                    ccy_name_zh_TW: _data.ccy_name_zh_TW,
-                    ccy_name_zh_CN: _data.ccy_name_zh_CN,
-                    ccy_name_en: _data.ccy_name_en,
-                    ccy_code: _data.ccy_code
+                    [`${this.code}_status`]: _data[`${this.code}_status`],
+                    [`${this.code}_name_zh_TW`]: _data[`${this.code}_name_zh_TW`],
+                    [`${this.code}_name_zh_CN`]: _data[`${this.code}_name_zh_CN`],
+                    [`${this.code}_name_en`]: _data[`${this.code}_name_en`],
+                    [`${this.code}_code`]: _data[`${this.code}_code`]
                 }
 
                 this.api.setting(this.subject,'postNew',data).then(res=>{
@@ -128,12 +129,12 @@
             },
             modifySubmit(_data) {
                 var data = {
-                    ccy_guid: this.modalData.id,
-                    ccy_status: _data.ccy_status,
-                    ccy_name_zh_TW: _data.ccy_name_zh_TW,
-                    ccy_name_zh_CN: _data.ccy_name_zh_CN,
-                    ccy_name_en: _data.ccy_name_en,
-                    ccy_code: _data.ccy_code
+                    [`${this.code}_guid`]: this.modalData.id,
+                    [`${this.code}_status`]: _data[`${this.code}_status`],
+                    [`${this.code}_name_zh_TW`]: _data[`${this.code}_name_zh_TW`],
+                    [`${this.code}_name_zh_CN`]: _data[`${this.code}_name_zh_CN`],
+                    [`${this.code}_name_en`]: _data[`${this.code}_name_en`],
+                    [`${this.code}_code`]: _data[`${this.code}_code`]
                 }
                 this.api.setting(this.subject,'updateItem',data).then(res=>{
                     if(!res.code){
@@ -152,17 +153,17 @@
                     display: {},
                     value: {},
                     type: {
-                        ccy_status: "radio",
-                        ccy_name_zh_TW: "text",
-                        ccy_name_zh_CN: "text",
-                        ccy_name_en: "text",
-                        ccy_code: "text",
-                        ccy_udate: "date",
-                        ccy_add_date: "date",
-                        ccy_guid: "static"
+                        [`${this.code}_status`]: "radio",
+                        [`${this.code}_name_zh_TW`]: "text",
+                        [`${this.code}_name_zh_CN`]: "text",
+                        [`${this.code}_name_en`]: "text",
+                        [`${this.code}_code`]: "text",
+                        [`${this.code}_udate`]: "date",
+                        [`${this.code}_add_date`]: "date",
+                        [`${this.code}_guid`]: "static"
                     },
                     option: {
-                        ccy_status: [
+                        [`${this.code}_status`]: [
                             {label: "啟用", value: 3},
                             {label: "不啟用", value: -2}
                         ]
@@ -176,18 +177,18 @@
                 this.modalData.title = "新增幣別項目"
                 this.modalData.id = null
                 this.modalData.display = {
-                    ccy_status: true,
-                    ccy_name_zh_TW: true,
-                    ccy_name_zh_CN: true,
-                    ccy_name_en: true,
-                    ccy_code: true,
+                    [`${this.code}_status`]: true,
+                    [`${this.code}_name_zh_TW`]: true,
+                    [`${this.code}_name_zh_CN`]: true,
+                    [`${this.code}_name_en`]: true,
+                    [`${this.code}_code`]: true
                 }
                 this.modalData.value = {
-                    ccy_status: 3,
-                    ccy_name_zh_TW: "",
-                    ccy_name_zh_CN: "",
-                    ccy_name_en: "",
-                    ccy_code: ""
+                    [`${this.code}_status`]: 3,
+                    [`${this.code}_name_zh_TW`]: "",
+                    [`${this.code}_name_zh_CN`]: "",
+                    [`${this.code}_name_en`]: "",
+                    [`${this.code}_code`]: ""
                 }
 
             }

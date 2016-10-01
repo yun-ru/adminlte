@@ -22,15 +22,15 @@
             </div>
             <div class="box-body">
 
-                <test-table
+                <data-table
                     v-if="permission"
                     :code="code"
-                    :test-table-data="testTableData"
+                    :table-data="tableData"
                     :permission="permission"
                     :permission-btn="permissionBtn"
                     :on-modify="onModify"
                     :on-delete="onDelete"
-                ></test-table>
+                ></data-table>
                 <pagination v-if="pagination" :pagination="pagination" :data-label="dataLabel" :change-page="changePage"></pagination>
 
             </div>
@@ -45,8 +45,7 @@
 
 <script>
     import RWD from '../../mixins/rwd'
-    import MyTable from '../widgets/MyTable.vue'
-    import TestTable from '../widgets/TestTable.vue'
+    import DataTable from './DataTable.vue'
     import Search from '../widgets/Search.vue'
     import Pagination from '../widgets/Pagination.vue'
 
@@ -64,7 +63,6 @@
             'pagination',
             'dataLabel',
             'changePage',
-            'testTableData',
             'searchText',
             'onSearch',
             'checkEmpty',
@@ -75,9 +73,8 @@
         ],
         components: {
             Search,
-            MyTable,
             Pagination,
-            TestTable
+            DataTable
         }
     }
 </script>

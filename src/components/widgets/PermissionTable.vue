@@ -34,7 +34,7 @@
 
     export default {
         mixins: [commonMixin],
-        props: ['tableData','editMode','editData','onChange'],
+        props: ['tableData','editMode','editData','onChange','permissionBtn'],
     }
 </script>
 

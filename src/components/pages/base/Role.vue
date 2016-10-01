@@ -7,7 +7,6 @@
                       :permission="permission"
                       :permission-btn="permissionBtn"
                       :table-data="tableData"
-                      :test-table-data="testTableData"
                       :data-reload="dataReload"
                       :on-modify="onModify"
                       :on-create="onCreate"
@@ -28,6 +27,7 @@
     </div>
 
 </template>
+
 <script>
     import commonMixin from '../../../mixins/commonMixin'
     import apiMixin from '../../../mixins/apiMixin'
@@ -39,44 +39,47 @@
                 resData: null,
                 subject: "role",
                 code: "role",
-                modalData: {},
-                dataLabel: {
-                    role_specific: "編輯",
-                    role_status: "狀態",
-                    role_name_zh_TW: "繁中名稱",
-                    role_name_zh_CN: "簡中名稱",
-                    role_name_en: "英文名稱",
-                    role_description_zh_TW: "繁中說明",
-                    role_description_zh_CN: "簡中說明",
-                    role_description_en: "英文說明",
-                    role_udate: "更新時間",
-                    role_add_date: "新增時間",
-                    role_guid: "ID",
-                    role_id: "_ID"
-                }
+                modalData: {}
             }
         },
+        ready() {
+            this.dataReload();
+        },
         computed: {
-            testTableData() {
+            dataLabel() {
+                return {
+                    [`${this.code}_status`]: "狀態",
+                    [`${this.code}_name_zh_TW`]: "繁中名稱",
+                    [`${this.code}_name_zh_CN`]: "簡中名稱",
+                    [`${this.code}_name_en`]: "英文名稱",
+                    [`${this.code}_description_zh_TW`]: "繁中說明",
+                    [`${this.code}_description_zh_CN`]: "簡中說明",
+                    [`${this.code}_description_en`]: "英文說明",
+                    [`${this.code}_udate`]: "更新時間",
+                    [`${this.code}_add_date`]: "新增時間",
+                    [`${this.code}_guid`]: "ID",
+                    [`${this.code}_id`]: "_ID"
+                }
+            },
+            tableData() {
                 var list = this.resData.data.list.map(item=>{return {...item, id: item[this.code+'_guid']}})
                 var columns = this.dataLabel
                 var display = {
-                    role_status: true,
-                    role_name_zh_TW: true,
-                    role_name_zh_CN: true,
-                    role_name_en: true,
-                    role_description_zh_TW: true,
-                    role_description_zh_CN: true,
-                    role_description_en: true,
-                    role_udate: true,
-                    role_specific: false
+                    [`${this.code}_status`]: true,
+                    [`${this.code}_name_zh_TW`]: true,
+                    [`${this.code}_name_zh_CN`]: true,
+                    [`${this.code}_name_en`]: true,
+                    [`${this.code}_description_zh_TW`]: true,
+                    [`${this.code}_description_zh_CN`]: true,
+                    [`${this.code}_description_en`]: true,
+                    [`${this.code}_udate`]: false,
+                    [`${this.code}_add_date`]: false
                 }
 
                 var filter = {
-                    role_status: "status",
-                    role_udate: "date",
-                    role_add_date: "date",
-                    role_specific: "edit"
+                    [`${this.code}_status`]: "status",
+                    [`${this.code}_udate`]: "date",
+                    [`${this.code}_add_date`]: "date"
                 }
 
                 var controller = {
@@ -93,56 +96,31 @@
                 }
             }
         },
-        ready() {
-            this.dataReload()
-        },
         methods: {
             modifyReady(data) {
                 this.modalInit()
                 this.modalData.title = "修改幣別項目"
-                this.modalData.id = data.role_guid
+                this.modalData.id = data[`${this.code}_guid`]
                 this.modalData.value = data
                 this.modalData.display = {
-                    role_status: true,
-                    role_name_zh_TW: true,
-                    role_name_zh_CN: true,
-                    role_name_en: true,
-                    role_description_zh_TW: true,
-                    role_description_zh_CN: true,
-                    role_description_en: true,
-                    role_udate: true,
-                    role_add_date: true
+                    [`${this.code}_status`]: true,
+                    [`${this.code}_name_zh_TW`]: true,
+                    [`${this.code}_name_zh_CN`]: true,
+                    [`${this.code}_name_en`]: true,
+                    [`${this.code}_description_zh_TW`]: true,
+                    [`${this.code}_description_zh_CN`]: true,
+                    [`${this.code}_description_en`]: true,
+                    [`${this.code}_udate`]: true,
+                    [`${this.code}_add_date`]: true
                 }
-            },
-            modifySubmit(_data) {
-                var data = {
-                    role_guid: this.modalData.id,
-                    role_status: _data.role_status,
-                    role_name_zh_TW: _data.role_name_zh_TW || "",
-                    role_name_zh_CN: _data.role_name_zh_CN || "",
-                    role_name_en: _data.role_name_en || "",
-                    role_description_zh_TW: _data.role_description_zh_TW || "",
-                    role_description_zh_CN: _data.role_description_zh_CN || "",
-                    role_description_en: _data.role_description_en || "",
-                }
-                this.api.setting(this.subject,'updateItem',data).then(res=>{
-                    if(!res.code){
-                        this.closeModal()
-                        swal("修改成功！").then(()=>this.dataReload())
-                    }else{
-                        this.handleError(res)
-                    }
-                })
             },
             createSubmit(_data) {
                 var data = {
-                    role_status: _data.role_status,
-                    role_name_zh_TW: _data.role_name_zh_TW,
-                    role_name_zh_CN: _data.role_name_zh_CN,
-                    role_name_en: _data.role_name_en,
-                    role_description_zh_TW: _data.role_description_zh_TW,
-                    role_description_zh_CN: _data.role_description_zh_CN,
-                    role_description_en: _data.role_description_en,
+                    [`${this.code}_status`]: _data[`${this.code}_status`],
+                    [`${this.code}_name_zh_TW`]: _data[`${this.code}_name_zh_TW`],
+                    [`${this.code}_name_zh_CN`]: _data[`${this.code}_name_zh_CN`],
+                    [`${this.code}_name_en`]: _data[`${this.code}_name_en`],
+                    [`${this.code}_code`]: _data[`${this.code}_code`]
                 }
 
                 this.api.setting(this.subject,'postNew',data).then(res=>{
@@ -155,6 +133,26 @@
 
                 })
             },
+            modifySubmit(_data) {
+                var data = {
+                    [`${this.code}_guid`]: this.modalData.id,
+                    [`${this.code}_status`]: _data[`${this.code}_status`],
+                    [`${this.code}_name_zh_TW`]: _data[`${this.code}_name_zh_TW`],
+                    [`${this.code}_name_zh_CN`]: _data[`${this.code}_name_zh_CN`],
+                    [`${this.code}_name_en`]: _data[`${this.code}_name_en`],
+                    [`${this.code}_description_zh_TW`]: _data[`${this.code}_description_zh_TW`],
+                    [`${this.code}_description_zh_CN`]: _data[`${this.code}_description_zh_CN`],
+                    [`${this.code}_description_en`]: _data[`${this.code}_description_en`],
+                }
+                this.api.setting(this.subject,'updateItem',data).then(res=>{
+                    if(!res.code){
+                        this.closeModal()
+                        swal("修改成功！").then(()=>this.dataReload())
+                    }else{
+                        this.handleError(res)
+                    }
+                })
+            },
             modalInit() {
                 this.modalData = {
                     ready: false,
@@ -163,19 +161,19 @@
                     display: {},
                     value: {},
                     type: {
-                        role_status: "radio",
-                        role_name_zh_TW: "text",
-                        role_name_zh_CN: "text",
-                        role_name_en: "text",
-                        role_description_zh_TW: "text",
-                        role_description_zh_CN: "text",
-                        role_description_en: "text",
-                        role_udate: "date",
-                        role_add_date: "date",
-                        role_guid: "static"
+                        [`${this.code}_status`]: "radio",
+                        [`${this.code}_name_zh_TW`]: "text",
+                        [`${this.code}_name_zh_CN`]: "text",
+                        [`${this.code}_name_en`]: "text",
+                        [`${this.code}_description_zh_TW`]: "text",
+                        [`${this.code}_description_zh_CN`]: "text",
+                        [`${this.code}_description_en`]: "text",
+                        [`${this.code}_udate`]: "date",
+                        [`${this.code}_add_date`]: "date",
+                        [`${this.code}_guid`]: "static"
                     },
                     option: {
-                        role_status: [
+                        [`${this.code}_status`]: [
                             {label: "啟用", value: 3},
                             {label: "不啟用", value: -2}
                         ]
@@ -189,26 +187,27 @@
                 this.modalData.title = "新增幣別項目"
                 this.modalData.id = null
                 this.modalData.display = {
-                    role_status: true,
-                    role_name_zh_TW: true,
-                    role_name_zh_CN: true,
-                    role_name_en: true,
-                    role_description_zh_TW: true,
-                    role_description_zh_CN: true,
-                    role_description_en: true
+                    [`${this.code}_status`]: true,
+                    [`${this.code}_name_zh_TW`]: true,
+                    [`${this.code}_name_zh_CN`]: true,
+                    [`${this.code}_name_en`]: true,
+                    [`${this.code}_description_zh_TW`]: true,
+                    [`${this.code}_description_zh_CN`]: true,
+                    [`${this.code}_description_en`]: true
                 }
                 this.modalData.value = {
-                    role_status: 3,
-                    role_name_zh_TW: "",
-                    role_name_zh_CN: "",
-                    role_name_en: "",
-                    role_description_zh_TW: "",
-                    role_description_zh_CN: "",
-                    role_description_en: ""
+                    [`${this.code}_status`]: 3,
+                    [`${this.code}_name_zh_TW`]: "",
+                    [`${this.code}_name_zh_CN`]: "",
+                    [`${this.code}_name_en`]: "",
+                    [`${this.code}_description_zh_TW`]: "",
+                    [`${this.code}_description_zh_CN`]: "",
+                    [`${this.code}_description_en`]: ""
                 }
 
             }
         }
     }
 </script>
+
 

@@ -15,7 +15,14 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <permission-table v-if="tableData" :table-data="tableData" :edit-mode="editMode" :edit-data="editData" :on-submit="onSubmit" :on-change="onChange"></permission-table>
+                    <permission-table v-if="tableData"
+                                      :table-data="tableData"
+                                      :edit-mode="editMode"
+                                      :edit-data="editData"
+                                      :on-submit="onSubmit"
+                                      :on-change="onChange"
+                                      :permission-btn="permissionBtn"
+                    ></permission-table>
 
                 </div>
                 <!--<div v-if="loading" class="overlay" transition>-->
@@ -30,9 +37,7 @@
 </template>
 
 <script>
-    import ContentHeader from '../../widgets/ContentHeader.vue'
     import PermissionTable from '../../widgets/PermissionTable.vue'
-    import tableMixin from '../../../mixins/tableMixin'
     import commonMixin from '../../../mixins/commonMixin'
     import apiMixin from '../../../mixins/apiMixin'
 
@@ -92,21 +97,12 @@
                     roleNodeList,
                     roleNode: this.prevRoleNode
                 }
-            },
-            breadcrumb() {
-                return _.map(this.resData.data.breadcrumb, item=> {
-                    return {text: item.node_name_zh_TW, link: item.node_route}
-                })
-            },
-            permission() {
-                return (this.resData.data.permission >>> 0).toString(2)
-            },
+            }
         },
         ready() {
             this.dataReload()
         },
         components: {
-            ContentHeader,
             PermissionTable
         },
         methods: {
@@ -158,14 +154,3 @@
         mixins: [commonMixin, apiMixin]
     }
 </script>
-
-<style lang="stylus">
-    .v-transition
-        transition: opacity 0.4s ease-in-out
-    .v-enter, .v-leave
-        opacity: 0
-    .btn .caret
-        margin-left: 10px
-    select.flat
-        border-radius: 0
-</style>
