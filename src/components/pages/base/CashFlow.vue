@@ -37,7 +37,7 @@
         data () {
             return {
                 subject: "cash-flow",
-                code: "ccy"
+                code: "cfw"
             }
         },
         ready() {
@@ -66,7 +66,7 @@
                     [`${this.code}_name_zh_CN`]: true,
                     [`${this.code}_name_en`]: true,
                     [`${this.code}_code`]: true,
-                    [`${this.code}_udate`]: true,
+                    [`${this.code}_udate`]: false,
                     [`${this.code}_add_date`]: false
                 }
 

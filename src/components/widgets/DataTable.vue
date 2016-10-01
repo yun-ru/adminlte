@@ -22,6 +22,7 @@
                 <td v-if="allow(item[code+'_specific'])">
                     <button class="btn btn-default btn-xs" type="button" v-if="permissionBtn.edit" @click="onModify(item.id)">修改</button>
                     <button class="btn btn-danger btn-xs" type="button" v-if="permissionBtn.del" @click="onDelete(item.id)">刪除</button>
+                    <p v-else class="text-muted">(權限不足)</p>
                 </td>
             </tr>
             </tbody>

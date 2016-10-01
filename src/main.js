@@ -56,7 +56,7 @@ router.map({
             '/block/setting/getList': {
                 component: Block
             },
-            '/cash-flow/setting/getList': {
+            '/cashFlow/setting/getList': {
                 component: CashFlow
             },
             '/language/setting/getList': {
