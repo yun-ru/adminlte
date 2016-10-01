@@ -48,7 +48,7 @@ router.map({
                 component: Currency
             },
             '/theme/setting/getList': {
-                component: Currency
+                component: Theme
             },
             '/language/setting/getList': {
                 component: Currency

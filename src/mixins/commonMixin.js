@@ -4,6 +4,10 @@ import Modal from '../components/widgets/Modal.vue'
 export default {
     data() {
       return {
+          host: "http://61.219.77.174",
+          file: null,
+          resData: null,
+          modalData: {},
           searchMode: false,
           searchText: "",
           currentSearchType: 0,
@@ -37,6 +41,18 @@ export default {
         }
     },
     methods: {
+        onFileChange() {
+            var formData = new FormData($("#form")[0])
+            this.api.upload(formData).then(res=>{
+                this.modalData.file_guid = res.data.files.files_guid
+                this.modalData.fileImg = this.host + res.data.file_path + "/" + res.data.file_name
+                this.modalData.display.files_name = false
+                setTimeout(()=>{
+                    this.modalData.value.files_name = this.modalData.fileImg
+                    this.modalData.display.files_name = true
+                })
+            })
+        },
         dataReload() {
             this.searchMode = false
             this.searchText = ""

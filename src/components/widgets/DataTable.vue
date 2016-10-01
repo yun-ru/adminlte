@@ -1,6 +1,5 @@
 <template>
     <div class="table-responsive">
-        <!--{{tableData|json}}-->
         <table class="table table-striped table-bordered">
             <thead>
             <tr>
@@ -10,11 +9,13 @@
             </thead>
             <tbody>
             <tr v-for="item in tableData.list">
-                <td v-for="(key,val) in tableData.columns" v-if="tableData.display[key]">
+                <!--<td v-if=""></td>-->
+                <td :class="{img:tableData.filter[key]==='image'}" v-for="(key,val) in tableData.columns" v-if="tableData.display[key]">
                     <span v-if="!tableData.filter[key]">{{item[key]}}</span>
                     <span v-if="tableData.filter[key]==='status'">{{item[key] | status}}</span>
                     <span v-if="tableData.filter[key]==='date'">{{item[key] | myDate}}</span>
                     <span v-if="tableData.filter[key]==='edit'">{{item[key] | allowEdit}}</span>
+                    <img v-if="tableData.filter[key]==='image'" :src="item[key] | showImg item" />
                 </td>
                 <td v-if="!allow(item[code+'_specific'])" class="text-muted">(不可修改)</td>
                 <td v-if="allow(item[code+'_specific'])">
@@ -43,6 +44,11 @@
 
 <style lang="stylus">
     .table > tbody > tr > td
+        &.img
+            width: 100px
+        vertical-align: middle
+        img
+            max-height: 100px
         .btn
             margin-right: 5px
             &:last-of-type

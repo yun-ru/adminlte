@@ -1,8 +1,13 @@
 
 export default {
+    data() {
+        return {
+            host: "http://61.219.77.174"
+        }
+    },
     filters: {
-        myDate(data) {
-            return new Date(data*1000).toLocaleString()
+        myDate(val) {
+            return new Date(val*1000).toLocaleString()
         },
         status(val) {
             switch (val){
@@ -11,6 +16,9 @@ export default {
                 case -2:
                     return '停用'
             }
+        },
+        showImg(val,item) {
+            return this.host + item.files_folder+ '/' + val
         },
         allowEdit(val) {
             switch (val){

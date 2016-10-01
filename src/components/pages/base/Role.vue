@@ -36,10 +36,8 @@
         mixins: [commonMixin, apiMixin],
         data () {
             return {
-                resData: null,
                 subject: "role",
                 code: "role",
-                modalData: {}
             }
         },
         ready() {

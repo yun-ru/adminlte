@@ -36,10 +36,8 @@
         mixins: [commonMixin, apiMixin],
         data () {
             return {
-                resData: null,
                 subject: "currency",
-                code: "ccy",
-                modalData: {}
+                code: "ccy"
             }
         },
         ready() {

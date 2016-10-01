@@ -7,7 +7,11 @@
                     <h4 class="modal-title" id="myModalLabel">{{modalData.title}}</h4>
                 </div>
                 <div class="modal-body">
-                    <modal-form v-ref:modal-form :form-submit="formSubmit" :modal-data="modalData"></modal-form>
+                    <modal-form v-ref:modal-form
+                                :form-submit="formSubmit"
+                                :modal-data="modalData"
+                                :on-file-change="onFileChange"
+                    ></modal-form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default btn-flat" @click="closeModal">關閉</button>
@@ -21,7 +25,7 @@
 <script>
     import ModalForm from './ModalForm.vue'
     export default {
-        props: ['modalData','formSubmit','closeModal'],
+        props: ['modalData','formSubmit','closeModal','onFileChange'],
         methods: {
 
         },

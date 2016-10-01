@@ -1,6 +1,6 @@
 <template>
-    <form class="form-horizontal" novalidate>
-        <div class="form-group" v-for="(labelKey,isActive) in modalData.display" :class="{'has-error':modalData.errMsg[labelKey]}">
+    <form id="form" class="form-horizontal" novalidate>
+        <div class="form-group" v-if="isActive" v-for="(labelKey,isActive) in modalData.display" :class="{'has-error':modalData.errMsg[labelKey]}">
             <label class="col-sm-2 control-label">{{modalData.label[labelKey]}}</label>
             <div class="col-sm-10">
                 <template v-if="modalData.type[labelKey]==='radio'">
@@ -8,6 +8,8 @@
                         <input type="radio" v-model="modalData.value[labelKey]" :value="opt.value" :name="labelKey"> {{opt.label}}
                     </label>
                 </template>
+                <img v-if="modalData.type[labelKey]==='image'" :src="modalData.value[labelKey]">
+                <input v-if="modalData.type[labelKey]==='file'" type="file" class="form-control" name="file_upload" v-model="modalData.value[labelKey]" @change="onFileChange">
                 <input v-if="modalData.type[labelKey]==='text'" type="text" class="form-control" :placeholder="modalData.label[labelKey]" v-model="modalData.value[labelKey]">
                 <p v-if="modalData.type[labelKey]==='date'" class="form-control-static">{{modalData.value[labelKey] | my-date}}</p>
                 <span v-if="modalData.errMsg[labelKey]" class="help-block">{{modalData.errMsg[labelKey]}}</span>
@@ -19,12 +21,16 @@
 </template>
 
 <script>
+    import filterMixin from '../../mixins/filterMixin'
     export default {
-        props: ['modalData','formSubmit','formUpdate'],
-        filters: {
-            myDate(data) {
-                return new Date(data*1000).toLocaleString()
-            }
-        }
+        mixins: [filterMixin],
+        props: ['modalData','formSubmit','formUpdate','onFileChange']
     }
 </script>
+
+<style lang="stylus">
+    form
+        .form-group
+            img
+                max-height: 100px
+</style>
