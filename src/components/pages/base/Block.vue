@@ -36,8 +36,8 @@
         mixins: [commonMixin, apiMixin],
         data () {
             return {
-                subject: "currency",
-                code: "ccy"
+                subject: "block",
+                code: "bck"
             }
         },
         ready() {
@@ -47,10 +47,8 @@
             dataLabel() {
                 return {
                     [`${this.code}_status`]: "狀態",
-                    [`${this.code}_name_zh_TW`]: "繁中名稱",
-                    [`${this.code}_name_zh_CN`]: "簡中名稱",
-                    [`${this.code}_name_en`]: "英文名稱",
-                    [`${this.code}_code`]: "代碼",
+                    [`${this.code}_type`]: "類型",
+                    [`${this.code}_content`]: "內容",
                     [`${this.code}_udate`]: "更新時間",
                     [`${this.code}_add_date`]: "新增時間",
                     [`${this.code}_guid`]: "ID",
@@ -62,15 +60,14 @@
                 var columns = this.dataLabel
                 var display = {
                     [`${this.code}_status`]: true,
-                    [`${this.code}_name_zh_TW`]: true,
-                    [`${this.code}_name_zh_CN`]: true,
-                    [`${this.code}_name_en`]: true,
-                    [`${this.code}_code`]: true,
-                    [`${this.code}_udate`]: true,
+                    [`${this.code}_type`]: true,
+                    [`${this.code}_content`]: true,
+                    [`${this.code}_udate`]: false,
                     [`${this.code}_add_date`]: false
                 }
 
                 var filter = {
+                    [`${this.code}_type`]: "type",
                     [`${this.code}_status`]: "status",
                     [`${this.code}_udate`]: "date",
                     [`${this.code}_add_date`]: "date"
@@ -100,10 +97,8 @@
                     value: {},
                     type: {
                         [`${this.code}_status`]: "radio",
-                        [`${this.code}_name_zh_TW`]: "text",
-                        [`${this.code}_name_zh_CN`]: "text",
-                        [`${this.code}_name_en`]: "text",
-                        [`${this.code}_code`]: "text",
+                        [`${this.code}_type`]: "radio",
+                        [`${this.code}_content`]: "text",
                         [`${this.code}_udate`]: "date",
                         [`${this.code}_add_date`]: "date",
                         [`${this.code}_guid`]: "static"
@@ -112,6 +107,11 @@
                         [`${this.code}_status`]: [
                             {label: "啟用", value: 3},
                             {label: "不啟用", value: -2}
+                        ],
+                        [`${this.code}_type`]: [
+                            {label: "電話", value: 1},
+                            {label: "IP", value: 2},
+                            {label: "銀行帳號", value: 3}
                         ]
                     },
                     label: this.dataLabel,
@@ -124,17 +124,13 @@
                 this.modalData.id = null
                 this.modalData.display = {
                     [`${this.code}_status`]: true,
-                    [`${this.code}_name_zh_TW`]: true,
-                    [`${this.code}_name_zh_CN`]: true,
-                    [`${this.code}_name_en`]: true,
-                    [`${this.code}_code`]: true
+                    [`${this.code}_type`]: true,
+                    [`${this.code}_content`]: true
                 }
                 this.modalData.value = {
                     [`${this.code}_status`]: 3,
-                    [`${this.code}_name_zh_TW`]: "",
-                    [`${this.code}_name_zh_CN`]: "",
-                    [`${this.code}_name_en`]: "",
-                    [`${this.code}_code`]: ""
+                    [`${this.code}_type`]: "",
+                    [`${this.code}_content`]: ""
                 }
 
             },
@@ -145,10 +141,8 @@
                 this.modalData.value = data
                 this.modalData.display = {
                     [`${this.code}_status`]: true,
-                    [`${this.code}_name_zh_TW`]: true,
-                    [`${this.code}_name_zh_CN`]: true,
-                    [`${this.code}_name_en`]: true,
-                    [`${this.code}_code`]: true,
+                    [`${this.code}_type`]: true,
+                    [`${this.code}_content`]: true,
                     [`${this.code}_udate`]: true,
                     [`${this.code}_add_date`]: true
                 }
@@ -156,10 +150,8 @@
             createSubmit(_data) {
                 var data = {
                     [`${this.code}_status`]: _data[`${this.code}_status`],
-                    [`${this.code}_name_zh_TW`]: _data[`${this.code}_name_zh_TW`],
-                    [`${this.code}_name_zh_CN`]: _data[`${this.code}_name_zh_CN`],
-                    [`${this.code}_name_en`]: _data[`${this.code}_name_en`],
-                    [`${this.code}_code`]: _data[`${this.code}_code`]
+                    [`${this.code}_type`]: _data[`${this.code}_type`],
+                    [`${this.code}_content`]: _data[`${this.code}_content`]
                 }
 
                 this.api.setting(this.subject,'postNew',data).then(res=>{
@@ -176,10 +168,8 @@
                 var data = {
                     [`${this.code}_guid`]: this.modalData.id,
                     [`${this.code}_status`]: _data[`${this.code}_status`],
-                    [`${this.code}_name_zh_TW`]: _data[`${this.code}_name_zh_TW`],
-                    [`${this.code}_name_zh_CN`]: _data[`${this.code}_name_zh_CN`],
-                    [`${this.code}_name_en`]: _data[`${this.code}_name_en`],
-                    [`${this.code}_code`]: _data[`${this.code}_code`]
+                    [`${this.code}_type`]: _data[`${this.code}_type`],
+                    [`${this.code}_content`]: _data[`${this.code}_content`]
                 }
                 this.api.setting(this.subject,'updateItem',data).then(res=>{
                     if(!res.code){

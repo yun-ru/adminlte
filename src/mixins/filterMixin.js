@@ -9,6 +9,14 @@ export default {
         myDate(val) {
             return new Date(val*1000).toLocaleString()
         },
+        type(val) {
+            var types = [
+                {label: "電話", value: 1},
+                {label: "IP", value: 2},
+                {label: "銀行帳號", value: 3}
+            ]
+            return _.find(types,{value: val-0})? _.find(types,{value: val-0}).label : ""
+        },
         status(val) {
             switch (val){
                 case 3:

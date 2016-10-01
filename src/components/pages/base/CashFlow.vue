@@ -36,7 +36,7 @@
         mixins: [commonMixin, apiMixin],
         data () {
             return {
-                subject: "currency",
+                subject: "cash-flow",
                 code: "ccy"
             }
         },

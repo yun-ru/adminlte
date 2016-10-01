@@ -15,6 +15,9 @@ import Currency from './components/pages/base/Currency.vue'
 import Role from './components/pages/base/Role.vue'
 import Permission from './components/pages/base/Permission.vue'
 import Theme from './components/pages/base/Theme.vue'
+import Block from './components/pages/base/Block.vue'
+import Advertising from './components/pages/base/Advertising.vue'
+import CashFlow from './components/pages/base/CashFlow.vue'
 
 
 Vue.use(VueRouter)
@@ -50,9 +53,19 @@ router.map({
             '/theme/setting/getList': {
                 component: Theme
             },
+            '/block/setting/getList': {
+                component: Block
+            },
+            '/cash-flow/setting/getList': {
+                component: CashFlow
+            },
             '/language/setting/getList': {
                 component: Currency
             },
+            '/advertising/setting/getList': {
+                component: Advertising
+            },
+
 
 
 

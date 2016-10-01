@@ -12,6 +12,7 @@
                 <!--<td v-if=""></td>-->
                 <td :class="{img:tableData.filter[key]==='image'}" v-for="(key,val) in tableData.columns" v-if="tableData.display[key]">
                     <span v-if="!tableData.filter[key]">{{item[key]}}</span>
+                    <span v-if="tableData.filter[key]==='type'">{{item[key] | type}}</span>
                     <span v-if="tableData.filter[key]==='status'">{{item[key] | status}}</span>
                     <span v-if="tableData.filter[key]==='date'">{{item[key] | myDate}}</span>
                     <span v-if="tableData.filter[key]==='edit'">{{item[key] | allowEdit}}</span>
