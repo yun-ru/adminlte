@@ -80,3 +80,14 @@
     }
 
 </script>
+
+<style lang="stylus">
+    .v-transition
+        transition: opacity 0.4s ease-in-out
+    .v-enter, .v-leave
+        opacity: 0
+    .btn .caret
+        margin-left: 10px
+    select.flat
+        border-radius: 0
+</style>

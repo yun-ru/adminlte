@@ -28,6 +28,7 @@ export default {
                     }
                 })
             }
+
             var getTestRoute = function(action) {
                 return action === 'getList' ? 'static/data/getList.json' : 'static/data/getItem.json'
             }
@@ -56,6 +57,20 @@ export default {
                         type = router.assign[action].type
                         return apiInit( type , route , data)
                     }
+                },
+                upload: function(data) {
+                    return $.ajax({
+                        method: 'post',
+                        url: apiConfig.host + 'theme/setting/do-upload',
+                        xhrFields: {
+                            withCredentials: true
+                        },
+                        data: data,
+                        cache: false,
+                        contentType: false,
+                        processData: false
+                    })
+
                 }
             }
         }

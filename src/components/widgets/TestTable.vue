@@ -29,21 +29,13 @@
 </template>
 
 <script>
-    import commonMixin from '../../mixins/commonMixin'
+    import filterMixin from '../../mixins/filterMixin'
     export default {
-        mixins: [commonMixin],
-        props: ['code','test-table-data','permission','onModify','onDelete'],
+        mixins: [filterMixin],
+        props: ['code','test-table-data','permission','permissionBtn','onModify','onDelete'],
         methods: {
             allow(specific) {
-                if(specific){
-                    if(specific==='CUSTOM'){
-                        return true
-                    }else{
-                        return false
-                    }
-                }else{
-                    return true
-                }
+                return specific===undefined || specific==='CUSTOM'
             }
         }
     }

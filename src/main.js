@@ -14,6 +14,7 @@ import VueValidator from 'vue-validator'
 import Currency from './components/pages/base/Currency.vue'
 import Role from './components/pages/base/Role.vue'
 import Permission from './components/pages/base/Permission.vue'
+import Theme from './components/pages/base/Theme.vue'
 
 
 Vue.use(VueRouter)
@@ -26,54 +27,51 @@ Vue.use(VueValidator)
 export var router = new VueRouter({ linkActiveClass: 'active' })
 
 router.map({
-  '*': {
-    component: NotFound
-  },
-  '/': {
-    name: 'main',
-    component: Platform,
-    subRoutes: {
-      '/': {
-        component: Currency
-      },
+    '*': {
+        component: NotFound
+    },
+    '/': {
+        name: 'main',
+        component: Platform,
+        subRoutes: {
+            '/': {
+                component: Currency
+            },
 
-      '/ui/general': {
-        component: PageGeneral
-      },
-      '/ui/icons': {
-        component: PageIcons
-      },
-      '/ui/buttons': {
-        component: PageButtons
-      },
+            '/role/setting/getList': {
+                component: Role
+            },
+            '/role/assign/show': {
+                component: Permission
+            },
+            '/currency/setting/getList': {
+                component: Currency
+            },
+            '/theme/setting/getList': {
+                component: Theme
+            },
 
-      '/role/setting/getList': {
-        component: Role
-      },
-      '/role/assign/show': {
-        component: Permission
-      },
-      '/currency/setting/getList': {
-        component: Currency
-      },
-      '/base/payment': {
-        component: Currency
-      },
 
-      '/member/:level': {
-        component: Currency
-      },
-      '/member/service': {
-        component: PageIcons
-      },
-      '/member/login-log': {
-        component: PageButtons
-      },
+
+
+            '/base/payment': {
+                component: Currency
+            },
+
+            '/member/:level': {
+                component: Currency
+            },
+            '/member/service': {
+                component: PageIcons
+            },
+            '/member/login-log': {
+                component: PageButtons
+            },
+        }
+    },
+    '/login': {
+        component: Login
     }
-  },
-  '/login': {
-    component: Login
-  }
 })
 
 router.start(App, 'body')

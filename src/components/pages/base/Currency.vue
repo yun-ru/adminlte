@@ -5,6 +5,7 @@
         <content-body v-if="resData"
                       :code="code"
                       :permission="permission"
+                      :permission-btn="permissionBtn"
                       :table-data="tableData"
                       :test-table-data="testTableData"
                       :data-reload="dataReload"
@@ -14,6 +15,13 @@
                       :pagination="pagination"
                       :data-label="dataLabel"
                       :change-page="changePage"
+                      :search-text="searchText"
+                      :on-search="onSearch"
+                      :check-empty="checkEmpty"
+                      :get-search-type="getSearchType"
+                      :search-types="searchTypes"
+                      :search-mode="searchMode"
+                      :current-search-type="currentSearchType"
         ></content-body>
 
         <Modal :modal-data="modalData" :form-submit="formSubmit" :close-modal="closeModal"></Modal>
@@ -22,14 +30,11 @@
 </template>
 
 <script>
-    import ContentHeader from '../../widgets/ContentHeader.vue'
-    import ContentBody from '../../widgets/ContentBody.vue'
-    import Modal from '../../widgets/Modal.vue'
-    import tableMixin from '../../../mixins/tableMixin'
     import commonMixin from '../../../mixins/commonMixin'
     import apiMixin from '../../../mixins/apiMixin'
 
     export default {
+        mixins: [commonMixin, apiMixin],
         data () {
             return {
                 resData: null,
@@ -49,18 +54,10 @@
                 }
             }
         },
+        ready() {
+            this.dataReload();
+        },
         computed: {
-            pagination() {
-                return this.resData.data.paginator
-            },
-            breadcrumb() {
-                return _.map(this.resData.data.breadcrumb,item=>{
-                    return {text: item.node_name_zh_TW,link: item.node_route}
-                })
-            },
-            permission() {
-                return (this.resData.data.permission >>> 0).toString(2)
-            },
             testTableData() {
                 var list = this.resData.data.list.map(item=>{return {...item, id: item[this.code+'_guid']}})
                 var columns = this.dataLabel
@@ -94,60 +91,7 @@
                 }
             }
         },
-        ready() {
-            this.dataReload()
-        },
-        components: {
-            ContentHeader,
-            ContentBody,
-            Modal
-        },
         methods: {
-            dataReload() {
-                this.api.setting(this.subject,"getList").then(res=>{
-                    if(res.code===0) {
-                        this.resData = res
-                    }else{
-                        this.handleError(res)
-                    }
-                })
-            },
-            onCreate() {
-                this.createReady()
-                this.openModal()
-            },
-            onModify(id) {
-                this.api.setting(this.subject,"getItem",{ccy_guid: id}).then(res=>{
-                    if(res.code===0){
-                        this.modifyReady(res.data.currency)
-                        this.openModal()
-                    }else{
-                        this.handleError(res)
-                    }
-                })
-            },
-            onDelete(id) {
-                swal({
-                    title: '確認刪除?',
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: '刪除',
-                    cancelButtonText: '取消',
-                }).then(()=> {
-                    this.api.setting(this.subject, 'delItem', {ccy_guid: id}).then(res=>{
-                        if(res.code===0){
-                            swal("刪除成功！").then(()=> this.dataReload())
-                        }else{
-                            this.handleError(res)
-                        }
-                    })
-                }, (dismiss)=> {
-                    if (dismiss === 'cancel') {
-                        swal('刪除已取消');
-                    }
-                });
-
-            },
             modifyReady(data) {
                 this.modalInit()
                 this.modalData.title = "修改幣別項目"
@@ -246,23 +190,9 @@
                     ccy_code: ""
                 }
 
-            },
-            formSubmit() {
-                var data = this.modalData.value
-                this.modalData.id ? this.modifySubmit(data) : this.createSubmit(data)
             }
-        },
-        mixins: [tableMixin, commonMixin, apiMixin]
+        }
     }
 </script>
 
-<style lang="stylus">
-    .v-transition
-        transition: opacity 0.4s ease-in-out
-    .v-enter, .v-leave
-        opacity: 0
-    .btn .caret
-        margin-left: 10px
-    select.flat
-        border-radius: 0
-</style>
+
