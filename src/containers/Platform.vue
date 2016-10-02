@@ -32,7 +32,7 @@
             'app-footer': Footer
         },
         ready() {
-            this.loadMenu.call(this)
+            if(this.menu.length===1) this.loadMenu.call(this)
         },
         methods: {
             async loadMenu(){

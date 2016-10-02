@@ -161,7 +161,6 @@
                 this.modalData.value = data
                 var target = _.find(this.tableData.list,{files_guid: data[`${this.code}_files_guid`]})
                 var path = this.host + target.files_folder + "/" +target.files_name
-                console.log(path)
                 this.modalData.value[`files_name`] = path
                 this.modalData.display = {
                     [`pick_file`]: true,
