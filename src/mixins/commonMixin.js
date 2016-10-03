@@ -11,13 +11,7 @@ export default {
           modalData: {},
           searchMode: false,
           searchText: "",
-          currentSearchType: 0,
-          searchTypes: [
-              {text: "全部名稱", value: 0, code: "complex"},
-              {text: "繁中名稱", value: 1, code: "name_zh_TW"},
-              {text: "簡中名稱", value: 2, code: "name_zh_CN"},
-              {text: "English Name", value: 3, code: "name_en"}
-          ],
+          currentSearchType: "search_complex",
           crudList: {
               C: [3, 7, 11, 15],
               R: [1, 3, 5, 7, 9, 11, 13, 15],
@@ -29,7 +23,18 @@ export default {
               {text: "新增", value: 2, code: "C"},
               {text: "修改", value: 4, code: "U"},
               {text: "刪除", value: 8, code: "D"}
-          ]
+          ],
+          opts: {
+              status: [
+                  {label: "啟用", value: 3},
+                  {label: "不啟用", value: -2}
+              ],
+              blockTypes: [
+                  {label: "電話", value: 1},
+                  {label: "IP", value: 2},
+                  {label: "銀行帳號", value: 3}
+              ]
+          }
       }
     },
     computed: {
@@ -141,23 +146,15 @@ export default {
             });
 
         },
-        getSearchType(currentSearchType) {
-            this.currentSearchType = currentSearchType
-            var target = _.find(this.searchTypes,{value: this.currentSearchType})
-            var searchMsg = this.currentSearchType>0 ? `search_${this.code}_${target.code}` : `search_${target.code}`
-            console.log(searchMsg)
-        },
         checkEmpty(searchText) {
             if(searchText===""){
                 this.dataReload()
             }
         },
-        onSearch(searchText) {
-            console.log(this)
-            this.searchText = searchText
+        onSearch(currentType,searchText) {
             this.searchMode = true
             var data = {
-                search_complex: this.searchText
+                [currentType]: searchText
             }
             this.api.setting(this.subject,"getList",data).then(res=>{
                 if(res.code===0) {

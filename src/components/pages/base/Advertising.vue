@@ -53,11 +53,9 @@
                     [`pick_file`]: "選擇圖片",
                     [`files_name`]: "縮圖",
                     [`${this.code}_status`]: "狀態",
-                    [`${this.code}_name_zh_TW`]: "繁中名稱",
-                    [`${this.code}_name_zh_CN`]: "簡中名稱",
-                    [`${this.code}_name_en`]: "英文名稱",
-                    [`les_guid`]: "語系",
+                    [`${this.code}_les_guid`]: "語系",
                     [`${this.code}_title`]: "標題",
+                    [`${this.code}_description`]: "說明",
                     [`${this.code}_link`]: "連結",
                     [`${this.code}_blank`]: "另開視窗",
                     [`${this.code}_udate`]: "更新時間",
@@ -72,11 +70,9 @@
                 var display = {
                     [`files_name`]: true,
                     [`${this.code}_status`]: true,
-                    [`${this.code}_name_zh_TW`]: true,
-                    [`${this.code}_name_zh_CN`]: true,
-                    [`${this.code}_name_en`]: true,
-                    [`les_guid`]: true,
+                    [`${this.code}_les_guid`]: true,
                     [`${this.code}_title`]: true,
+                    [`${this.code}_description`]: true,
                     [`${this.code}_link`]: true,
                     [`${this.code}_blank`]: true,
                     [`${this.code}_udate`]: false,
@@ -84,9 +80,9 @@
                 }
 
                 var filter = {
-                    [`les_guid`]: "lang",
                     [`files_name`]: "image",
-                    [`${this.code}_blank`]: "y_n",
+                    [`${this.code}_les_guid`]: "lang",
+                    [`${this.code}_blank`]: "yes",
                     [`${this.code}_status`]: "status",
                     [`${this.code}_udate`]: "date",
                     [`${this.code}_add_date`]: "date"
@@ -102,7 +98,8 @@
                     columns,
                     display,
                     filter,
-                    controller
+                    controller,
+                    langList: this.langList
                 }
             }
         },
@@ -118,11 +115,9 @@
                         [`files_name`]: "image",
                         [`pick_file`]: "file",
                         [`${this.code}_status`]: "radio",
-                        [`${this.code}_name_zh_TW`]: "text",
-                        [`${this.code}_name_zh_CN`]: "text",
-                        [`${this.code}_name_en`]: "text",
                         [`${this.code}_title`]: "text",
-                        [`les_guid`]: "radio",
+                        [`${this.code}_description`]: "text",
+                        [`${this.code}_les_guid`]: "radio",
                         [`${this.code}_link`]: "text",
                         [`${this.code}_blank`]: "radio",
                         [`${this.code}_udate`]: "date",
@@ -138,7 +133,7 @@
                             {label: "是", value: 'y'},
                             {label: "否", value: 'n'}
                         ],
-                        [`les_guid`]: _.map(this.langList,item=>{
+                        [`${this.code}_les_guid`]: _.map(this.langList,item=>{
                             return {label: item.les_name_zh_TW, value: item.les_guid}
                         })
 
@@ -149,17 +144,15 @@
             },
             createReady() {
                 this.modalInit()
-                this.modalData.title = "新增幣別項目"
+                this.modalData.title = "新增廣告輪播項目"
                 this.modalData.id = null
                 this.modalData.display = {
                     [`pick_file`]: true,
                     [`files_name`]: false,
                     [`${this.code}_status`]: true,
-                    [`${this.code}_name_zh_TW`]: true,
-                    [`${this.code}_name_zh_CN`]: true,
-                    [`${this.code}_name_en`]: true,
-                    [`les_guid`]: true,
+                    [`${this.code}_les_guid`]: true,
                     [`${this.code}_title`]: true,
+                    [`${this.code}_description`]: true,
                     [`${this.code}_link`]: true,
                     [`${this.code}_blank`]: true
                 }
@@ -167,31 +160,26 @@
                     [`files_name`]: "",
                     [`pick_file`]: "",
                     [`${this.code}_status`]: 3,
-                    [`${this.code}_name_zh_TW`]: "",
-                    [`${this.code}_name_zh_CN`]: "",
-                    [`${this.code}_name_en`]: "",
-                    [`les_guid`]: "",
+                    [`${this.code}_les_guid`]: "",
                     [`${this.code}_title`]: "",
+                    [`${this.code}_description`]: "",
                     [`${this.code}_link`]: "",
                     [`${this.code}_blank`]: "y"
-
                 }
 
             },
             modifyReady(data) {
                 this.modalInit()
-                this.modalData.title = "修改幣別項目"
+                this.modalData.title = "修改廣告輪播項目"
                 this.modalData.id = data[`${this.code}_guid`]
                 this.modalData.value = data
                 this.modalData.display = {
                     [`pick_file`]: true,
                     [`files_name`]: true,
                     [`${this.code}_status`]: true,
-                    [`${this.code}_name_zh_TW`]: true,
-                    [`${this.code}_name_zh_CN`]: true,
-                    [`${this.code}_name_en`]: true,
-                    [`les_guid`]: true,
+                    [`${this.code}_les_guid`]: true,
                     [`${this.code}_title`]: true,
+                    [`${this.code}_description`]: true,
                     [`${this.code}_link`]: true,
                     [`${this.code}_blank`]: true,
                     [`${this.code}_udate`]: true,
@@ -200,13 +188,11 @@
             },
             createSubmit(_data) {
                 var data = {
-                    [`files_guid`]: this.modalData.file_guid,
+                    [`fi${this.code}_les_guid`]: this.modalData.file_guid,
                     [`${this.code}_status`]: _data[`${this.code}_status`],
-                    [`${this.code}_name_zh_TW`]: _data[`${this.code}_name_zh_TW`],
-                    [`${this.code}_name_zh_CN`]: _data[`${this.code}_name_zh_CN`],
-                    [`${this.code}_name_en`]: _data[`${this.code}_name_en`],
-                    [`les_guid`]: _data[`les_guid`],
+                    [`${this.code}_les_guid`]: _data[`${this.code}_les_guid`],
                     [`${this.code}_title`]: _data[`${this.code}_title`],
+                    [`${this.code}_description`]: _data[`${this.code}_description`],
                     [`${this.code}_link`]: _data[`${this.code}_link`],
                     [`${this.code}_blank`]: _data[`${this.code}_blank`]
                 }
@@ -224,13 +210,11 @@
             modifySubmit(_data) {
                 var data = {
                     [`${this.code}_guid`]: this.modalData.id,
-                    [`files_guid`]: this.modalData.file_guid,
+                    [`fi${this.code}_les_guid`]: this.modalData.file_guid,
                     [`${this.code}_status`]: _data[`${this.code}_status`],
-                    [`${this.code}_name_zh_TW`]: _data[`${this.code}_name_zh_TW`],
-                    [`${this.code}_name_zh_CN`]: _data[`${this.code}_name_zh_CN`],
-                    [`${this.code}_name_en`]: _data[`${this.code}_name_en`],
-                    [`les_guid`]: _data[`les_guid`],
+                    [`${this.code}_les_guid`]: _data[`${this.code}_les_guid`],
                     [`${this.code}_title`]: _data[`${this.code}_title`],
+                    [`${this.code}_description`]: _data[`${this.code}_description`],
                     [`${this.code}_link`]: _data[`${this.code}_link`],
                     [`${this.code}_blank`]: _data[`${this.code}_blank`]
                 }

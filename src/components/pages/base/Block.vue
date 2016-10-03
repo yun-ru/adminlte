@@ -44,6 +44,14 @@
             this.dataReload();
         },
         computed: {
+            searchTypes() {
+                return [
+                    {text: "全部", value: "search_complex"},
+                    {text: "狀態", value: `search_${this.code}_status`, opts: this.opts.status},
+                    {text: "內容", value: `search_${this.code}_content`},
+                    {text: "類型", value: `search_${this.code}_type`, opts: this.opts.blockTypes}
+                ]
+            },
             dataLabel() {
                 return {
                     [`${this.code}_status`]: "狀態",
@@ -104,15 +112,8 @@
                         [`${this.code}_guid`]: "static"
                     },
                     option: {
-                        [`${this.code}_status`]: [
-                            {label: "啟用", value: 3},
-                            {label: "不啟用", value: -2}
-                        ],
-                        [`${this.code}_type`]: [
-                            {label: "電話", value: 1},
-                            {label: "IP", value: 2},
-                            {label: "銀行帳號", value: 3}
-                        ]
+                        [`${this.code}_status`]: this.opts.status,
+                        [`${this.code}_type`]: this.opts.blockTypes
                     },
                     label: this.dataLabel,
                     errMsg: {}

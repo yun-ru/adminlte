@@ -12,6 +12,8 @@
                 <!--<td v-if=""></td>-->
                 <td :class="{img:tableData.filter[key]==='image'}" v-for="(key,val) in tableData.columns" v-if="tableData.display[key]">
                     <span v-if="!tableData.filter[key]">{{item[key]}}</span>
+                    <span v-if="tableData.filter[key]==='lang'">{{item[key] | lang}}</span>
+                    <span v-if="tableData.filter[key]==='yes'">{{item[key] | yes}}</span>
                     <span v-if="tableData.filter[key]==='type'">{{item[key] | type}}</span>
                     <span v-if="tableData.filter[key]==='status'">{{item[key] | status}}</span>
                     <span v-if="tableData.filter[key]==='date'">{{item[key] | myDate}}</span>
@@ -40,6 +42,17 @@
             allow(specific) {
                 return specific===undefined || specific==='CUSTOM'
             }
+        },
+        filters:{
+            lang(val) {
+                var types = _.map(this.tableData.langList,item=>{
+                    return {label: item.les_name_zh_TW, value: item.les_guid}
+                })
+                console.log(val)
+                console.log(types)
+
+                return _.find(types,{value: val})? _.find(types,{value: val}).label : "99"
+            },
         }
     }
 </script>

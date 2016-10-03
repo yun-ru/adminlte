@@ -6,13 +6,6 @@ export default {
         }
     },
     filters: {
-        lang(val) {
-            var types = _.map(this.langList,item=>{
-                return {label: item.les_name_zh_TW, value: item.les_guid}
-            })
-
-            return _.find(types,{value: val-0})? _.find(types,{value: val-0}).label : ""
-        },
         myDate(val) {
             return new Date(val*1000).toLocaleString()
         },
@@ -24,12 +17,12 @@ export default {
             ]
             return _.find(types,{value: val-0})? _.find(types,{value: val-0}).label : ""
         },
-        y_n(val) {
+        yes(val) {
             var types = [
-                {label: "是", value: 'y'},
-                {label: "否", value: 'n'}
+                {label: "是", value: "y"},
+                {label: "否", value: "n"}
             ]
-            return _.find(types,{value: val-0})? _.find(types,{value: val-0}).label : ""
+            return _.find(types,{value: val})? _.find(types,{value: val}).label : ""
         },
         status(val) {
             var types = [
