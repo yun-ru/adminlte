@@ -18,6 +18,7 @@ import Theme from './components/pages/base/Theme.vue'
 import Block from './components/pages/base/Block.vue'
 import Advertising from './components/pages/base/Advertising.vue'
 import CashFlow from './components/pages/base/CashFlow.vue'
+import Languages from './components/pages/base/Languages.vue'
 
 
 Vue.use(VueRouter)
@@ -59,8 +60,8 @@ router.map({
             '/cashFlow/setting/getList': {
                 component: CashFlow
             },
-            '/language/setting/getList': {
-                component: Currency
+            '/languages/setting/getList': {
+                component: Languages
             },
             '/advertising/setting/getList': {
                 component: Advertising

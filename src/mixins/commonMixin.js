@@ -5,6 +5,7 @@ export default {
     data() {
       return {
           host: "http://61.219.77.174",
+          langList: [],
           file: null,
           resData: null,
           modalData: {},
@@ -16,6 +17,18 @@ export default {
               {text: "繁中名稱", value: 1, code: "name_zh_TW"},
               {text: "簡中名稱", value: 2, code: "name_zh_CN"},
               {text: "English Name", value: 3, code: "name_en"}
+          ],
+          crudList: {
+              C: [3, 7, 11, 15],
+              R: [1, 3, 5, 7, 9, 11, 13, 15],
+              U: [5, 7, 13, 15],
+              D: [9, 11, 13, 15]
+          },
+          initCRUD: [
+              {text: "讀取", value: 1, code: "R"},
+              {text: "新增", value: 2, code: "C"},
+              {text: "修改", value: 4, code: "U"},
+              {text: "刪除", value: 8, code: "D"}
           ]
       }
     },
@@ -29,18 +42,38 @@ export default {
             })
         },
         permission() {
-            return (this.resData.data.permission >>> 0).toString(2)
+            return this.resData.data.permission
         },
-        permissionBtn() {
+        CRUD() {
             return {
-                show: this.permission[0]-0,
-                edit: this.permission[1]-0,
-                add: this.permission[2]-0,
-                del: this.permission[3]-0
+                C: _.indexOf(this.toCrudList(this.permission),_.find(this.initCRUD,{code:"C"}).value) > -1,
+                R: _.indexOf(this.toCrudList(this.permission),_.find(this.initCRUD,{code:"R"}).value) > -1,
+                U: _.indexOf(this.toCrudList(this.permission),_.find(this.initCRUD,{code:"U"}).value) > -1,
+                D: _.indexOf(this.toCrudList(this.permission),_.find(this.initCRUD,{code:"D"}).value) > -1,
             }
         }
     },
     methods: {
+        toCrudList(num) {
+            switch(num){
+                case 1:
+                    return [1]
+                case 3:
+                    return [1,2]
+                case 5:
+                    return [1,4]
+                case 7:
+                    return [1,2,4]
+                case 9:
+                    return [1,8]
+                case 11:
+                    return [1,2,8]
+                case 13:
+                    return [1,4,8]
+                case 15:
+                    return [1,2,4,8]
+            }
+        },
         onFileChange() {
             var formData = new FormData($("#form")[0])
             this.api.upload(formData).then(res=>{
@@ -53,26 +86,33 @@ export default {
                 })
             })
         },
-        dataReload() {
+        async dataReload() {
             this.searchMode = false
             this.searchText = ""
-            this.api.setting(this.subject,"getList").then(res=>{
-                if(res.code===0) {
-                    this.resData = res
-                }else{
-                    this.handleError(res)
-                }
-            })
+
+            try{
+                var mainRes = await this.api.setting(this.subject,"getList")
+                var langRes = await this.api.setting("languages","getList")
+                mainRes.code===0 ? this.resData = mainRes : this.handleError(mainRes)
+                langRes.code===0 ? this.langList = langRes.data.list : this.handleError(langRes)
+            }catch(err) {
+                this.handleError(err)
+            }
+
         },
         onCreate() {
             this.createReady()
             this.openModal()
         },
         onModify(id) {
-            console.log(this)
             this.api.setting(this.subject,"getItem",{[`${this.code}_guid`]: id}).then(res=>{
                 if(res.code===0){
-                    this.modifyReady(res.data[this.subject])
+                    if(this.subject==="cash-flow"){
+                        this.modifyReady(res.data['cash_flow'])
+                    }else{
+                        this.modifyReady(res.data[this.subject])
+                    }
+
                     this.openModal()
                 }else{
                     this.handleError(res)

@@ -6,6 +6,13 @@ export default {
         }
     },
     filters: {
+        lang(val) {
+            var types = _.map(this.langList,item=>{
+                return {label: item.les_name_zh_TW, value: item.les_guid}
+            })
+
+            return _.find(types,{value: val-0})? _.find(types,{value: val-0}).label : ""
+        },
         myDate(val) {
             return new Date(val*1000).toLocaleString()
         },
@@ -17,13 +24,19 @@ export default {
             ]
             return _.find(types,{value: val-0})? _.find(types,{value: val-0}).label : ""
         },
+        y_n(val) {
+            var types = [
+                {label: "是", value: 'y'},
+                {label: "否", value: 'n'}
+            ]
+            return _.find(types,{value: val-0})? _.find(types,{value: val-0}).label : ""
+        },
         status(val) {
-            switch (val){
-                case 3:
-                    return '啟用'
-                case -2:
-                    return '停用'
-            }
+            var types = [
+                {label: "啟用", value: 3},
+                {label: "不啟用", value: -2}
+            ]
+            return _.find(types,{value: val-0})? _.find(types,{value: val-0}).label : ""
         },
         showImg(val,item) {
             return this.host + item.files_folder+ '/' + val

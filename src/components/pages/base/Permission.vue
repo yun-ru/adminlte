@@ -9,12 +9,14 @@
                         <div class="btn-group pull-left">
                             <a class="btn btn-sm btn-default btn-flat"><i class="fa fa-arrow-left"></i><span v-if="winType !== 'xs'">返回</span></a>
                             <a class="btn btn-sm btn-default btn-flat" @click="dataReload"><i class="fa fa-undo"></i><span v-if="winType !== 'xs'">更新</span></a>
-                            <a class="btn btn-sm btn-flat btn-success" v-if="permissionBtn.edit && !editMode" @click="onEdit"><i class="fa fa-wrench"></i><span v-if="winType !== 'xs'">編輯</span></a>
-                            <a class="btn btn-sm btn-flat btn-warning" v-if="permissionBtn.edit && editMode" @click="onSubmit"><i class="fa fa-wrench"></i><span v-if="winType !== 'xs'">確認修改</span></a>
+
+                            <a class="btn btn-sm btn-flat btn-success" v-if="!editMode" @click="onEdit"><i class="fa fa-wrench"></i><span v-if="winType !== 'xs'">編輯</span></a>
+                            <a class="btn btn-sm btn-flat btn-warning" v-else @click="onSubmit"><i class="fa fa-wrench"></i><span v-if="winType !== 'xs'">確認修改</span></a>
                         </div>
                     </div>
                 </div>
                 <div class="box-body">
+                    {{per|json}}
                     <permission-table v-if="tableData"
                                       :table-data="tableData"
                                       :edit-mode="editMode"
@@ -66,34 +68,23 @@
                 var roles = srcData.data.role
                 var nodes = srcData.data.node
                 var role_node = srcData.data.role_node
-                var initCRUD = [
-                    {text: "新增", value: 2, code: "C"},
-                    {text: "讀取", value: 1, code: "R"},
-                    {text: "修改", value: 4, code: "U"},
-                    {text: "刪除", value: 8, code: "D"}
-                ]
-                
+
                 var getSumList = function(node,role) {
                     var target = _.find(role_node,{rne_node_guid: node.node_guid, rne_role_guid: role.role_guid})
-                    var sumList = []
-                    if(target){
-                        var crud = (target.rne_crud >>> 0).toString(2)
-                        _.each(crud,(t,i)=>{
-                            if(t) sumList.push(initCRUD[i].value)
-                        })
-                    }
-                    return sumList
+
+                    return target ? this.toCrudList(target.rne_crud) : []
+
                 }
                 var roleNodeList = _.map(nodes,node=>{
                     return _.map(roles,role=>{
-                        return getSumList(node,role)
+                        return getSumList.call(this,node,role)
                     })
                 })
 
                 return {
                     roles,
                     nodes,
-                    initCRUD,
+                    initCRUD: this.initCRUD,
                     roleNodeList,
                     roleNode: this.prevRoleNode
                 }
@@ -115,11 +106,8 @@
             onEdit() {
                 this.editMode = true
                 this.nextRoleNode = _.extend(this.prevRoleNode)
-//                this.api.assign('edit').then(res=>{
-//                    this.editData = res
-//                })
             },
-            onChange(node,role,crudItem) {
+            onChange(node,role,crudItem,e) {
 
                 console.log(crudItem)
                 var nodeID = node.node_guid

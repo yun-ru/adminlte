@@ -5,7 +5,7 @@
         <content-body v-if="resData"
                       :code="code"
                       :permission="permission"
-                      :permission-btn="permissionBtn"
+                      :crud="CRUD"
                       :table-data="tableData"
                       :data-reload="dataReload"
                       :on-modify="onModify"

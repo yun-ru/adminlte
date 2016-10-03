@@ -20,8 +20,8 @@
                 </td>
                 <td v-if="!allow(item[code+'_specific'])" class="text-muted">(不可修改)</td>
                 <td v-if="allow(item[code+'_specific'])">
-                    <button class="btn btn-default btn-xs" type="button" v-if="permissionBtn.edit" @click="onModify(item.id)">修改</button>
-                    <button class="btn btn-danger btn-xs" type="button" v-if="permissionBtn.del" @click="onDelete(item.id)">刪除</button>
+                    <button class="btn btn-default btn-xs" type="button" v-if="CRUD.U" @click="onModify(item.id)">修改</button>
+                    <button class="btn btn-danger btn-xs" type="button" v-if="CRUD.D" @click="onDelete(item.id)">刪除</button>
                     <p v-else class="text-muted">(權限不足)</p>
                 </td>
             </tr>
@@ -35,7 +35,7 @@
     import filterMixin from '../../mixins/filterMixin'
     export default {
         mixins: [filterMixin],
-        props: ['code','tableData','permission','permissionBtn','onModify','onDelete'],
+        props: ['code','tableData','permission','CRUD','onModify','onDelete'],
         methods: {
             allow(specific) {
                 return specific===undefined || specific==='CUSTOM'

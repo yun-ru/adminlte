@@ -92,6 +92,7 @@ export default {
                     this.msg = "帳號或密碼錯誤請重新輸入"
                     break
                 case 10006:
+                    if(res.text.files_guid) res.text.pick_file = res.text.files_guid
                     this.modalData.errMsg = res.text
                     break
                 case 30006:

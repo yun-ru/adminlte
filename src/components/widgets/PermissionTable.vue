@@ -14,7 +14,7 @@
                     <td v-for="(r_i,role) in tableData.roles">
                         <p v-for="obj in tableData.initCRUD">
                             <label>{{obj.text}}
-                                <input type="checkbox" :disabled="!editMode" v-model="tableData.roleNodeList[n_i][r_i]" :value="obj.value" @change="onChange(node,role,tableData.roleNodeList[n_i][r_i],$e)">
+                                <input type="checkbox" :disabled="!editMode" v-model="tableData.roleNodeList[n_i][r_i]" :value="obj.value" @change="onChange(node,role,tableData.roleNodeList[n_i][r_i],$event)">
                             </label>
                             <span class="text-muted">{{obj.value}}</span>
                         </p>

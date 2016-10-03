@@ -5,7 +5,7 @@
         <content-body v-if="resData"
                       :code="code"
                       :permission="permission"
-                      :permission-btn="permissionBtn"
+                      :crud="CRUD"
                       :table-data="tableData"
                       :data-reload="dataReload"
                       :on-modify="onModify"
@@ -23,7 +23,11 @@
                       :current-search-type="currentSearchType"
         ></content-body>
 
-        <Modal :modal-data="modalData" :form-submit="formSubmit" :close-modal="closeModal"></Modal>
+        <Modal :modal-data="modalData"
+               :form-submit="formSubmit"
+               :close-modal="closeModal"
+               :on-file-change="onFileChange"
+        ></Modal>
     </div>
 
 </template>
@@ -36,8 +40,8 @@
         mixins: [commonMixin, apiMixin],
         data () {
             return {
-                subject: "currency",
-                code: "ccy"
+                subject: "advertising",
+                code: "ang"
             }
         },
         ready() {
@@ -46,11 +50,16 @@
         computed: {
             dataLabel() {
                 return {
+                    [`pick_file`]: "選擇圖片",
+                    [`files_name`]: "縮圖",
                     [`${this.code}_status`]: "狀態",
                     [`${this.code}_name_zh_TW`]: "繁中名稱",
                     [`${this.code}_name_zh_CN`]: "簡中名稱",
                     [`${this.code}_name_en`]: "英文名稱",
-                    [`${this.code}_code`]: "代碼",
+                    [`les_guid`]: "語系",
+                    [`${this.code}_title`]: "標題",
+                    [`${this.code}_link`]: "連結",
+                    [`${this.code}_blank`]: "另開視窗",
                     [`${this.code}_udate`]: "更新時間",
                     [`${this.code}_add_date`]: "新增時間",
                     [`${this.code}_guid`]: "ID",
@@ -61,16 +70,23 @@
                 var list = this.resData.data.list.map(item=>{return {...item, id: item[this.code+'_guid']}})
                 var columns = this.dataLabel
                 var display = {
+                    [`files_name`]: true,
                     [`${this.code}_status`]: true,
                     [`${this.code}_name_zh_TW`]: true,
                     [`${this.code}_name_zh_CN`]: true,
                     [`${this.code}_name_en`]: true,
-                    [`${this.code}_code`]: true,
-                    [`${this.code}_udate`]: true,
+                    [`les_guid`]: true,
+                    [`${this.code}_title`]: true,
+                    [`${this.code}_link`]: true,
+                    [`${this.code}_blank`]: true,
+                    [`${this.code}_udate`]: false,
                     [`${this.code}_add_date`]: false
                 }
 
                 var filter = {
+                    [`les_guid`]: "lang",
+                    [`files_name`]: "image",
+                    [`${this.code}_blank`]: "y_n",
                     [`${this.code}_status`]: "status",
                     [`${this.code}_udate`]: "date",
                     [`${this.code}_add_date`]: "date"
@@ -99,11 +115,16 @@
                     display: {},
                     value: {},
                     type: {
+                        [`files_name`]: "image",
+                        [`pick_file`]: "file",
                         [`${this.code}_status`]: "radio",
                         [`${this.code}_name_zh_TW`]: "text",
                         [`${this.code}_name_zh_CN`]: "text",
                         [`${this.code}_name_en`]: "text",
-                        [`${this.code}_code`]: "text",
+                        [`${this.code}_title`]: "text",
+                        [`les_guid`]: "radio",
+                        [`${this.code}_link`]: "text",
+                        [`${this.code}_blank`]: "radio",
                         [`${this.code}_udate`]: "date",
                         [`${this.code}_add_date`]: "date",
                         [`${this.code}_guid`]: "static"
@@ -112,7 +133,15 @@
                         [`${this.code}_status`]: [
                             {label: "啟用", value: 3},
                             {label: "不啟用", value: -2}
-                        ]
+                        ],
+                        [`${this.code}_blank`]: [
+                            {label: "是", value: 'y'},
+                            {label: "否", value: 'n'}
+                        ],
+                        [`les_guid`]: _.map(this.langList,item=>{
+                            return {label: item.les_name_zh_TW, value: item.les_guid}
+                        })
+
                     },
                     label: this.dataLabel,
                     errMsg: {}
@@ -123,18 +152,29 @@
                 this.modalData.title = "新增幣別項目"
                 this.modalData.id = null
                 this.modalData.display = {
+                    [`pick_file`]: true,
+                    [`files_name`]: false,
                     [`${this.code}_status`]: true,
                     [`${this.code}_name_zh_TW`]: true,
                     [`${this.code}_name_zh_CN`]: true,
                     [`${this.code}_name_en`]: true,
-                    [`${this.code}_code`]: true
+                    [`les_guid`]: true,
+                    [`${this.code}_title`]: true,
+                    [`${this.code}_link`]: true,
+                    [`${this.code}_blank`]: true
                 }
                 this.modalData.value = {
+                    [`files_name`]: "",
+                    [`pick_file`]: "",
                     [`${this.code}_status`]: 3,
                     [`${this.code}_name_zh_TW`]: "",
                     [`${this.code}_name_zh_CN`]: "",
                     [`${this.code}_name_en`]: "",
-                    [`${this.code}_code`]: ""
+                    [`les_guid`]: "",
+                    [`${this.code}_title`]: "",
+                    [`${this.code}_link`]: "",
+                    [`${this.code}_blank`]: "y"
+
                 }
 
             },
@@ -144,22 +184,31 @@
                 this.modalData.id = data[`${this.code}_guid`]
                 this.modalData.value = data
                 this.modalData.display = {
+                    [`pick_file`]: true,
+                    [`files_name`]: true,
                     [`${this.code}_status`]: true,
                     [`${this.code}_name_zh_TW`]: true,
                     [`${this.code}_name_zh_CN`]: true,
                     [`${this.code}_name_en`]: true,
-                    [`${this.code}_code`]: true,
+                    [`les_guid`]: true,
+                    [`${this.code}_title`]: true,
+                    [`${this.code}_link`]: true,
+                    [`${this.code}_blank`]: true,
                     [`${this.code}_udate`]: true,
                     [`${this.code}_add_date`]: true
                 }
             },
             createSubmit(_data) {
                 var data = {
+                    [`files_guid`]: this.modalData.file_guid,
                     [`${this.code}_status`]: _data[`${this.code}_status`],
                     [`${this.code}_name_zh_TW`]: _data[`${this.code}_name_zh_TW`],
                     [`${this.code}_name_zh_CN`]: _data[`${this.code}_name_zh_CN`],
                     [`${this.code}_name_en`]: _data[`${this.code}_name_en`],
-                    [`${this.code}_code`]: _data[`${this.code}_code`]
+                    [`les_guid`]: _data[`les_guid`],
+                    [`${this.code}_title`]: _data[`${this.code}_title`],
+                    [`${this.code}_link`]: _data[`${this.code}_link`],
+                    [`${this.code}_blank`]: _data[`${this.code}_blank`]
                 }
 
                 this.api.setting(this.subject,'postNew',data).then(res=>{
@@ -175,11 +224,15 @@
             modifySubmit(_data) {
                 var data = {
                     [`${this.code}_guid`]: this.modalData.id,
+                    [`files_guid`]: this.modalData.file_guid,
                     [`${this.code}_status`]: _data[`${this.code}_status`],
                     [`${this.code}_name_zh_TW`]: _data[`${this.code}_name_zh_TW`],
                     [`${this.code}_name_zh_CN`]: _data[`${this.code}_name_zh_CN`],
                     [`${this.code}_name_en`]: _data[`${this.code}_name_en`],
-                    [`${this.code}_code`]: _data[`${this.code}_code`]
+                    [`les_guid`]: _data[`les_guid`],
+                    [`${this.code}_title`]: _data[`${this.code}_title`],
+                    [`${this.code}_link`]: _data[`${this.code}_link`],
+                    [`${this.code}_blank`]: _data[`${this.code}_blank`]
                 }
                 this.api.setting(this.subject,'updateItem',data).then(res=>{
                     if(!res.code){

@@ -6,7 +6,7 @@
                     <div class="btn-group pull-left">
                         <a class="btn btn-sm btn-default btn-flat"><i class="fa fa-arrow-left"></i><span v-if="winType !== 'xs'">返回</span></a>
                         <a class="btn btn-sm btn-default btn-flat" @click="dataReload"><i class="fa fa-undo"></i><span v-if="winType !== 'xs'">更新</span></a>
-                        <a class="btn btn-sm btn-success btn-flat" v-if="permission[2]-0" @click="onCreate"><i class="fa fa-plus"></i><span v-if="winType !== 'xs'">新增</span></a>
+                        <a class="btn btn-sm btn-success btn-flat" v-if="CRUD.C" @click="onCreate"><i class="fa fa-plus"></i><span v-if="winType !== 'xs'">新增</span></a>
                     </div>
                     <search
                         :search-text="searchText"
@@ -27,7 +27,7 @@
                     :code="code"
                     :table-data="tableData"
                     :permission="permission"
-                    :permission-btn="permissionBtn"
+                    :crud="CRUD"
                     :on-modify="onModify"
                     :on-delete="onDelete"
                 ></data-table>
@@ -55,7 +55,7 @@
             'code',
             'tableData',
             'permission',
-            'permissionBtn',
+            'CRUD',
             'dataReload',
             'onModify',
             'onCreate',
