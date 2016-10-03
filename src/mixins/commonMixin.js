@@ -89,7 +89,7 @@ export default {
         onFileChange() {
             var formData = new FormData($("#form")[0])
             this.api.upload(formData).then(res=>{
-                this.modalData.file_guid = res.data.files.files_guid
+                this.modalData.files_guid = res.data.files.files_guid
                 this.modalData.fileImg = this.host + res.data.file_path + "/" + res.data.file_name
                 this.modalData.display.files_name = false
                 setTimeout(()=>{

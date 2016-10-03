@@ -53,6 +53,7 @@
                 return {
                     [`pick_file`]: "選擇圖片",
                     [`files_name`]: "縮圖",
+                    [`files_guid`]: "縮圖ID",
                     [`${this.code}_status`]: "狀態",
                     [`${this.code}_name_zh_TW`]: "繁中名稱",
                     [`${this.code}_name_zh_CN`]: "簡中名稱",
@@ -79,6 +80,7 @@
                 var columns = this.dataLabel
                 var display = {
                     [`files_name`]: true,
+                    [`files_guid`]: false,
                     [`${this.code}_status`]: true,
                     [`${this.code}_name_zh_TW`]: true,
                     [`${this.code}_name_zh_CN`]: true,
@@ -114,7 +116,7 @@
         methods: {
             modalInit() {
                 this.modalData = {
-                    file_guid: null,
+                    files_guid: null,
                     fileImg: null,
                     ready: false,
                     title: "",
@@ -173,7 +175,7 @@
                 this.modalData.id = data[`${this.code}_guid`]
                 this.modalData.value = data
                 var target = _.find(this.tableData.list,{files_guid: data[`${this.code}_files_guid`]})
-                var path = this.host + target.files_folder + "/" +target.files_name
+                var path = this.host + target.files_folder + "/" + target.files_name
                 this.modalData.value[`files_name`] = path
                 this.modalData.display = {
                     [`pick_file`]: true,
@@ -189,7 +191,7 @@
             },
             createSubmit(_data) {
                 var data = {
-                    [`files_guid`]: this.modalData.file_guid,
+                    [`files_guid`]: this.modalData.files_guid,
                     [`${this.code}_status`]: _data[`${this.code}_status`],
                     [`${this.code}_name_zh_TW`]: _data[`${this.code}_name_zh_TW`],
                     [`${this.code}_name_zh_CN`]: _data[`${this.code}_name_zh_CN`],
@@ -199,18 +201,18 @@
 
                 this.api.setting(this.subject,'postNew',data).then(res=>{
                     if(res.code===0){
-                        this.closeModal()
-                        swal("新增成功！").then(()=> this.dataReload())
-                    }else{
-                        this.handleError(res)
-                    }
+                    this.closeModal()
+                    swal("新增成功！").then(()=> this.dataReload())
+                }else{
+                    this.handleError(res)
+                }
 
-                })
+            })
             },
             modifySubmit(_data) {
                 var data = {
                     [`${this.code}_guid`]: this.modalData.id,
-                    [`files_guid`]: this.modalData.file_guid,
+                    [`files_guid`]: this.modalData.files_guid || _data[`${this.code}_files_guid`],
                     [`${this.code}_status`]: _data[`${this.code}_status`],
                     [`${this.code}_name_zh_TW`]: _data[`${this.code}_name_zh_TW`],
                     [`${this.code}_name_zh_CN`]: _data[`${this.code}_name_zh_CN`],
@@ -219,12 +221,12 @@
                 }
                 this.api.setting(this.subject,'updateItem',data).then(res=>{
                     if(!res.code){
-                        this.closeModal()
-                        swal("修改成功！").then(()=>this.dataReload())
-                    }else{
-                        this.handleError(res)
-                    }
-                })
+                    this.closeModal()
+                    swal("修改成功！").then(()=>this.dataReload())
+                }else{
+                    this.handleError(res)
+                }
+            })
             }
         }
     }

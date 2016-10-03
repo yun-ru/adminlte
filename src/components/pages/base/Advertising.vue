@@ -205,7 +205,7 @@
             },
             createSubmit(_data) {
                 var data = {
-                    [`files_guid`]: this.modalData.file_guid,
+                    [`files_guid`]: this.modalData.files_guid,
                     [`${this.code}_status`]: _data[`${this.code}_status`],
                     [`les_guid`]: _data[`${this.code}_les_guid`],
                     [`${this.code}_title`]: _data[`${this.code}_title`],
@@ -227,7 +227,7 @@
             modifySubmit(_data) {
                 var data = {
                     [`${this.code}_guid`]: this.modalData.id,
-                    [`files_guid`]: this.modalData.file_guid,
+                    [`files_guid`]: this.modalData.files_guid || _data[`${this.code}_files_guid`],
                     [`${this.code}_status`]: _data[`${this.code}_status`],
                     [`les_guid`]: _data[`${this.code}_les_guid`],
                     [`${this.code}_title`]: _data[`${this.code}_title`],
