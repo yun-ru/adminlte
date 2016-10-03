@@ -21,6 +21,7 @@
                       :search-types="searchTypes"
                       :search-mode="searchMode"
                       :current-search-type="currentSearchType"
+                      :check-select-all="checkSelectAll"
         ></content-body>
 
         <Modal :modal-data="modalData"
@@ -109,7 +110,9 @@
                     display,
                     filter,
                     controller,
-                    langList: this.langList
+                    langList: this.langList,
+                    checkGroup: this.checkGroup,
+                    selectAll: this.selectAll,
                 }
             }
         },

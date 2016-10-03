@@ -30,6 +30,7 @@
                     :crud="CRUD"
                     :on-modify="onModify"
                     :on-delete="onDelete"
+                    :check-select-all="checkSelectAll"
                 ></data-table>
                 <pagination v-if="pagination" :pagination="pagination" :data-label="dataLabel" :change-page="changePage"></pagination>
 
@@ -69,7 +70,8 @@
             'getSearchType',
             'searchTypes',
             'currentSearchType',
-            'searchMode'
+            'searchMode',
+            'checkSelectAll'
         ],
         components: {
             Search,

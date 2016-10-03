@@ -4,6 +4,8 @@ import Modal from '../components/widgets/Modal.vue'
 export default {
     data() {
       return {
+          selectAll: false,
+          checkGroup: [],
           host: "http://61.219.77.174",
           langList: [],
           file: null,
@@ -56,6 +58,11 @@ export default {
                 U: _.indexOf(this.toCrudList(this.permission),_.find(this.initCRUD,{code:"U"}).value) > -1,
                 D: _.indexOf(this.toCrudList(this.permission),_.find(this.initCRUD,{code:"D"}).value) > -1,
             }
+        }
+    },
+    watch: {
+        'checkAll'(val) {
+            console.log(val)
         }
     },
     methods: {
@@ -132,6 +139,7 @@ export default {
                 confirmButtonText: '刪除',
                 cancelButtonText: '取消',
             }).then(()=> {
+                this.checkGroup = []
                 this.api.setting(this.subject, 'delItem', {[`${this.code}_guid`]: id}).then(res=>{
                     if(res.code===0){
                         swal("刪除成功！").then(()=> this.dataReload())
@@ -145,6 +153,15 @@ export default {
                 }
             });
 
+        },
+        checkSelectAll(val) {
+            if(val){
+                this.checkGroup = _.map(this.tableData.list,item=>{
+                    return item.id
+                })
+            }else{
+                this.checkGroup = []
+            }
         },
         checkEmpty(searchText) {
             if(searchText===""){

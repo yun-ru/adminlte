@@ -1,6 +1,6 @@
 <template>
-    <div class="btnWrap" v-if="checkGroup.length>0">
-        <button class="btn btn-danger btn-sm" type="button" v-if="CRUD.D" @click="onDelete(checkGroup)">刪除所選項目</button>
+    <div class="btnWrap" v-if="tableData.checkGroup.length>0">
+        <button class="btn btn-danger btn-sm" type="button" v-if="CRUD.D" @click="onDelete(tableData.checkGroup)">刪除所選項目</button>
         <p v-else class="text-muted">(無批次處理項目或權限不足)</p>
     </div>
     <div class="table-responsive">
@@ -8,9 +8,9 @@
             <thead>
             <tr class="bold">
                 <th>
-                    <input type="checkbox" v-model="checkAll">
+                    <input type="checkbox" v-model="tableData.selectAll" @change="checkSelectAll(tableData.selectAll)">
                 </th>
-                <th>編號</th>
+                <th>#</th>
                 <th v-for="(key,val) in tableData.columns" v-if="tableData.display[key]">{{val}}</th>
                 <th>
                     {{tableData.controller.title}}
@@ -19,7 +19,7 @@
             </thead>
             <tbody>
             <tr v-for="item in tableData.list">
-                <td><input v-if="allow(item[code+'_specific'])" type="checkbox" v-model="checkGroup" :value="item.id"></td>
+                <td><input v-if="allow(item[code+'_specific'])" type="checkbox" v-model="tableData.checkGroup" :value="item.id"></td>
                 <td class="bold">#{{$index+1}}</td>
                 <td :class="{img:tableData.filter[key]==='image'}" v-for="(key,val) in tableData.columns" v-if="tableData.display[key]">
                     <span v-if="!tableData.filter[key]">{{item[key]}}</span>
@@ -48,24 +48,7 @@
     import filterMixin from '../../mixins/filterMixin'
     export default {
         mixins: [filterMixin],
-        props: ['code','tableData','permission','CRUD','onModify','onDelete'],
-        data () {
-            return {
-                checkAll: false,
-                checkGroup: []
-            }
-        },
-        watch: {
-            'checkAll'(val) {
-                if(val){
-                    this.checkGroup = _.map(this.tableData.list,item=>{
-                        return item.id
-                    })
-                }else{
-                    this.checkGroup = []
-                }
-            }
-        },
+        props: ['code','tableData','permission','CRUD','onModify','onDelete','checkSelectAll'],
         methods: {
             allow(specific) {
                 return specific===undefined || specific==='CUSTOM'
@@ -99,10 +82,9 @@
                     margin-right: 0
             &.bold
                     font-weight: bold
-            &:nth-child(1)
-                width: 40px
-                text-align: center
+            &:nth-child(1),
             &:nth-child(2)
                 width: 40px
+                text-align: center
 </style>
 
