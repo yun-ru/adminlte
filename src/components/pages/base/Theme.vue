@@ -145,7 +145,7 @@
             },
             createReady() {
                 this.modalInit()
-                this.modalData.title = "新增幣別項目"
+                this.modalData.title = "新增主題"
                 this.modalData.id = null
                 this.modalData.display = {
                     [`pick_file`]: true,
@@ -169,7 +169,7 @@
             },
             modifyReady(data) {
                 this.modalInit()
-                this.modalData.title = "修改幣別項目"
+                this.modalData.title = "修改主題"
                 this.modalData.id = data[`${this.code}_guid`]
                 this.modalData.value = data
                 var target = _.find(this.tableData.list,{files_guid: data[`${this.code}_files_guid`]})

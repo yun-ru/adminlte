@@ -130,7 +130,7 @@
                         [`${this.code}_status`]: "radio",
                         [`${this.code}_title`]: "text",
                         [`${this.code}_description`]: "text",
-                        [`${this.code}_les_guid`]: "radio",
+                        [`${this.code}_les_guid`]: "select",
                         [`${this.code}_link`]: "text",
                         [`${this.code}_blank`]: "radio",
                         [`${this.code}_udate`]: "date",
@@ -157,7 +157,7 @@
             },
             createReady() {
                 this.modalInit()
-                this.modalData.title = "新增廣告輪播項目"
+                this.modalData.title = "新增廣告輪播"
                 this.modalData.id = null
                 this.modalData.display = {
                     [`pick_file`]: true,
@@ -182,10 +182,14 @@
 
             },
             modifyReady(data) {
+                console.log(data)
                 this.modalInit()
-                this.modalData.title = "修改廣告輪播項目"
+                this.modalData.title = "修改廣告輪播"
                 this.modalData.id = data[`${this.code}_guid`]
                 this.modalData.value = data
+                var target = _.find(this.tableData.list,{files_guid: data[`${this.code}_files_guid`]})
+                var path = this.host + target.files_folder + "/" +target.files_name
+                this.modalData.value[`files_name`] = path
                 this.modalData.display = {
                     [`pick_file`]: true,
                     [`files_name`]: true,
@@ -201,9 +205,9 @@
             },
             createSubmit(_data) {
                 var data = {
-                    [`fi${this.code}_les_guid`]: this.modalData.file_guid,
+                    [`files_guid`]: this.modalData.file_guid,
                     [`${this.code}_status`]: _data[`${this.code}_status`],
-                    [`${this.code}_les_guid`]: _data[`${this.code}_les_guid`],
+                    [`les_guid`]: _data[`${this.code}_les_guid`],
                     [`${this.code}_title`]: _data[`${this.code}_title`],
                     [`${this.code}_description`]: _data[`${this.code}_description`],
                     [`${this.code}_link`]: _data[`${this.code}_link`],
@@ -223,9 +227,9 @@
             modifySubmit(_data) {
                 var data = {
                     [`${this.code}_guid`]: this.modalData.id,
-                    [`fi${this.code}_les_guid`]: this.modalData.file_guid,
+                    [`files_guid`]: this.modalData.file_guid,
                     [`${this.code}_status`]: _data[`${this.code}_status`],
-                    [`${this.code}_les_guid`]: _data[`${this.code}_les_guid`],
+                    [`les_guid`]: _data[`${this.code}_les_guid`],
                     [`${this.code}_title`]: _data[`${this.code}_title`],
                     [`${this.code}_description`]: _data[`${this.code}_description`],
                     [`${this.code}_link`]: _data[`${this.code}_link`],

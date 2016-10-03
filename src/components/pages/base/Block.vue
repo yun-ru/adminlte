@@ -124,7 +124,7 @@
             },
             createReady() {
                 this.modalInit()
-                this.modalData.title = "新增幣別項目"
+                this.modalData.title = "新增黑名單"
                 this.modalData.id = null
                 this.modalData.display = {
                     [`${this.code}_status`]: true,
@@ -140,7 +140,7 @@
             },
             modifyReady(data) {
                 this.modalInit()
-                this.modalData.title = "修改幣別項目"
+                this.modalData.title = "修改黑名單"
                 this.modalData.id = data[`${this.code}_guid`]
                 this.modalData.value = data
                 this.modalData.display = {
