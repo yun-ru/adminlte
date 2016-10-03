@@ -44,14 +44,6 @@
             this.dataReload();
         },
         computed: {
-            searchTypes() {
-                return [
-                    {text: "全部", value: "search_complex"},
-                    {text: "狀態", value: `search_${this.code}_status`, opts: this.opts.status},
-                    {text: "內容", value: `search_${this.code}_content`},
-                    {text: "類型", value: `search_${this.code}_type`, opts: this.opts.blockTypes}
-                ]
-            },
             dataLabel() {
                 return {
                     [`${this.code}_status`]: "狀態",
@@ -62,6 +54,14 @@
                     [`${this.code}_guid`]: "ID",
                     [`${this.code}_id`]: "_ID"
                 }
+            },
+            searchTypes() {
+                return [
+                    {text: "全部", value: "search_complex"},
+                    {text: this.dataLabel[`${this.code}_status`], value: `search_${this.code}_status`, opts: this.opts.status},
+                    {text: this.dataLabel[`${this.code}_content`], value: `search_${this.code}_content`},
+                    {text: this.dataLabel[`${this.code}_type`], value: `search_${this.code}_type`, opts: this.opts.blockTypes}
+                ]
             },
             tableData() {
                 var list = this.resData.data.list.map(item=>{return {...item, id: item[this.code+'_guid']}})

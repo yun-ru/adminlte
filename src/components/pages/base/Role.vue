@@ -59,6 +59,18 @@
                     [`${this.code}_id`]: "_ID"
                 }
             },
+            searchTypes() {
+                return [
+                    {text: "全部", value: "search_complex", placeholder: "繁中名稱+簡中名稱+英文名稱"},
+                    {text: this.dataLabel[`${this.code}_name_zh_TW`], value: `search_${this.code}_name_zh_TW`},
+                    {text: this.dataLabel[`${this.code}_name_zh_CN`], value: `search_${this.code}_name_zh_CN`},
+                    {text: this.dataLabel[`${this.code}_name_en`], value: `search_${this.code}_name_en`},
+                    {text: this.dataLabel[`${this.code}_description_zh_TW`], value: `search_${this.code}_description_zh_TW`},
+                    {text: this.dataLabel[`${this.code}_description_zh_CN`], value: `search_${this.code}_description_zh_CN`},
+                    {text: this.dataLabel[`${this.code}_description_en`], value: `search_${this.code}_description_en`},
+                    {text: this.dataLabel[`${this.code}_status`], value: `search_${this.code}_status`, opts: this.opts.status},
+                ]
+            },
             tableData() {
                 var list = this.resData.data.list.map(item=>{return {...item, id: item[this.code+'_guid']}})
                 var columns = this.dataLabel

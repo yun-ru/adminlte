@@ -64,6 +64,16 @@
                     [`${this.code}_id`]: "_ID"
                 }
             },
+            searchTypes() {
+                return [
+                    {text: "全部", value: "search_complex", placeholder: "標題+連結"},
+                    {text: this.dataLabel[`${this.code}_status`], value: `search_${this.code}_status`, opts: this.opts.status},
+                    {text: this.dataLabel[`${this.code}_les_guid`], value: `search_${this.code}_les_guid`},
+                    {text: this.dataLabel[`${this.code}_title`], value: `search_${this.code}_title`},
+                    {text: this.dataLabel[`${this.code}_description`], value: `search_${this.code}_description`},
+                    {text: this.dataLabel[`${this.code}_link`], value: `search_${this.code}_link`}
+                ]
+            },
             tableData() {
                 var list = this.resData.data.list.map(item=>{return {...item, id: item[this.code+'_guid']}})
                 var columns = this.dataLabel

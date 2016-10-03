@@ -93,7 +93,6 @@ export default {
         },
         async dataReload() {
             this.searchMode = false
-            this.searchText = ""
 
             try{
                 var mainRes = await this.api.setting(this.subject,"getList")
