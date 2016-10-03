@@ -109,6 +109,7 @@ export default {
             this.openModal()
         },
         onModify(id) {
+            console.log(id)
             this.api.setting(this.subject,"getItem",{[`${this.code}_guid`]: id}).then(res=>{
                 if(res.code===0){
                     if(this.subject==="cash-flow"){
