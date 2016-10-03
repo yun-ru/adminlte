@@ -108,7 +108,7 @@
                     value: {},
                     type: {
                         [`${this.code}_status`]: "radio",
-                        [`${this.code}_type`]: "radio",
+                        [`${this.code}_type`]: "select",
                         [`${this.code}_content`]: "text",
                         [`${this.code}_udate`]: "date",
                         [`${this.code}_add_date`]: "date",

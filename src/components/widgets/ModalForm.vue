@@ -3,6 +3,12 @@
         <div class="form-group" v-if="isActive" v-for="(labelKey,isActive) in modalData.display" :class="{'has-error':modalData.errMsg[labelKey]}">
             <label class="col-sm-2 control-label">{{modalData.label[labelKey]}}</label>
             <div class="col-sm-10">
+                <template v-if="modalData.type[labelKey]==='select'">
+                    <select class="form-control" v-model="modalData.value[labelKey]">
+                        <option value="">請選擇</option>
+                        <option v-for="opt in modalData.option[labelKey]" type="radio" :value="opt.value" :name="labelKey">{{opt.label}}</option>
+                    </select>
+                </template>
                 <template v-if="modalData.type[labelKey]==='radio'">
                     <label class="radio-inline" v-for="opt in modalData.option[labelKey]">
                         <input type="radio" v-model="modalData.value[labelKey]" :value="opt.value" :name="labelKey"> {{opt.label}}
