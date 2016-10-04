@@ -11,6 +11,7 @@ export default {
           file: null,
           resData: null,
           modalData: {},
+          groupData: {},
           searchMode: false,
           searchText: "",
           currentSearchType: "search_complex",
@@ -98,13 +99,22 @@ export default {
                 })
             })
         },
+        onGroupFileChange(langID) {
+            var formData= new FormData($(`#${langID}`)[0])
+            this.api.upload(formData).then(res=>{
+                console.log(res)
+                this.groupData[langID].value.files_guid = res.data.files.files_guid
+                this.groupData[langID].value.group_file_img = this.host + res.data.file_path + "/" + res.data.file_name
+                console.log(this.groupData[langID].value)
+            })
+        },
         async dataReload() {
             this.searchMode = false
 
             try{
-                var mainRes = await this.api.setting(this.subject,"getList")
+                // var mainRes = await this.api.setting(this.subject,"getList")
                 var langRes = await this.api.setting("languages","getList")
-                mainRes.code===0 ? this.resData = mainRes : this.handleError(mainRes)
+                // mainRes.code===0 ? this.resData = mainRes : this.handleError(mainRes)
                 langRes.code===0 ? this.langList = langRes.data.list : this.handleError(langRes)
             }catch(err) {
                 this.handleError(err)
@@ -119,10 +129,15 @@ export default {
             console.log(id)
             this.api.setting(this.subject,"getItem",{[`${this.code}_guid`]: id}).then(res=>{
                 if(res.code===0){
-                    if(this.subject==="cash-flow"){
-                        this.modifyReady(res.data['cash_flow'])
+                    var attrName = this.subject.replace(/-/g, "_")
+                    if(res.data[`${attrName}_group`]){
+                        var groupData = {}
+                        _.each(res.data[`${attrName}_group`],lang=>{
+                            groupData[lang[`${this.groupCode}_les_guid`]] = lang
+                        })
+                        this.modifyReady(res.data[attrName],groupData)
                     }else{
-                        this.modifyReady(res.data[this.subject])
+                        this.modifyReady(res.data[attrName])
                     }
 
                     this.openModal()
@@ -183,7 +198,8 @@ export default {
         },
         formSubmit() {
             var data = this.modalData.value
-            this.modalData.id ? this.modifySubmit(data) : this.createSubmit(data)
+            var groupValue = this.groupData
+            this.modalData.id ? this.modifySubmit(data,groupValue) : this.createSubmit(data,groupValue)
         },
         openModal() {
             $("#myModal").modal()

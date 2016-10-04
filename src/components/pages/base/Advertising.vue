@@ -24,10 +24,15 @@
                       :check-select-all="checkSelectAll"
         ></content-body>
 
+        <button @click="onCreate">add test</button>
+        <button @click="onModify('14349697-8a11-11e6-b295-000c29c2eae8')">edit test</button>
+
         <Modal :modal-data="modalData"
+               :group-data="groupData"
                :form-submit="formSubmit"
                :close-modal="closeModal"
                :on-file-change="onFileChange"
+               :on-group-file-change="onGroupFileChange"
         ></Modal>
     </div>
 
@@ -42,7 +47,8 @@
         data () {
             return {
                 subject: "advertising",
-                code: "ang"
+                code: "ang",
+                groupCode: "agp"
             }
         },
         ready() {
@@ -51,8 +57,8 @@
         computed: {
             dataLabel() {
                 return {
-                    [`pick_file`]: "選擇圖片",
-                    [`files_name`]: "縮圖",
+                    [`group_pick_file`]: "選擇圖片",
+                    [`group_file_img`]: "縮圖",
                     [`${this.code}_status`]: "狀態",
                     [`${this.code}_les_guid`]: "語系",
                     [`${this.code}_title`]: "標題",
@@ -79,7 +85,7 @@
                 var list = this.resData.data.list.map(item=>{return {...item, id: item[this.code+'_guid']}})
                 var columns = this.dataLabel
                 var display = {
-                    [`files_name`]: true,
+                    [`group_file_img`]: true,
                     [`${this.code}_status`]: true,
                     [`${this.code}_les_guid`]: true,
                     [`${this.code}_title`]: true,
@@ -91,7 +97,7 @@
                 }
 
                 var filter = {
-                    [`files_name`]: "image",
+                    [`group_file_img`]: "image",
                     [`${this.code}_les_guid`]: "lang",
                     [`${this.code}_blank`]: "yes",
                     [`${this.code}_status`]: "status",
@@ -125,8 +131,8 @@
                     display: {},
                     value: {},
                     type: {
-                        [`files_name`]: "image",
-                        [`pick_file`]: "file",
+                        [`group_file_img`]: "image",
+                        [`group_pick_file`]: "file",
                         [`${this.code}_status`]: "radio",
                         [`${this.code}_title`]: "text",
                         [`${this.code}_description`]: "text",
@@ -160,18 +166,12 @@
                 this.modalData.title = "新增廣告輪播"
                 this.modalData.id = null
                 this.modalData.display = {
-                    [`pick_file`]: true,
-                    [`files_name`]: false,
                     [`${this.code}_status`]: true,
-                    [`${this.code}_les_guid`]: true,
-                    [`${this.code}_title`]: true,
-                    [`${this.code}_description`]: true,
-                    [`${this.code}_link`]: true,
                     [`${this.code}_blank`]: true
                 }
                 this.modalData.value = {
-                    [`files_name`]: "",
-                    [`pick_file`]: "",
+                    [`group_file_img`]: "",
+                    [`group_pick_file`]: "",
                     [`${this.code}_status`]: 3,
                     [`${this.code}_les_guid`]: "",
                     [`${this.code}_title`]: "",
@@ -179,40 +179,116 @@
                     [`${this.code}_link`]: "",
                     [`${this.code}_blank`]: "y"
                 }
+                this.groupData = {}
+                var langs = _.map(this.langList,lang=>lang.les_guid)
+                this.modalData.langs = langs
+                this.modalData.langList = this.langList
+
+                _.each(this.langList,lang=>{
+                    this.groupData[lang.les_guid] = _.assign({},{
+                        type: this.modalData.type,
+                        option: this.modalData.option,
+                        label: this.modalData.label,
+                        display: this.modalData.display,
+                        value: this.modalData.value,
+                        errMsg: this.modalData.errMsg
+                    })
+
+                    this.groupData[lang.les_guid].display = {
+                        [`group_file_img`]: true,
+                        [`group_pick_file`]: true,
+                        [`${this.code}_title`]: true,
+                        [`${this.code}_description`]: true,
+                        [`${this.code}_link`]: true,
+                    }
+
+                    this.groupData[lang.les_guid].value = {
+                        [`group_file_img`]: "",
+                        [`group_pick_file`]: "",
+                        [`${this.code}_title`]: "",
+                        [`${this.code}_description`]: "",
+                        [`${this.code}_link`]: ""
+                    }
+
+                })
 
             },
-            modifyReady(data) {
+            modifyReady(data,groupData) {
                 console.log(data)
+                console.log(groupData)
                 this.modalInit()
                 this.modalData.title = "修改廣告輪播"
                 this.modalData.id = data[`${this.code}_guid`]
-                this.modalData.value = data
-                var target = _.find(this.tableData.list,{files_guid: data[`${this.code}_files_guid`]})
-                var path = this.host + target.files_folder + "/" +target.files_name
-                this.modalData.value[`files_name`] = path
+                this.modalData.value = {
+                    [`${this.code}_blank`]: data[`${this.code}_blank`],
+                    [`${this.code}_status`]: data[`${this.code}_status`]
+                }
+//                var target = _.find(this.tableData.list,{files_guid: data[`${this.code}_files_guid`]})
+//                var path = this.host + target.files_folder + "/" +target.group_file_img
+//                this.modalData.value[`group_file_img`] = path
                 this.modalData.display = {
-                    [`pick_file`]: true,
-                    [`files_name`]: true,
                     [`${this.code}_status`]: true,
-                    [`${this.code}_les_guid`]: true,
-                    [`${this.code}_title`]: true,
-                    [`${this.code}_description`]: true,
-                    [`${this.code}_link`]: true,
-                    [`${this.code}_blank`]: true,
-                    [`${this.code}_udate`]: true,
-                    [`${this.code}_add_date`]: true
+                    [`${this.code}_blank`]: true
                 }
+
+                this.groupData = {}
+                var langs = _.map(this.langList,lang=>lang.les_guid)
+                this.modalData.langs = langs
+                this.modalData.langList = this.langList
+
+                _.each(this.langList,lang=>{
+                    this.groupData[lang.les_guid] = _.assign({},{
+                        type: this.modalData.type,
+                        option: this.modalData.option,
+                        label: this.modalData.label,
+                        display: this.modalData.display,
+                        value: this.modalData.value,
+                        errMsg: this.modalData.errMsg
+                    })
+
+                    this.groupData[lang.les_guid].display = {
+                        [`group_file_img`]: true,
+                        [`group_pick_file`]: true,
+                        [`${this.code}_title`]: true,
+                        [`${this.code}_description`]: true,
+                        [`${this.code}_link`]: true,
+                    }
+
+                    var imgPath = this.host + groupData[lang.les_guid][`files_folder`] + "/" + groupData[lang.les_guid][`files_name`]
+
+                    this.groupData[lang.les_guid].value = {
+                        [`group_file_img`]: groupData[lang.les_guid][`files_name`] ? imgPath : "",
+                        [`group_pick_file`]: "",
+                        [`${this.code}_title`]: groupData[lang.les_guid][`${this.groupCode}_title`],
+                        [`${this.code}_description`]: groupData[lang.les_guid][`${this.groupCode}_description`],
+                        [`${this.code}_link`]: groupData[lang.les_guid][`${this.groupCode}_link`]
+                    }
+
+                })
+
             },
-            createSubmit(_data) {
-                var data = {
-                    [`files_guid`]: this.modalData.files_guid,
-                    [`${this.code}_status`]: _data[`${this.code}_status`],
-                    [`les_guid`]: _data[`${this.code}_les_guid`],
-                    [`${this.code}_title`]: _data[`${this.code}_title`],
-                    [`${this.code}_description`]: _data[`${this.code}_description`],
-                    [`${this.code}_link`]: _data[`${this.code}_link`],
-                    [`${this.code}_blank`]: _data[`${this.code}_blank`]
+            createSubmit(_mainData,_groupData) {
+                var mainData = {
+                    [`${this.code}_status`]: _mainData[`${this.code}_status`],
+                    [`${this.code}_blank`]: _mainData[`${this.code}_blank`],
                 }
+
+                var group = _.mapValues(_groupData,(val)=>{
+                    return val.value
+                })
+
+                console.log(group)
+
+                var groupData = _.mapValues(group,vals=>{
+                    var data = {}
+                    data["agp_title"] = vals[`${this.code}_title`]
+                    data["agp_link"] = vals[`${this.code}_link`]
+                    data["agp_description"] = vals[`${this.code}_description`]
+                    data["files_guid"] = vals["files_guid"]
+                    return data
+                })
+
+                var data = _.assign({},mainData,groupData)
 
                 this.api.setting(this.subject,'postNew',data).then(res=>{
                     if(res.code===0){
@@ -221,7 +297,6 @@
                     }else{
                         this.handleError(res)
                     }
-
                 })
             },
             modifySubmit(_data) {

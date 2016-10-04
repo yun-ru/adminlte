@@ -10,7 +10,9 @@
                     <modal-form v-ref:modal-form
                                 :form-submit="formSubmit"
                                 :modal-data="modalData"
+                                :group-data="groupData"
                                 :on-file-change="onFileChange"
+                                :on-group-file-change="onGroupFileChange"
                     ></modal-form>
                 </div>
                 <div class="modal-footer">
@@ -25,7 +27,7 @@
 <script>
     import ModalForm from './ModalForm.vue'
     export default {
-        props: ['modalData','formSubmit','closeModal','onFileChange'],
+        props: ['modalData','groupData','formSubmit','closeModal','onFileChange','onGroupFileChange'],
         methods: {
 
         },
