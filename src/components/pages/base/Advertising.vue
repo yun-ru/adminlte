@@ -220,8 +220,9 @@
                 this.modalData.title = "修改廣告輪播"
                 this.modalData.id = data[`${this.code}_guid`]
                 this.modalData.value = {
+                    [`${this.code}_guid`]: data[`${this.code}_guid`],
                     [`${this.code}_blank`]: data[`${this.code}_blank`],
-                    [`${this.code}_status`]: data[`${this.code}_status`]
+                    [`${this.code}_status`]: data[`${this.code}_status`],
                 }
 //                var target = _.find(this.tableData.list,{files_guid: data[`${this.code}_files_guid`]})
 //                var path = this.host + target.files_folder + "/" +target.group_file_img
@@ -255,9 +256,11 @@
                     }
 
                     var imgPath = this.host + groupData[lang.les_guid][`files_folder`] + "/" + groupData[lang.les_guid][`files_name`]
+                    var imgID = groupData[lang.les_guid][`files_guid`]
 
                     this.groupData[lang.les_guid].value = {
                         [`group_file_img`]: groupData[lang.les_guid][`files_name`] ? imgPath : "",
+                        [`files_guid`]: groupData[lang.les_guid][`files_guid`] ? imgID : "",
                         [`group_pick_file`]: "",
                         [`${this.code}_title`]: groupData[lang.les_guid][`${this.groupCode}_title`],
                         [`${this.code}_description`]: groupData[lang.les_guid][`${this.groupCode}_description`],
@@ -299,17 +302,28 @@
                     }
                 })
             },
-            modifySubmit(_data) {
-                var data = {
-                    [`${this.code}_guid`]: this.modalData.id,
-                    [`files_guid`]: this.modalData.files_guid || _data[`${this.code}_files_guid`],
-                    [`${this.code}_status`]: _data[`${this.code}_status`],
-                    [`les_guid`]: _data[`${this.code}_les_guid`],
-                    [`${this.code}_title`]: _data[`${this.code}_title`],
-                    [`${this.code}_description`]: _data[`${this.code}_description`],
-                    [`${this.code}_link`]: _data[`${this.code}_link`],
-                    [`${this.code}_blank`]: _data[`${this.code}_blank`]
+            modifySubmit(_mainData, _groupData) {
+                var mainData = {
+                    [`${this.code}_guid`]: _mainData[`${this.code}_guid`],
+                    [`${this.code}_status`]: _mainData[`${this.code}_status`],
+                    [`${this.code}_blank`]: _mainData[`${this.code}_blank`],
                 }
+
+                var group = _.mapValues(_groupData,(val)=>{
+                    return val.value
+                })
+
+                var groupData = _.mapValues(group,vals=>{
+                    var data = {}
+                    data["agp_title"] = vals[`${this.code}_title`]
+                    data["agp_link"] = vals[`${this.code}_link`]
+                    data["agp_description"] = vals[`${this.code}_description`]
+                    data["files_guid"] = vals["files_guid"]
+                    return data
+                })
+
+                var data = _.assign({},mainData,groupData)
+                console.log(data)
                 this.api.setting(this.subject,'updateItem',data).then(res=>{
                     if(!res.code){
                         this.closeModal()
