@@ -19,6 +19,7 @@ import Block from './components/pages/base/Block.vue'
 import Advertising from './components/pages/base/Advertising.vue'
 import CashFlow from './components/pages/base/CashFlow.vue'
 import Languages from './components/pages/base/Languages.vue'
+import Account from './components/pages/base/Account.vue'
 
 
 Vue.use(VueRouter)
@@ -66,9 +67,9 @@ router.map({
             '/advertising/setting/getList': {
                 component: Advertising
             },
-
-
-
+            '/account/master/getList': {
+                component: Account
+            },
 
 
             '/base/payment': {

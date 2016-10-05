@@ -1,8 +1,8 @@
-import apiConfig from '../../config/api'
 export default {
-    computed: {
-        api() {
-            var router = {
+    data() {
+        return {
+            host: "http://mid2.tw/",
+            router: {
                 setting: {
                     getList: {path: "/setting/get-list", type: "get"},
                     getItem: {path: "/setting/edit", type: "post"},
@@ -15,70 +15,85 @@ export default {
                     show: {path: "role/assign/show", type: "post"},
                     edit: {path: "role/assign/edit", type: "post"},
                     doEdit: {path: "role/assign/do-edit", type: "post"}
-                }
-            }
-
-            var apiInit = function (method,url,data) {
-                return $.ajax({
-                    method: method,
-                    url: apiConfig.host + url,
-                    data: data,
-                    xhrFields: {
-                        withCredentials: true
-                    }
-                })
-            }
-
-            var getTestRoute = function(action) {
-                return action === 'getList' ? 'static/data/getList.json' : 'static/data/getItem.json'
-            }
-
-            return {
-                setting: function(subject,action,data) {
-                    var route = apiConfig.testMode? getTestRoute(action) : subject + router.setting[action].path
-                    var type = apiConfig.testMode? 'get' : router.setting[action].type
-                    var _data = apiConfig.testMode? {testType: action, ...data} : data
-                    return apiInit( type , route , _data)
                 },
-                login: function(data) {
-                    return apiInit('post','account/common/do-login', data)
-                },
-                menu: function() {
-                    var route = apiConfig.testMode? 'static/data/getMenu.json' : 'node/menu/get-menu'
-                    return apiInit('get', route)
-                },
-                assign: function(action,data) {
-                    var route, type
-                    if(apiConfig.testMode){
-                        route = 'static/data/showRole.json'
-                        return apiInit( 'get' , route , {testType: action, ...data})
-                    }else{
-                        route = router.assign[action].path
-                        type = router.assign[action].type
-                        return apiInit( type , route , data)
-                    }
-                },
-                upload: function(data) {
-                    return $.ajax({
-                        method: 'post',
-                        url: apiConfig.host + 'theme/setting/do-upload',
-                        xhrFields: {
-                            withCredentials: true
-                        },
-                        data: data,
-                        cache: false,
-                        contentType: false,
-                        processData: false
-                    })
-
+                account: {
+                    getList: {path: "getList", type: "get"},
+                    getAllBranch: {path: "getAllBranch", type: "get"}
                 }
             }
         }
     },
-    methods: {
-        handleError(res){
+    computed: {
+        api() {
 
-            console.log(res)
+            var account = (user, action, data) => {
+                var route = `account/${user}/${this.router.account[action].path}`
+                var type = this.router.account[action].type
+                return this.apiInit( type , route , data)
+            }
+
+            var setting = (subject,action,data) => {
+                var route = subject + this.router.setting[action].path
+                var type = this.router.setting[action].type
+                return this.apiInit( type , route , data)
+            }
+
+            var login = (data) =>{
+                return this.apiInit('post','account/common/do-login', data)
+            }
+
+            var menu = () => {
+                var route = 'node/menu/get-menu'
+                return this.apiInit('get', route)
+            }
+
+            var assign = (action,data) => {
+                var route, type
+                route = this.router.assign[action].path
+                type = this.router.assign[action].type
+                return this.apiInit( type , route , data)
+            }
+
+            var upload = (data) => {
+                return $.ajax({
+                    method: 'post',
+                    url: this.host + 'theme/setting/do-upload',
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    data: data,
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                })
+
+            }
+
+
+            return {
+                account,
+                setting,
+                login,
+                menu,
+                assign,
+                upload
+            }
+        }
+    },
+    methods: {
+        apiInit(method, url, data) {
+            return $.ajax({
+                method: method,
+                url: this.host + url,
+                data: data,
+                xhrFields: {
+                    withCredentials: true
+                }
+            })
+        },
+        handleError(res){
+            throw res
+
 
             var errCode = _.has(res,'code')? res.code : 99999
             var errMsg = _.has(res,'text')? res.text.common : `系統錯誤 (${errCode})`
@@ -96,7 +111,7 @@ export default {
                     this.modalData.errMsg = res.text
                     break
                 case 30006:
-                    this.$router.go({path: "/login"});
+                    this.$this.router.go({path: "/login"});
                     swal(errMsg)
                     break
                 default:

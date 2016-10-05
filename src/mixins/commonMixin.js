@@ -4,6 +4,7 @@ import Modal from '../components/widgets/Modal.vue'
 export default {
     data() {
       return {
+          userInfo: null,
           selectAll: false,
           checkGroup: [],
           host: "http://61.219.77.174",
@@ -112,9 +113,9 @@ export default {
             this.searchMode = false
 
             try{
-                // var mainRes = await this.api.setting(this.subject,"getList")
+                var mainRes = await this.api.setting(this.subject,"getList")
                 var langRes = await this.api.setting("languages","getList")
-                // mainRes.code===0 ? this.resData = mainRes : this.handleError(mainRes)
+                mainRes.code===0 ? this.resData = mainRes : this.handleError(mainRes)
                 langRes.code===0 ? this.langList = langRes.data.list : this.handleError(langRes)
             }catch(err) {
                 this.handleError(err)

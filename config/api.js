@@ -1,8 +1,7 @@
 module.exports = (function(){
 
   var testMode = false
-  // var host = testMode? "/" : "http://mid.tw/"
-  var host = testMode? "/" : "http://61.219.77.174/"
+  var host = "http://mid2.tw/"
 
   return {
     testMode,

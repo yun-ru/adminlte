@@ -59,15 +59,19 @@
             handleSuccess(res) {
                 this.msgClass = "alert-warning"
                 this.msg = "登入成功..."
+                console.log(res)
                 setTimeout(()=>{
                     this.$router.go({path: "/"});
                 },1500)
+                if(res.data) this.userInfo = res.data
+
+
             },
             onSubmit() {
                 this.api.login({ant_account: this.account, ant_passwd: this.password})
                     .then(res=>{
-                        if(res.code) this.handleError(res)
-                        else this.handleSuccess(res)
+                        if(res.code===0) this.handleSuccess(res)
+                        else this.handleError(res)
                     })
             },
 
