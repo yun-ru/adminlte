@@ -43,7 +43,7 @@
               <img src="./../../assets/image/user2-160x160.jpg" class="user-image" alt="User Image">
               <span class="hidden-xs">Alexander Pierce</span>
             </a>
-            <personal-box></personal-box>
+            <personal-box :logout="logout"></personal-box>
           </li>
 
         </ul>
@@ -58,7 +58,9 @@
 import MessageList from './header/MessageList.vue'
 import NotificationList from './header/NotificationList.vue'
 import PersonalBox from './header/PersonalBox.vue'
+import AccountMixin from '../../mixins/AccountMixin'
 export default {
+    mixins: [AccountMixin],
     components: {
         MessageList,
         NotificationList,

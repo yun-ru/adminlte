@@ -11,6 +11,7 @@ import VueResource from 'vue-resource'
 import VueValidator from 'vue-validator'
 
 // Pages
+import Home from './components/pages/base/Home.vue'
 import Currency from './components/pages/base/Currency.vue'
 import Role from './components/pages/base/Role.vue'
 import Permission from './components/pages/base/Permission.vue'
@@ -40,7 +41,7 @@ router.map({
         component: Platform,
         subRoutes: {
             '/': {
-                component: Currency
+                component: Home
             },
 
             '/role/setting/getList': {

@@ -1,7 +1,8 @@
 export default {
     data() {
         return {
-            host: "http://mid2.tw/",
+            // host: "http://61.219.77.174/",
+            host: "http://mid.tw/",
             router: {
                 setting: {
                     getList: {path: "/setting/get-list", type: "get"},
@@ -19,6 +20,11 @@ export default {
                 account: {
                     getList: {path: "getList", type: "get"},
                     getAllBranch: {path: "getAllBranch", type: "get"}
+                },
+                common: {
+                    menu: {path: "node/menu/get-menu", type: "get"},
+                    login: {path: "account/common/do-login", type: "post"},
+                    logout: {path: "account/common/do-logout", type: "get"}
                 }
             }
         }
@@ -40,6 +46,10 @@ export default {
 
             var login = (data) =>{
                 return this.apiInit('post','account/common/do-login', data)
+            }
+
+            var logout = () => {
+                return this.apiInit('get','account/common/do-logout')
             }
 
             var menu = () => {
@@ -74,6 +84,7 @@ export default {
                 account,
                 setting,
                 login,
+                logout,
                 menu,
                 assign,
                 upload

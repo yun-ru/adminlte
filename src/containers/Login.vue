@@ -43,8 +43,9 @@
 
 <script>
     import apiMixin from '../mixins/apiMixin'
+    import AccountMixin from '../mixins/AccountMixin'
     export default {
-        mixins: [apiMixin],
+        mixins: [AccountMixin,apiMixin],
         data() {
             return {
                 account: "",
@@ -54,27 +55,6 @@
                 pw_err: "",
                 msgClass: ""
             }
-        },
-        methods: {
-            handleSuccess(res) {
-                this.msgClass = "alert-warning"
-                this.msg = "登入成功..."
-                console.log(res)
-                setTimeout(()=>{
-                    this.$router.go({path: "/"});
-                },1500)
-                if(res.data) this.userInfo = res.data
-
-
-            },
-            onSubmit() {
-                this.api.login({ant_account: this.account, ant_passwd: this.password})
-                    .then(res=>{
-                        if(res.code===0) this.handleSuccess(res)
-                        else this.handleError(res)
-                    })
-            },
-
         },
         ready() {
             $('.loginPage').height($(window).height())

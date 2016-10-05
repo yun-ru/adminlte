@@ -27,11 +27,17 @@
         <!-- Menu Footer-->
         <li class="user-footer">
             <div class="pull-left">
-                <a href="#" class="btn btn-default btn-flat">Profile</a>
+                <a href="#" class="btn btn-default btn-flat">個人資料</a>
             </div>
             <div class="pull-right">
-                <a v-link="{path:'/login'}" class="btn btn-default btn-flat">Sign out</a>
+                <a class="btn btn-default btn-flat" @click="logout">登出</a>
             </div>
         </li>
     </ul>
 </template>
+
+<script>
+export default {
+    props: ['logout']
+}
+</script>

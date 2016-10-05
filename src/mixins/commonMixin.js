@@ -4,7 +4,6 @@ import Modal from '../components/widgets/Modal.vue'
 export default {
     data() {
       return {
-          userInfo: null,
           selectAll: false,
           checkGroup: [],
           host: "http://61.219.77.174",
